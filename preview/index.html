@@ -806,6 +806,9 @@ html.hlock,html.hlock body{overflow:hidden}
 .gnext{position:absolute;top:.75rem;left:.8rem;padding:.1rem .6rem;border-radius:99px;background:var(--c);color:#fff;font-size:.72rem;font-weight:800}
 .gsec.now.full .gnext{display:none}
 @media (max-width:760px){.gnext{top:auto;bottom:.5rem;left:.6rem;font-size:.66rem}}
+/* الفوتر في آخر الصفحة لا في وسطها */
+#v-games.on{min-height:calc(100vh - 88px);min-height:calc(100svh - 88px)}
+@media (max-width:760px){#v-games.on{min-height:calc(100svh - 80px)}}
 
 </style>
 </head>
