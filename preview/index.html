@@ -802,6 +802,11 @@ html.hlock,html.hlock body{overflow:hidden}
 .gsic{width:104px;height:104px}
 @media (max-width:760px){.ghero{min-height:0}.ggirl{height:auto;max-height:calc(100% - 4px);top:4px}.gsic{width:56px;height:56px}}
 
+.gsec.later{opacity:.82}.gsec.later .gsic img{filter:saturate(.6)}
+.gnext{position:absolute;top:.75rem;left:.8rem;padding:.1rem .6rem;border-radius:99px;background:var(--c);color:#fff;font-size:.72rem;font-weight:800}
+.gsec.now.full .gnext{display:none}
+@media (max-width:760px){.gnext{top:auto;bottom:.5rem;left:.6rem;font-size:.66rem}}
+
 </style>
 </head>
 <body>
@@ -919,12 +924,12 @@ const GAMES=[
  {id:'sym',t:'رموز الخرائط',d:'تعرّف على رموز الخريطة المرسومة: عناصر الخريطة، المواقع، الظواهر الطبيعية والخطوط.',ic:'i-map',s:1,max:6,how:'ستظهر لك رموز مرسومة كما على الخرائط. في بعض الأسئلة تخمّن معنى الرمز، وفي أخرى تختار الرمز الذي يدل على المعنى المكتوب. الخيارات دائمًا من المجموعة نفسها.'},
  {id:'om',t:'مسطحات عُمان',d:'البحار والمضيق على سواحل السلطنة وموقعها.',ic:'i-wave',s:1,max:6,n:6},
  {id:'ol',t:'أين تقع؟',d:'مدن ومواقع عُمانية: حدّد محافظتها على خريطة السلطنة.',ic:'i-pin',s:1,max:6,n:6,wide:1,how:'يظهر لك سؤال عن مدينة أو موقع عُماني. اضغط على المحافظة الصحيحة على خريطة سلطنة عُمان المعتمدة (أو اخترها من القائمة).'},
- {id:'lm',t:'معالم عُمان',d:'تعرّف على معلم عُماني واضغط على محافظته في الخريطة.',ic:'i-pin',s:1,max:6,n:6,wide:1,how:'تظهر لك صورة معلم عُماني بدون اسم. تعرّف عليه ثم اضغط على المحافظة التي يقع فيها على خريطة سلطنة عُمان (أو اخترها من القائمة). تذكّر: المحافظة تختلف عن الولاية.'},
+ {id:'lm',t:'معالم عُمان',d:'تعرّف على معالم عُمان ومدنها، واضغط على محافظة كل منها في الخريطة.',ic:'i-pin',s:1,max:6,n:6,wide:1,how:'تظهر لك صورة معلم عُماني بدون اسم أو سؤال عن مدينة أو موقع عُماني. تعرّف عليه ثم اضغط على المحافظة التي يقع فيها على خريطة سلطنة عُمان (أو اخترها من القائمة). تذكّر: المحافظة تختلف عن الولاية.'},
  {id:'pz',t:'أحجية عُمان',d:'ضع كل محافظة في مكانها الصحيح على الخريطة.',ic:'i-compass',s:1,max:6,wide:1,how:'اسحب كل محافظة من الأسفل إلى مكانها على الخريطة. تقدر أيضًا أن تضغط على القطعة ثم تضغط على مكانها. القطع الصحيحة تثبت وتتلوّن.'},
- {id:'fl',t:'راية عُمان',d:'ركّب راية السلطنة من أجزائها وألوانها الصحيحة.',ic:'i-star',s:1,max:5,wide:1,how:'اسحب أجزاء الراية إلى أماكنها (أو اضغط الجزء ثم مكانه). انتبه: بين القطع ألوان ليست من علم عُمان!'},
+ {id:'fl',t:'علم عُمان',d:'ركّب علم السلطنة من أجزائه وألوانه الصحيحة.',ic:'i-star',s:1,max:5,wide:1,how:'اسحب أجزاء العلم إلى أماكنها (أو اضغط الجزء ثم مكانه). انتبه: بين القطع ألوان ليست من علم عُمان!'},
  {id:'ar',t:'مسطحات الوطن العربي (القديمة)',d:'حدّد البحار والخلجان والمضائق والقنوات على خريطة الوطن العربي.',ic:'i-wave',s:2,max:7,n:7,wide:1,how:'يظهر سؤال عن مسطح مائي. اضغط مكانه على خريطة الوطن العربي. للمضائق الصغيرة كبّر الخريطة بالزر ＋ ثم اضغط.'},
  {id:'cp',t:'عواصم الوطن العربي',d:'اعرف الدولة من عاصمتها أو معلمها واضغط عليها في الخريطة.',ic:'i-pin',s:2,max:8,n:8,wide:1,how:'يظهر سؤال عن عاصمة أو مدينة أو معلم. اضغط على الدولة العربية الصحيحة على الخريطة.'},
- {id:'sw',t:'مسطحات الوطن العربي',d:'صنّف المسطحات المائية، اربط كل ممر بما يصله، ثم فكّر جغرافيًا.',ic:'i-wave',s:2,max:6,wide:1,how:'الجولة الأولى: صنّف كل اسم (بحر، خليج، مضيق، قناة، محيط) بسحبه إلى مكانه. الجولة الثانية: اربط كل ممر مائي بالمسطحين اللذين يصل بينهما. الجولة الثالثة: أسئلة تفكير جغرافي قصيرة.'},
+ {id:'sw',t:'مسطحات الوطن العربي',d:'صنّف المسطحات المائية، اربط كل ممر بما يصله، ثم فكّر جغرافيًا.',ic:'i-wave',s:2,max:6,wide:1,how:'الجولة الأولى: صنّف كل اسم (بحر، خليج، مضيق، قناة، محيط) بسحبه إلى مكانه. الجولة الثانية: اربط كل ممر مائي بالمسطحين اللذين يصل بينهما. الجولة الثالثة: أسئلة تفكير جغرافي عن مسطحات الوطن العربي وعُمان.'},
  {id:'sh',t:'رحلة الوطن العربي',d:'أبحر بسفينتك على خريطة الوطن العربي: كل إجابة صحيحة تحرّكها إلى المحطة التالية.',ic:'i-ship',s:2,max:6,wide:1,how:'أنت قبطان السفينة. الخريطة بلا أسماء، وفي كل محطة تختار المسطح أو الممر المائي التالي الصحيح فتتحرك السفينة إلى النقطة التالية حتى تصل إلى وجهتك. المسار تعليمي مبسّط وليس خط ملاحة دقيقًا.'},
  {id:'og',t:'مستكشف المحافظات',d:'ثلاث مهمات على خريطة عُمان: ارسم المحافظات، اربطها بحواضرها، ثم اهتدِ إليها بالألغاز.',ic:'i-map',s:1,emb:'og',max:9},
  {id:'aw',t:'مستكشف الوطن العربي',d:'ثلاث مهمات على خريطة الوطن العربي: حدّد المسطحات المائية، اعبر المضائق، وحلّ الألغاز.',ic:'i-compass',s:2,emb:'aw',max:8},
@@ -944,7 +949,7 @@ om:[
  {i:'i-ship',q:'تقع جزيرة مصيرة في:',o:['بحر العرب','البحر المتوسط','الخليج العربي'],e:'مصيرة أكبر جزر عُمان وتقع في بحر العرب.'},
  {i:'i-compass',q:'في أي جزء من شبه الجزيرة العربية تقع سلطنة عُمان؟',o:['الجنوب الشرقي','الشمال الغربي','الغرب'],e:'تقع عُمان في الجنوب الشرقي من شبه الجزيرة العربية.'},
  {i:'i-pin',q:'ما الدولة العربية التي تحد سلطنة عُمان من الجنوب الغربي؟',o:['اليمن','الكويت','الأردن'],e:'تجاور اليمن عُمان من جهة الجنوب الغربي.'},
- {i:'i-map',q:'كم عدد محافظات سلطنة عُمان؟',o:['١١ محافظة','٩ محافظات','١٤ محافظة'],e:'في سلطنة عُمان إحدى عشرة محافظة.'},
+ {i:'i-map',q:'كم عدد محافظات سلطنة عُمان؟',o:['11 محافظة','9 محافظات','14 محافظة'],e:'في سلطنة عُمان إحدى عشرة محافظة.'},
  {i:'i-pin',q:'ما عاصمة سلطنة عُمان؟',o:['مسقط','صلالة','نزوى'],e:'مسقط هي عاصمة السلطنة.'},
  {i:'i-star',q:'ما الشجرة التي يُستخرج منها اللبان العُماني؟',o:['شجرة اللبان','شجرة النخيل','شجرة الغاف'],e:'يُستخرج اللبان من صمغ شجرة اللبان، وتشتهر به محافظة ظفار.'}]};
 
@@ -1125,6 +1130,7 @@ const WATERS=[
  {n:'مضيق باب المندب',c:'مضيق',e:'ممر مائي ضيق يصل البحر الأحمر بخليج عدن.'},
  {n:'مضيق جبل طارق',c:'مضيق',e:'ممر مائي ضيق يصل المتوسط بالأطلسي.'},
  {n:'قناة السويس',c:'قناة',e:'ممر صناعي حفره الإنسان في مصر.'},
+ {n:'بحر عُمان',c:'بحر',e:'بحر يطل عليه الساحل الشمالي الشرقي لعُمان، ويصله مضيق هرمز بالخليج العربي.'},
  {n:'المحيط الهندي',c:'محيط',e:'مسطح مائي هائل المساحة.'},
  {n:'المحيط الأطلسي',c:'محيط',e:'مسطح مائي هائل المساحة.'}];
 const LINKS=[
@@ -1316,7 +1322,7 @@ const gStars=id=>Math.round((st.best[id]||0)/10);
 const gGame=id=>GAMES.find(x=>x.id===id);
 function gInfo(i){const s=GST[i],gs=s.g.map(gGame).filter(Boolean);
  return{gs,done:gs.filter(g=>played(g.id)).length,t:gs.length,st:gs.reduce((a,g)=>a+gStars(g.id),0),mx:gs.reduce((a,g)=>a+(g.max||0),0)}}
-const gOpen=i=>i===0||GST.slice(0,i).every((_,k)=>{const f=gInfo(k);return f.done===f.t});
+const gOpen=()=>true; /* الأقسام كلها مفتوحة، والرحلة تقترح الترتيب */
 function gamesDraw(){const root=document.getElementById('gb2');if(!root)return;
  if(gStation!==null&&!gOpen(gStation))gStation=null;
  gStation===null?gHome(root):gStationView(root,gStation)}
@@ -1324,12 +1330,12 @@ function gHome(root){const I=window.SB_IMG||{},inf=GST.map((_,i)=>gInfo(i)),open
  let cur=inf.findIndex((f,i)=>open[i]&&f.done<f.t);if(cur<0)cur=GST.length-1;
  root.className='gb2 ghome';root.removeAttribute('style');
  root.innerHTML=`<div class="ghero"><div class="gsea" aria-hidden="true">${gWaves()}</div>${I.down?`<img class="ggirl" src="${I.down}" alt="">`:''}
-  <div class="gtx"><h2>ألعاب سندباد</h2><p>ثلاثة أقسام في رحلة واحدة. أكمل ألعاب القسم ليُفتح القسم الذي بعده.</p></div>
+  <div class="gtx"><h2>ألعاب سندباد</h2><p>ثلاثة أقسام في رحلة واحدة. أكمل ألعاب كل قسم لتحصل على ختمه وكنزه.</p></div>
   <div class="gpass-strip" aria-label="أختام الجواز">${GST.map((s,i)=>{const f=inf[i];return`<span class="gstamp${f.done===f.t?' got':''}" style="--c:${s.c};--c2:${s.c2}" title="ختم ${E(STG[i]?STG[i].t:'')}">${gSvg(s.ic,'0 0 64 64')}</span>`}).join('')}<small>أختام جوازي</small></div></div>
  <div class="groute"><svg class="gline" viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 20 C 50 0, 100 40, 150 20 S 250 0, 300 20" fill="none"/></svg>
- ${GST.map((s,i)=>{const f=inf[i],t=STG[i]?STG[i].t:'',lock=!open[i],full=f.done===f.t;
-  return`<button class="gsec${lock?' lock':''}${full?' full':''}${i===cur?' now':''}" data-st="${i}" style="--c:${s.c};--c2:${s.c2};--cs:${s.s}" ${lock?'aria-disabled="true"':''}>
-   ${i===cur?`<span class="gship" aria-hidden="true">${I.dhow?`<img src="${I.dhow}" alt="">`:gSvg('sh')}</span>`:''}
+ ${GST.map((s,i)=>{const f=inf[i],t=STG[i]?STG[i].t:'',lock=false,later=i>cur&&f.done===0,full=f.done===f.t;
+  return`<button class="gsec${lock?' lock':''}${full?' full':''}${later?' later':''}${i===cur?' now':''}" data-st="${i}" style="--c:${s.c};--c2:${s.c2};--cs:${s.s}" ${lock?'aria-disabled="true"':''}>
+   ${i===cur&&!full?`<span class="gnext">محطتك التالية</span>`:''}${i===cur?`<span class="gship" aria-hidden="true">${I.dhow?`<img src="${I.dhow}" alt="">`:gSvg('sh')}</span>`:''}
    <span class="gsno">${i+1}</span>
    <span class="gsic">${I[s.img]?`<img src="${I[s.img]}" alt="">`:gSvg(s.ic,'0 0 64 64')}</span>
    <b>${E(t)}</b><span class="gsd2">${E(s.d)}</span>
@@ -1357,7 +1363,7 @@ function gStationView(root,i){const s=GST[i],I=window.SB_IMG||{},f=gInfo(i),t=ST
 function gWaves(){return'<svg class="w2" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 50 Q75 25 150 50 T300 50 T450 50 T600 50 T750 50 T900 50 T1050 50 T1200 50 V120 H0Z" fill="rgba(255,255,255,.2)"/></svg><svg class="w1" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 70 Q75 45 150 70 T300 70 T450 70 T600 70 T750 70 T900 70 T1050 70 T1200 70 V120 H0Z" fill="rgba(255,255,255,.32)"/></svg>'}
 function gToast(m){let t=document.getElementById('gtoast');if(!t){t=document.createElement('div');t.id='gtoast';t.setAttribute('role','status');document.body.appendChild(t)}t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2600)}
 function gChest(i){const s=GST[i],I=window.SB_IMG||{},o=document.createElement('div');o.id='gchest';o.style.cssText=`--c:${s.c};--c2:${s.c2}`;
- o.innerHTML=`<div class="gcbox" role="dialog" aria-label="صندوق الكنز">${I.trophy?`<img class="gcgirl" src="${I.trophy}" alt="">`:''}<div class="gchestart">${G_CHEST}</div><h3>أتممت قسم «${E(STG[i].t)}»</h3><p>حصلت على ختم القسم في جوازك${i<GST.length-1?`، وفُتح قسم «${E(STG[i+1].t)}»`:''}.</p><span class="gstamp got big" style="--c:${s.c};--c2:${s.c2}">${gSvg(s.ic,'0 0 64 64')}</span><button type="button">أحسنت، تابع الرحلة</button></div>`;
+ o.innerHTML=`<div class="gcbox" role="dialog" aria-label="صندوق الكنز">${I.trophy?`<img class="gcgirl" src="${I.trophy}" alt="">`:''}<div class="gchestart">${G_CHEST}</div><h3>أتممت قسم «${E(STG[i].t)}»</h3><p>حصلت على ختم القسم في جوازك${i<GST.length-1?`، ومحطتك التالية «${E(STG[i+1].t)}»`:''}.</p><span class="gstamp got big" style="--c:${s.c};--c2:${s.c2}">${gSvg(s.ic,'0 0 64 64')}</span><button type="button">أحسنت، تابع الرحلة</button></div>`;
  document.body.appendChild(o);try{confetti&&confetti()}catch(e){}
  o.querySelector('button').onclick=()=>o.remove();o.onclick=e=>{if(e.target===o)o.remove()}}
 window.addEventListener('popstate',()=>{if(document.getElementById('v-games')?.classList.contains('on')&&gStation!==null&&!(history.state&&history.state.gst!=null)){gStation=null;gamesDraw()}});
@@ -1638,7 +1644,7 @@ function pickSpread(arr,n){const s=shuffle(arr),out=[],c={};for(const x of s){if
 function omapGame(g,items,o){const OM=window.OMAN_MAP;if(!OM){noMap(g);return}
  const my=token,names=omanNames();
  intro(g,'',()=>{
-  const picks=pickSpread(items,g.n||6);let i=0,ok=0,labels=true;
+  const picks=o.pick?o.pick():pickSpread(items,g.n||6);let i=0,ok=0,labels=true;
   const step=()=>{if(my!==token)return;
    if(i>=picks.length){finishGame(g.id,ok,picks.length,g.max,o.note||'');return}
    const L=picks[i];let answered=false,mistake=false;
@@ -1662,9 +1668,9 @@ const lmProbe=src=>new Promise(r=>{if(!src)return r(false);if(src.startsWith('da
 async function gLM(g){const pr=await Promise.all(GD.LANDMARKS.map(l=>lmProbe(l.img)));const withPic=GD.LANDMARKS.filter((l,i)=>pr[i]);
  /* تُعرض المعالم التي لها صور فقط (الصورة بلا اسم)، وإن قلّت الصور تُكمَّل بمعالم بلا صور */
  const pool=withPic.length>=(g.n||6)?withPic:[...withPic,...GD.LANDMARKS.filter(l=>!withPic.includes(l))];
- omapGame(g,pool,{
- side:L=>L.img&&withPic.includes(L)?`<div class="lmic photo">${lmVisual(L,true)}</div><h3 class="lmq" data-n="${E(L.n)}" data-h="${E(L.h)}">ما هذا المَعلم؟</h3><p class="lmh">تعرّف عليه من الصورة، ثم اضغط على المحافظة التي يقع فيها.</p>`:`<div class="lmic">${lmIcon(L.type)}</div><h3>${E(L.n)}</h3><p>${E(L.h)}</p><p class="mini">اضغط على المحافظة التي يقع فيها هذا المَعلم.</p>`,
- ok:(L,names)=>`${E(L.n)} تقع في <b>محافظة ${E(names[L.g])}</b>، في <b>${E(L.w)}</b>.${L.e?' '+E(L.e):''}`,note:''})}
+ omapGame(g,pool,{pick:()=>shuffle([...pickSpread(pool,(g.n||6)-2),...pickSpread(GD.OMANQ,2)]),
+ side:L=>L.q?`<div class="lmic">${lmIcon(L.type)}</div><h3>${E(L.q)}</h3><p class="mini">اضغط على المحافظة الصحيحة على خريطة سلطنة عُمان.</p>`:L.img&&withPic.includes(L)?`<div class="lmic photo">${lmVisual(L,true)}</div><h3 class="lmq" data-n="${E(L.n)}" data-h="${E(L.h)}">ما هذا المَعلم؟</h3><p class="lmh">تعرّف عليه من الصورة، ثم اضغط على المحافظة التي يقع فيها.</p>`:`<div class="lmic">${lmIcon(L.type)}</div><h3>${E(L.n)}</h3><p>${E(L.h)}</p><p class="mini">اضغط على المحافظة التي يقع فيها هذا المَعلم.</p>`,
+ ok:(L,names)=>L.q?E(L.e):`${E(L.n)} تقع في <b>محافظة ${E(names[L.g])}</b>، في <b>${E(L.w)}</b>.${L.e?' '+E(L.e):''}`,note:''})}
 function gOL(g){omapGame(g,GD.OMANQ,{
  side:L=>`<div class="lmic">${lmIcon(L.type)}</div><h3>${E(L.q)}</h3><p class="mini">اضغط على المحافظة الصحيحة على خريطة سلطنة عُمان.</p>`,
  ok:(L,names)=>E(L.e),note:''})}
@@ -1716,7 +1722,7 @@ function gFL(g){const my=token;
   const slot=(id,x,y,w,h)=>`<g class="slot" data-id="${id}" tabindex="0" role="button" aria-label="مكان قطعة"><rect class="sr" x="${x}" y="${y}" width="${w}" height="${h}"/></g>`;
   const flag=`<svg class="flag" id="flag" viewBox="0 0 300 180" role="group" aria-label="لوحة العلم">${slot('band',0,0,90,180)}${slot('white',90,0,210,60)}${slot('red',90,60,210,60)}${slot('green',90,120,210,60)}</svg>`;
   const pcs=shuffle(parts).map(p=>`<button type="button" class="pc-piece fp" data-id="${p.id}" aria-label="${E(p.n)}"><svg viewBox="0 0 ${p.w} ${p.h}" width="${Math.min(120,p.w*1.7)}" height="${Math.min(70,p.h*1.7)}" aria-hidden="true"><rect width="${p.w}" height="${p.h}" fill="${p.fill}" stroke="#073B4C" stroke-width="1"/>${p.id==='emblem'?`<g transform="translate(${(p.w-44)/2} ${(p.h-40)/2}) scale(.44)">${EMB}</g>`:''}</svg><span>${E(p.n)}</span></button>`).join('');
-  pcEl().innerHTML=`<div id="pzp">${progBar(0,5)}</div><div class="flgrid"><div>${flag}</div><div><div class="pztray">${pcs}</div><div class="fb" id="fb" role="status" aria-live="polite"></div></div></div><p class="mini">رسم تعليمي لراية سلطنة عُمان؛ شعار الخنجر والسيفين مرسوم بشكل مبسّط.</p>`;
+  pcEl().innerHTML=`<div id="pzp">${progBar(0,5)}</div><div class="flgrid"><div>${flag}</div><div><div class="pztray">${pcs}</div><div class="fb" id="fb" role="status" aria-live="polite"></div></div></div><p class="mini">رسم تعليمي لعلم سلطنة عُمان؛ شعار الخنجر والسيفين مرسوم بشكل مبسّط.</p>`;
   const root=pcEl();
   const fills={band:FRED,white:'#FFFFFF',red:FRED,green:FGRN};
   dnd(root,'.fp','.slot',(p,t)=>{
@@ -1743,17 +1749,17 @@ function gSW(g){const my=token;
   setPC(true);const box=pcEl();let first=0,total=0;
   const items=shuffle(GD.WATERS).slice(0,6);
   box.innerHTML='<div id="rb"></div>';const rb=$('#rb');
-  const a=await matchRound(rb,{title:'الجولة ١ من ٣: صنّف',hint:'اسحب كل اسم إلى نوعه الصحيح.',
+  const a=await matchRound(rb,{title:'الجولة 1 من 3: صنّف',hint:'اسحب كل اسم إلى نوعه الصحيح.',
    targets:GD.WCATS.map(c=>({id:c,h:c,label:c})),pieces:items.map(w=>({id:w.n,h:E(w.n)})),
    ok:pid=>items.find(w=>w.n===pid).c,fb:pid=>items.find(w=>w.n===pid).e,wrong:()=>'فكّر في شكل المسطح ووظيفته: بحر أم خليج أم ممر ضيق أم قناة صناعية.'});
   if(my!==token)return;first+=a;total+=items.length;
   const links=shuffle(GD.LINKS);
-  const b=await matchRound(rb,{title:'الجولة ٢ من ٣: اربط الممر بما يصله',hint:'اسحب اسم الممر إلى الوصف الصحيح.',
+  const b=await matchRound(rb,{title:'الجولة 2 من 3: اربط الممر بما يصله',hint:'اسحب اسم الممر إلى الوصف الصحيح.',
    targets:links.map(l=>({id:l.p,h:E(l.m),label:l.m})),pieces:shuffle(links).map(l=>({id:l.p,h:E(l.p)})),
    ok:pid=>pid,fb:pid=>links.find(l=>l.p===pid).p+' '+links.find(l=>l.p===pid).m+'.',wrong:()=>'تذكّر المسطحين اللذين يصل بينهما كل ممر.'});
   if(my!==token)return;first+=b;total+=links.length;
-  rb.innerHTML='<h3 class="rt">الجولة ٣ من ٣: فكّر جغرافيًا</h3><div id="sq"></div>';
-  for(const q of shuffle(GD.SWQ).slice(0,2)){const ok=await mcqItem($('#sq'),q,my,false);if(my!==token)return;if(ok)first++;total++}
+  rb.innerHTML='<h3 class="rt">الجولة 3 من 3: فكّر جغرافيًا</h3><div id="sq"></div>';
+  for(const q of [...shuffle(GD.SWQ).slice(0,2),...shuffle(BANKS.om).slice(0,2)]){const ok=await mcqItem($('#sq'),q,my,false);if(my!==token)return;if(ok)first++;total++}
   finishGame(g.id,first,total,g.max,'')})}
 
 /* ===== رحلة السفينة (على خريطة الوطن العربي بلا أسماء) ===== */
