@@ -611,6 +611,47 @@ html.hlock,html.hlock body{overflow:hidden}
 .hpass.none{opacity:.78;box-shadow:none;background:#fbfaf6}
 .hpass.none .hhd{background:#f1efe8}.hpass.none .hic{color:#9aa5a8}
 .hnog{flex:1;min-height:46px;display:flex;align-items:center;justify-content:center;border-radius:12px;border:2px dashed #cfd8dc;color:#6b7b80;font-weight:800;font-size:.92rem}
+/* لوحة الدروس في صفحة واحدة بلا تمرير داخلي */
+.hb2.board{height:auto;min-height:0;overflow:visible;gap:.45rem}
+.hb2.board .hunits{overflow:visible;flex:0 0 auto;gap:.45rem;padding:0}
+.hb2.board .hhello{min-height:82px;padding:.45rem .9rem}
+.hb2.board .hhello img{height:80px}
+.hb2.board .hhello h2{font-size:1.15rem}.hb2.board .hhello p{font-size:.9rem}
+.hb2.board .hunit h3{margin:0 0 .3rem;font-size:.98rem}
+.hb2.board .hgrid{grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.5rem}
+.hb2.board .hhd{padding:.45rem .65rem;gap:.5rem}
+.hb2.board .hic{flex-basis:38px;height:38px;border-radius:11px}.hb2.board .hic svg{width:24px;height:24px}
+.hb2.board .hhd b{font-size:.93rem;line-height:1.35}.hb2.board .hhd small{font-size:.74rem}
+.hb2.board .hft{padding:.4rem .6rem .5rem;gap:.35rem}
+.hb2.board .hsail{min-height:38px;font-size:.88rem;border-radius:10px;padding:0 .6rem}
+.hb2.board .hsail svg{width:17px;height:17px}
+.hb2.board .hcut::before,.hb2.board .hcut::after{width:16px;height:16px;top:-9px}
+.hb2.board .hcertbar{padding:.4rem .8rem}.hb2.board .hcertbar img{height:54px}
+.hb2.board .hcm{font-size:.85rem}
+#v-harbor .sec-h{margin-bottom:.35rem}
+@media (max-width:760px){.hb2.board .hgrid{grid-template-columns:1fr 1fr}.hb2.board .hhd{flex-direction:column;align-items:flex-start;text-align:start}.hb2.board .hhd b{font-size:.86rem}.hb2.board .hsail{font-size:.8rem}}
+@media (max-width:380px){.hb2.board .hgrid{grid-template-columns:1fr}}
+@media (max-width:760px){
+ #v-harbor .page{padding-top:.4rem}
+ #v-harbor .sec-h{display:none}
+ .hb2.board .hhello{min-height:58px;padding:.35rem .6rem .35rem 64px}
+ .hb2.board .hhello img{height:56px;left:.4rem}
+ .hb2.board .hhello h2{font-size:.98rem}.hb2.board .hhello p{font-size:.78rem}
+ .hb2.board .hhello .htx{flex:1 1 auto}.hb2.board .hhact{width:auto;flex:0 0 auto}
+ .hb2.board .hout{min-height:32px;font-size:.75rem;padding:.1rem .6rem}
+ .hb2.board .hgrid{align-items:start;gap:.35rem}
+ .hb2.board .hhd{flex-direction:row;align-items:center;padding:.3rem .45rem}
+ .hb2.board .hic{display:none}
+ .hb2.board .hhd b{font-size:.8rem;line-height:1.3}.hb2.board .hhd small{font-size:.68rem}
+ .hb2.board .hft{padding:.3rem .4rem .4rem;gap:.25rem}
+ .hb2.board .hsail{min-height:32px;font-size:.74rem;line-height:1.2}
+ .hb2.board .hsail svg{width:14px;height:14px}
+ .hb2.board .hunit h3{font-size:.85rem;margin-bottom:.2rem}
+ .hb2.board .hcertbar{padding:.35rem .6rem}.hb2.board .hcertbar img{display:none}
+ .hb2.board .hcertbar .hsail{flex:0 0 auto}
+ .hb2.board .hdone{font-size:.66rem;top:.25rem;left:.25rem}
+ .hb2.board .hcut{margin:0 8px}
+}
 
 </style>
 </head>
