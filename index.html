@@ -1117,7 +1117,7 @@ return {GAMES,STG,BANKS,LANDMARKS,OMANQ,GOVNOTE,TERMS,WORLD,SWQ,MISSIONS,WCATS,W
 <section class="view" id="v-play"><div class="wrap page"><div class="card qwrap" id="pc"></div></div></section>
 </main>
 
-<footer><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#logo"/></svg><b>سندباد عُمان الصغير</b><p>رحلة في الخريطة والمكان</p><p style="margin-top:.6rem;font-size:.9rem">إعداد : أ. عهود العبرية - مدرسة وادي غول للتعليم الأساسي (١-٩)</p></footer>
+<footer><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#logo"/></svg><b>سندباد عُمان الصغير</b><p>رحلة في الخريطة والمكان</p><p style="margin-top:.6rem;font-size:.9rem">إعداد : أ. عهود العبرية - مدرسة وادي غول للتعليم الأساسي (1-9)</p></footer>
 
 <div class="modal" id="nmod" role="dialog" aria-modal="true" aria-label="الاسم"><div class="dialog"><svg class="medal" viewBox="0 0 100 100" aria-hidden="true"><use href="#logo"/></svg><h2>أهلًا بك في الرحلة!</h2><input class="nm" id="ni" maxlength="30" placeholder="اكتب اسمك هنا" aria-label="الاسم"><button class="btn gold" id="ns">ابدأ الرحلة</button></div></div>
 <div class="modal" id="dmod" role="dialog" aria-modal="true" aria-label="تفاصيل"><div class="dialog"><h2 id="dt"></h2><p id="dp"></p><button class="btn" id="dc">حسنًا</button></div></div>
@@ -2066,7 +2066,7 @@ addEventListener('keydown',e=>{if(e.key==='Escape'&&!ov.hidden)closePass()});
 
 
 /* ---------- طباعة الجواز / حفظه PDF ---------- */
-const TEACHER='أ. عهود العبرية',SCHOOL='مدرسة وادي غول للتعليم الأساسي (١-٩)';
+const TEACHER='أ. عهود العبرية',SCHOOL='مدرسة وادي غول للتعليم الأساسي (1-9)';
 const pp=document.createElement('div');pp.id='ppPrint';document.body.appendChild(pp);
 function printPass(){const v=visited(),n=count(),nm=(A.st.name||'').trim(),gr=(A.grade?A.grade():'')||'',
  dt=new Date().toLocaleDateString('ar-OM',{year:'numeric',month:'long',day:'numeric',timeZone:'Asia/Muscat'});
