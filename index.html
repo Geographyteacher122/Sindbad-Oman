@@ -606,6 +606,8 @@ html.hlock,html.hlock body{overflow:hidden}
  .hhact{margin-left:0;width:100%;justify-content:flex-start}
 }
 
+#hb2 .hout{background:#fff;color:var(--acc2);border-color:#fff;font-weight:900}
+
 </style>
 </head>
 <body>
@@ -1142,7 +1144,7 @@ function hGradeHTML(g,teacher){
  return`<div class="hbar"><h2>${hEsc(g.name)}</h2>${teacher?(g.codeHash?'':'<span class="badge gold">رمز الصف غير معيّن</span>'):''}</div>
  <div class="hcols"><div class="hcol"><h3><svg width="26" height="26" aria-hidden="true"><use href="#i-star"/></svg> أنشطة التدريب</h3><div class="hlist">${acts}</div></div><div class="hcol"><h3><svg width="26" height="26" aria-hidden="true"><use href="#i-flag"/></svg> الاختبارات</h3><div class="hlist">${tests}</div></div></div>`}
 /* ===== مرفأ السفينة (الإصدار الجديد): بوابة بالاسم والصف، دروس الصف، اللعبة داخل الموقع، الشهادة ===== */
-const HG={g5:['#FF7A59','#C2410C','#FFE9E2'],g6:['#14B8A6','#0F766E','#DDF7F3'],g7:['#8B5CF6','#5B21B6','#EDE6FF'],g8:['#F59E0B','#B45309','#FFF1D6'],g9:['#3BA3FF','#0E5FA8','#E3F1FF']};
+const HG={g5:['#F43F7F','#BE185D','#FFE4EF'],g6:['#14B8A6','#0F766E','#DDF7F3'],g7:['#8B5CF6','#5B21B6','#EDE6FF'],g8:['#F59E0B','#B45309','#FFF1D6'],g9:['#3BA3FF','#0E5FA8','#E3F1FF']};
 const HIMG=()=>window.SB_IMG||{};
 const hL=()=>window.HARBOR_LESSONS||{};
 const hKey=r=>String(r).toLowerCase().replace(/\.+$/,'');
@@ -1204,7 +1206,7 @@ function hBoard(root,gid,teacher){const I=HIMG(),c=HG[gid]||HG.g9,D=hDone(),data
   <div class="hft">${l.games.map((g,k)=>{const d=D[hKey(g.repo)];return`<button class="hsail${d?' ok':''}${k?' alt':''}" data-repo="${hEsc(g.repo)}" data-t="${hEsc(l.t+(g.label&&l.games.length>1?' — '+g.label:''))}">${d?HCHK:HSHIP}${l.games.length>1?hEsc(g.label||('اللعبة '+(k+1))):(d?'العب مرة أخرى':'ابدأ الرحلة')}</button>`}).join('')}</div></article>`}).join('')}</div></section>`).join('');
  const left=p.t-p.n,full=p.t>0&&left===0;
  root.innerHTML=`<div class="hhello">${I.hold?`<img src="${I.hold}" alt="">`:''}<div class="htx"><h2>${teacher?'وضع المعلمة':'مرحبًا '+hEsc(st.name||'')+'!'}</h2><p>${teacher?'معاينة دروس '+hEsc(hGName(gid)):'دروس '+hEsc(hGName(gid))+' وألعابها'}</p></div>
-  <div class="hhact">${teacher?'':`<span class="hchip">أنهيت ${p.n} من ${p.t}</span>`}<button class="hout" id="hout">${teacher?'خروج':'تغيير الاسم أو الصف'}</button></div></div>
+  <div class="hhact">${teacher?'':`<span class="hchip">أنهيت ${p.n} من ${p.t}</span>`}<button class="hout" id="hout">${teacher?'خروج':'تغيير الصف أو الاسم'}</button></div></div>
   ${teacher?`<div class="htabs">${hCfg().map(x=>`<a class="htab${x.id===gid?' on':''}" href="#harbor-${hEsc(encodeURIComponent(x.id))}" style="--c:${(HG[x.id]||HG.g9)[0]}">${hEsc(x.name)}</a>`).join('')}</div>`:''}
   <div class="hunits">${units||`<div class="hempty">${I.think?`<img src="${I.think}" alt="">`:''}<p>ألعاب هذا الصف تُضاف قريبًا.</p></div>`}
   ${p.t?`<div class="hcertbar${full?' full':''}">${I.write?`<img src="${I.write}" alt="">`:''}<div><b>شهادة الرحلة</b><div class="hcm">${full?'أحسنت! أنهيت كل ألعاب دروسك، وشهادتك جاهزة.':'أكمل ألعاب دروسك كلها لتحصل على شهادتك. بقي '+left+(left===1?' لعبة واحدة.':left===2?' لعبتان.':left<=10?' ألعاب.':' لعبة.')}</div><div class="hprog"><i style="width:${p.t?Math.round(p.n/p.t*100):0}%"></i></div></div><button class="hsail" id="hcertb"${full||teacher?'':' disabled'}>${full?'استلم شهادتك':teacher?'معاينة الشهادة':'الشهادة مقفلة'}</button></div>`:''}</div>`;
@@ -1217,9 +1219,10 @@ function hPlay(repo,title){try{localStorage.setItem('sindbad-current',JSON.strin
  let o=document.getElementById('hplay');if(!o){o=document.createElement('div');o.id='hplay';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');document.body.appendChild(o)}
  const u=hURL(repo);
  o.innerHTML=`<div class="hpbar"><button class="hpb" id="hpback"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>رجوع إلى الدروس</span></button><b>${hEsc(title||'')}</b><a class="hpb" href="${hEsc(u)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>صفحة مستقلة</span></a></div><iframe src="${hEsc(u)}" title="${hEsc(title||'اللعبة')}" allow="fullscreen; autoplay"></iframe>`;
- o.classList.add('on');document.documentElement.classList.add('hlock');
- document.getElementById('hpback').onclick=hClose}
-function hClose(){const o=document.getElementById('hplay');if(!o)return;o.classList.remove('on');o.innerHTML='';document.documentElement.classList.remove('hlock');harborDraw()}
+ o.classList.add('on');document.documentElement.classList.add('hlock');try{history.pushState({hplay:1},'')}catch(e){}
+ document.getElementById('hpback').onclick=()=>hClose()}
+function hClose(fromPop){const o=document.getElementById('hplay');if(!o||!o.classList.contains('on'))return;if(!fromPop&&history.state&&history.state.hplay){history.back();return}o.classList.remove('on');o.innerHTML='';document.documentElement.classList.remove('hlock');harborDraw()}
+addEventListener('popstate',()=>hClose(true));
 addEventListener('message',e=>{const d=e.data;if(!d||!d.sindbadDone)return;hToast('أحسنت! أنهيت لعبة الدرس، وأُضيفت إلى رحلتك.')});
 addEventListener('keydown',e=>{if(e.key==='Escape'){const o=document.getElementById('hplay');if(o&&o.classList.contains('on'))hClose();const c=document.getElementById('hcert');if(c&&!c.hidden)c.hidden=true}});
 
