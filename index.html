@@ -608,6 +608,10 @@ html.hlock,html.hlock body{overflow:hidden}
 
 #hb2 .hout{background:#fff;color:var(--acc2);border-color:#fff;font-weight:900}
 
+.hpass.none{opacity:.78;box-shadow:none;background:#fbfaf6}
+.hpass.none .hhd{background:#f1efe8}.hpass.none .hic{color:#9aa5a8}
+.hnog{flex:1;min-height:46px;display:flex;align-items:center;justify-content:center;border-radius:12px;border:2px dashed #cfd8dc;color:#6b7b80;font-weight:800;font-size:.92rem}
+
 </style>
 </head>
 <body>
@@ -663,17 +667,20 @@ window.HARBOR_LESSONS={
    {n:2,t:'خطوط الطول ودوائر العرض',ic:'globe',games:[{repo:'longitude-latitude',label:'خطوط الطول ودوائر العرض'},{repo:'Thermal-Zones-of-the-World',label:'المناطق الحرارية في العالم'}]},
    {n:3,t:'الموقع الفلكي',ic:'compass',games:[{repo:'Astronomical-Location'}]}]},
   {n:2,t:'عُمان قبل الإسلام',lessons:[
-   {n:1,t:'شبه الجزيرة العربية قبل الإسلام',ic:'desert',games:[{repo:'Arabian-Peninsula'}]},
-   {n:2,t:'عُمان قبل الإسلام',ic:'fort',games:[{repo:'Omanhistory'}]},
-   {n:3,t:'ملامح من حياة العُمانيين قبل الإسلام',ic:'people',games:[{repo:'Omani-Life-Before-Islam'}]}]}]},
+   {n:4,t:'شبه الجزيرة العربية قبل الإسلام',ic:'desert',games:[{repo:'Arabian-Peninsula'}]},
+   {n:5,t:'عُمان قبل الإسلام',ic:'fort',games:[{repo:'Omanhistory'}]},
+   {n:6,t:'ملامح من حياة العُمانيين قبل الإسلام',ic:'people',games:[{repo:'Omani-Life-Before-Islam'}]}]}]},
  g6:{units:[
-  {n:2,t:'',lessons:[
-   {n:1,t:'تطوّر الدولة في عصر الخلافة الراشدة',ic:'mosque',games:[{repo:'Rashidun-State-Development'}]},
-   {n:2,t:'علاقة عُمان بالخلافة الراشدة',ic:'route',games:[{repo:'Oman-Rashidun'}]},
-   {n:3,t:'منجزات عُمانية في عصر الخلافة الراشدة',ic:'dhow',games:[{repo:'Oman-Achievements-Rashidun'}]}]},
-  {n:3,t:'',lessons:[
-   {n:1,t:'مقومات الاقتصاد العُماني',ic:'compass',games:[{repo:'Oman-Economy-Location'}]},
-   {n:3,t:'مشاريع اقتصادية عُمانية واعدة',ic:'coins',games:[{repo:'Oman-Promising-Projects'}]}]}]},
+  {n:1,t:'',lessons:[
+   {n:1,t:'',ic:'scroll',games:[]},
+   {n:2,t:'',ic:'scroll',games:[]}]},
+  {n:2,t:'عُمان في عصر الخلافة الراشدة',lessons:[
+   {n:3,t:'تطور الدولة وعلاقة عُمان بالخلافة الراشدة',ic:'mosque',games:[{repo:'Rashidun-State-Development',label:'تطوّر الدولة في عصر الخلافة الراشدة'},{repo:'Oman-Rashidun',label:'علاقة عُمان بالخلافة الراشدة'}]},
+   {n:4,t:'منجزات العُمانيين في عصر الخلافة الراشدة',ic:'dhow',games:[{repo:'Oman-Achievements-Rashidun'}]}]},
+  {n:3,t:'الاقتصاد العُماني: مقومات متنوعة، وقطاعات واعدة',lessons:[
+   {n:5,t:'مقومات الاقتصاد العُماني',ic:'compass',games:[{repo:'Oman-Economy-Location'}]},
+   {n:6,t:'قطاعات الاقتصاد العُماني',ic:'coins',games:[]},
+   {n:7,t:'مشاريع اقتصادية عُمانية واعدة',ic:'coins',games:[{repo:'Oman-Promising-Projects'}]}]}]},
  g7:{units:[
   {n:null,t:'عُمان في العصر العباسي الأول',lessons:[
    {n:1,t:'العصر العباسي الأول',ic:'mosque',games:[{repo:'Abbasid-First-Era',label:'العصر العباسي الأول'},{repo:'Andalus-Umayyad',label:'الدولة الأموية في الأندلس'}]},
@@ -1205,9 +1212,9 @@ function harborDraw(){const root=document.getElementById('hb2');if(!root)return;
 
 function hBoard(root,gid,teacher){const I=HIMG(),c=HG[gid]||HG.g9,D=hDone(),data=hL()[gid]||{units:[]},p=hProg(gid);
  root.className='hb2 board';root.style.cssText=`--acc:${c[0]};--acc2:${c[1]};--accs:${c[2]}`;
- const units=data.units.map(u=>`<section class="hunit"><h3>${u.n!=null?`<i>الوحدة ${u.n}</i>`:''}${u.t?`<span>${hEsc(u.t)}</span>`:''}</h3><div class="hgrid">${u.lessons.map(l=>{const all=l.games.every(g=>D[hKey(g.repo)]);
-  return`<article class="hpass${all?' done':''}">${all?`<span class="hdone">${HCHK}أنهيت</span>`:''}<div class="hhd"><span class="hic">${hIc(l.ic)}</span><div>${l.n!=null?`<small>الدرس ${l.n}</small>`:''}<b>${hEsc(l.t)}</b></div></div><div class="hcut"></div>
-  <div class="hft">${l.games.map((g,k)=>{const d=D[hKey(g.repo)];return`<button class="hsail${d?' ok':''}${k?' alt':''}" data-repo="${hEsc(g.repo)}" data-t="${hEsc(l.t+(g.label&&l.games.length>1?' — '+g.label:''))}">${d?HCHK:HSHIP}${l.games.length>1?hEsc(g.label||('اللعبة '+(k+1))):(d?'العب مرة أخرى':'ابدأ الرحلة')}</button>`}).join('')}</div></article>`}).join('')}</div></section>`).join('');
+ const units=data.units.map(u=>`<section class="hunit"><h3>${u.n!=null?`<i>الوحدة ${u.n}</i>`:''}${u.t?`<span>${hEsc(u.t)}</span>`:''}</h3><div class="hgrid">${u.lessons.map(l=>{const none=!l.games.length,all=!none&&l.games.every(g=>D[hKey(g.repo)]);
+  return`<article class="hpass${all?' done':''}${none?' none':''}">${all?`<span class="hdone">${HCHK}أنهيت</span>`:''}<div class="hhd"><span class="hic">${hIc(l.ic)}</span><div>${l.n!=null?`<small>الدرس ${l.n}</small>`:''}<b>${hEsc(l.t||(l.n!=null?'':'درس'))}</b></div></div><div class="hcut"></div>
+  <div class="hft">${none?'<span class="hnog">لا توجد ألعاب لهذا الدرس</span>':''}${l.games.map((g,k)=>{const d=D[hKey(g.repo)];return`<button class="hsail${d?' ok':''}${k?' alt':''}" data-repo="${hEsc(g.repo)}" data-t="${hEsc(l.t+(g.label&&l.games.length>1?' — '+g.label:''))}">${d?HCHK:HSHIP}${l.games.length>1?hEsc(g.label||('اللعبة '+(k+1))):(d?'العب مرة أخرى':'ابدأ الرحلة')}</button>`}).join('')}</div></article>`}).join('')}</div></section>`).join('');
  const left=p.t-p.n,full=p.t>0&&left===0;
  root.innerHTML=`<div class="hhello">${I.hold?`<img src="${I.hold}" alt="">`:''}<div class="htx"><h2>${teacher?'وضع المعلمة':'مرحبًا '+hEsc(st.name||'')+'!'}</h2><p>${teacher?'معاينة دروس '+hEsc(hGName(gid)):'دروس '+hEsc(hGName(gid))+' وألعابها'}</p></div>
   <div class="hhact">${teacher?'':`<span class="hchip">أنهيت ${p.n} من ${p.t}</span>`}<button class="hout" id="hout">${teacher?'خروج':'الرجوع للمرفأ'}</button></div></div>
