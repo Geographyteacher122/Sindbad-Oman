@@ -1809,7 +1809,7 @@ function trLoad(){const box=document.getElementById('trst');if(!box)return;const
  fetch(u+'&_='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{const d=trParse(t);if(!d||!d.list.length){box.innerHTML='<div class="tr-empty">لا توجد تسجيلات بعد. ستظهر الإحصاءات عندما يدخل الطلاب إلى الموقع.</div>';return}trStats(box,d);const lu=document.getElementById('trup');if(lu)lu.textContent='آخر تحديث: '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}).catch(()=>{box.innerHTML='<div class="tr-empty">تعذّر تحميل الإحصاءات الآن. تأكد من الاتصال بالإنترنت ثم اضغط «تحديث».</div>'})}
 function teacherDraw(){const box=document.getElementById('tbox'),G=hCfg(),S=hSet(),I=window.SB_IMG||{};
  const key='<svg class="tr-key" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="28" r="18" class="o"/><circle cx="32" cy="25" r="5.5" class="i"/><path d="M32 29l-4 14h8z" class="i"/><circle cx="32" cy="28" r="12" fill="none" class="r"/></svg>';
- const head=`<div class="tr-head"><div><h2>ركن المعلمة</h2><p>متابعة دخول الطلاب ونجومهم، ونتائج الاختبارات.</p></div><button type="button" class="tr-vid" id="trvid">${SIC('play')} الفيديو التوضيحي</button></div>`;
+ const head=`<div class="tr-head"><div><h2>ركن المعلمة</h2><p>متابعة دخول الطلاب ونجومهم، ونتائج الاختبارات.</p></div></div>`;
  const gen=`<details class="tr-adv"><summary>إعدادات متقدمة: إنشاء بصمة رمز</summary><section class="tr-pan tr-con"><p class="tr-ap">لكل صف رمز سري. اكتب الرمز هنا (يفضّل 8 خانات فأكثر) فتظهر بصمة تُلصق في الإعدادات أعلى الملف، فلا يُكتب الرمز نفسه داخل الموقع.</p>
   <div class="tr-form"><label class="tr-f">لأي جهة؟<select id="tgid" class="tr-in">${G.map(g=>`<option value="${hEsc(g.id)}">${hEsc(g.name)}</option>`).join('')}<option value="teacher">المعلمة</option></select></label>
   <label class="tr-f">الرمز<input id="tgc" class="tr-in" autocomplete="off"></label>
@@ -1822,7 +1822,7 @@ function teacherDraw(){const box=document.getElementById('tbox'),G=hCfg(),S=hSet
   <section class="tr-pan tr-wide"><div class="tr-ph"><span class="tr-pi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M8 11h8M8 15h8M8 8h4"/></svg></span><div><h3>نتائج الاختبارات</h3><p>روابط Google Forms لكل اختبار.</p></div></div><div class="tr-list">${L}</div></section>`}
  else main=`<section class="tr-pan tr-door tr-wide">${I.write?`<img class="tr-girl" src="${I.write}" alt="">`:''}<div class="tr-dtx">${key}<h3>الغرفة مقفلة</h3><p>هذه الصفحة للمعلمة، وفيها متابعة دخول الطلاب ونجومهم ونتائج الاختبارات.</p><p>اكتب رمز المعلمة لفتح الغرفة.</p><div class="tr-unl"><input id="tuc" class="tr-in" type="password" inputmode="numeric" autocomplete="off" placeholder="رمز المعلمة" aria-label="رمز المعلمة"><button class="tr-go" id="tub" type="button">فتح الغرفة</button></div><p class="tr-er" id="tue" role="alert"></p></div></section>`;
  box.innerHTML=`<div class="tr"><div class="tr-room">${head}<div class="tr-grid">${main}${gen}</div></div></div>`;
- document.getElementById('trvid').onclick=()=>window.mkVideo&&window.mkVideo('teacher');
+ 
  const tub=document.getElementById('tub');if(tub){const tuc=document.getElementById('tuc'),tue=document.getElementById('tue');
   const go=async()=>{tue.textContent='';try{const th=hSet().teacherHash;if(!th){tue.textContent='لم يُعيَّن رمز المعلمة بعد';return}if(await hHash('teacher',tuc.value)!==th){tue.textContent='الرمز غير صحيح';return}st.teacher=true;save();hud();teacherDraw()}catch(e){tue.textContent=e.message==='nosubtle'?'يلزم فتح الموقع عبر رابط https':'حدث خطأ، حاول مرة أخرى'}};
   tub.onclick=go;tuc.onkeydown=e=>{if(e.key==='Enter')go()}}
@@ -2869,7 +2869,7 @@ const DUR=6500;
   new MutationObserver(chk).observe(vg,{attributes:true,attributeFilter:['class']});chk()}catch(e){}
 
  try{const k='sindbad-video-teacher-v1',vt=document.getElementById('v-teacher');let seen=false;try{seen=!!localStorage.getItem(k)}catch(e){}
-  const chk=()=>{if(!seen&&vt.classList.contains('on')){seen=true;try{localStorage.setItem(k,'1')}catch(e){}setTimeout(()=>window.mkVideo('teacher'),700)}};
+  const chk=()=>{if(!seen&&vt.classList.contains('on')){seen=true;try{localStorage.setItem(k,'1')}catch(e){}}};
   new MutationObserver(chk).observe(vt,{attributes:true,attributeFilter:['class']});chk()}catch(e){}
 })();
 /* ---------- نصوص أوضح ---------- */
