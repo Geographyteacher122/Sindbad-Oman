@@ -1854,6 +1854,11 @@ const E=s=>hEsc(s);
 const played=id=>st.best[id]!==undefined;
 const backToGames=()=>{location.hash==='#games'?show('games'):location.hash='games'};
 const pcEl=()=>$('#pc');
+const CORNER={pz:1,fl:1,sw:1,cm:1,sym:1};
+try{new MutationObserver(()=>{const pc=pcEl();if(!pc)return;const on=!!CORNER[pc.dataset.g]&&!pc.querySelector('.mate.res')&&!pc.querySelector('.extbar');
+ const has=pc.querySelector(':scope>.mate.corner');
+ if(on&&!has){const t=document.createElement('template');t.innerHTML=mateImg('corner',pc.dataset.mood||'ask');pc.appendChild(t.content.firstChild);pc.classList.add('hasc')}
+ else if(!on&&has){has.remove();pc.classList.remove('hasc')}}).observe(document.getElementById('pc'),{childList:true})}catch(e){}
 function setPC(wide){const p=pcEl();p.className='card qwrap'+(wide?' wide':'')}
 const mateSrc=m=>{const P=window.POSES||{};return P[{ask:'point',ok:'cheer',no:'think',done:'trophy',hi:'map',hm:'think'}[m]||'point']||''};
 const mateImg=(cls,m)=>`<img class="mate ${cls}" src="${mateSrc(m||'ask')}" alt="">`;
@@ -2336,7 +2341,7 @@ function gEMB(g){setPC(true);pcEl().classList.add('xwide');pcEl().innerHTML=`<di
 window.addEventListener('message',e=>{const f=window.__embWin,d=e.data;if(!f||!d||d.sindbad!==1||e.source!==f.contentWindow)return;
  const g=GAMES.find(x=>x.id===window.__embId);if(!g||!(d.total>0))return;
  const sc=Math.round(Math.min(d.ok,d.total)/d.total*g.max)*10;if(sc>(st.best[g.id]||0)){st.best[g.id]=sc;save();hud()}else if(st.best[g.id]===undefined){st.best[g.id]=sc;save();hud()}});
-function quiz(id){show('play');setPC(false);{const gx=GAMES.find(x=>x.id===id);if(gx&&gx.emb){gEMB(gx);return}}
+function quiz(id){show('play');setPC(false);pcEl().dataset.g=id;pcEl().classList.remove('hasc');{const gx=GAMES.find(x=>x.id===id);if(gx&&gx.emb){gEMB(gx);return}}
  const run={lm:gLM,ol:gOL,pz:gPZ,fl:gFL,sw:gSW,sh:gSH,cm:gCM,ar:gAR,cp:gCP,wm:gWM,sym:gSYM}[id],g=GAMES.find(x=>x.id===id)||{id,ic:'i-star',t:id};
  if(run){run(g);return}
  quizMCQ(id)}
@@ -3632,6 +3637,17 @@ footer p{margin:0!important;font-size:clamp(.7rem,2.6vw,.9rem)!important;color:v
 .hzvp div{flex:1;border-radius:8px 8px 0 0;display:grid;place-items:start center;padding-top:.3rem;color:#3b2a14;transform-origin:bottom;transform:scaleY(.05);transition:transform .6s}
 .hzvp div.on{transform:scaleY(1)}.hzvp .a{height:100%;background:#f0c46a}.hzvp .b{height:78%;background:#bfd0d8}.hzvp .c{height:62%;background:#cf9460}
 .hzvs{display:flex;gap:.3rem;justify-content:center}.hzvs u{text-decoration:none;background:#0b3a4d;border:1.5px solid #b98a3e;border-radius:999px;padding:.25rem .6rem;transition:.3s}.hzvs u.on{background:#f0c46a;color:#4a2e0c}
+#pc.qwrap.hasc{padding-bottom:1.1rem}
+#pc>.mate.corner{display:none}
+@media(min-width:900px){#pc.qwrap.hasc{position:relative;padding-bottom:150px}
+ #pc>.mate.corner{display:block;position:absolute;bottom:4px;inset-inline-end:14px;height:138px;width:auto;pointer-events:none;filter:drop-shadow(0 5px 6px rgba(0,0,0,.35));transform-origin:bottom center;animation:gbreathe 5s ease-in-out infinite}
+ #pc[data-mood="ok"]>.mate.corner{animation:matejump .6s ease-out}}
+@media(min-width:900px){
+ #pc.qwrap.hasc[data-g="pz"]{padding-bottom:1.1rem}
+ #pc[data-g="pz"]>.mate.corner{bottom:auto;top:440px;height:130px}
+ #pc.qwrap.hasc[data-g="sym"]{padding-bottom:1.1rem}
+ #pc[data-g="sym"]>.mate.corner{bottom:auto;top:230px;inset-inline-end:calc(100% + 14px);height:190px}}
+@media(min-width:900px) and (max-width:1100px){#pc[data-g="sym"]>.mate.corner{display:none}}
 </style>
 </body>
 </html>
