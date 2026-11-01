@@ -974,19 +974,19 @@ html.hlock,html.hlock body{overflow:hidden}
    - الطالبة تدخل بالاسم واختيار صفها ورمز صفها، ولا ترى إلا صفها. (هذا تنظيم للاستخدام الصفي وليس حماية كاملة)
    ===================================================================== */
 window.HARBOR_CONFIG=[
- {id:'g5',name:'الصف الخامس',codeHash:'d7284ff1f990bef60350cf1bd1212856c9cd60dec951f8bc2ba277fda1588da3',
+ {id:'g5',name:'الصف الخامس',codeHash:'',
   activities:[{t:'اكتشف عُمان: خريطة تفاعلية',url:'#maps',type:'خريطة'}],
   tests:[{t:'اختبار الأسبوع الأول',url:'',open:'',close:''}]},
- {id:'g6',name:'الصف السادس',codeHash:'0414492ef9e59b5d87f7c411ef3ae6784daa0b632c6ed96f36578bc73bd33894',
+ {id:'g6',name:'الصف السادس',codeHash:'',
   activities:[{t:'اكتشف عُمان: خريطة تفاعلية',url:'#maps',type:'خريطة'}],
   tests:[{t:'اختبار الأسبوع الأول',url:'',open:'',close:''}]},
- {id:'g7',name:'الصف السابع',codeHash:'d5849ff3df6d4f6ef4f64f39657ba52baeaf560fd735e9f79df57bf924c062d0',
+ {id:'g7',name:'الصف السابع',codeHash:'',
   activities:[{t:'اكتشف عُمان: خريطة تفاعلية',url:'#maps',type:'خريطة'}],
   tests:[{t:'اختبار الأسبوع الأول',url:'',open:'',close:''}]},
- {id:'g8',name:'الصف الثامن',codeHash:'d54c833a7c41ce025cda5cfa5fd485c7dfde3a56e9c2240d888aaaf0dcc77338',
+ {id:'g8',name:'الصف الثامن',codeHash:'',
   activities:[{t:'اكتشف عُمان: خريطة تفاعلية',url:'#maps',type:'خريطة'}],
   tests:[{t:'اختبار الأسبوع الأول',url:'',open:'',close:''}]},
- {id:'g9',name:'الصف التاسع',codeHash:'601c15ae6c921fa1df4f125f21d60c00151e598605dd52479115ee7f8a749fd3',
+ {id:'g9',name:'الصف التاسع',codeHash:'',
   activities:[{t:'اكتشف عُمان: خريطة تفاعلية',url:'#maps',type:'خريطة'}],
   tests:[{t:'اختبار الأسبوع الأول',url:'',open:'',close:''}]}
 ];
@@ -997,7 +997,7 @@ window.HARBOR_CONFIG=[
    - resultsLinks: روابط نتائج Google Forms، وتظهر لك فقط بعد دخولك بوضع المعلمة.
    - loginForm: رابط «معاينة مملوءة مسبقًا» لنموذج سجل الدخول (سؤالان: الاسم، الصف) مكتوب فيه «الاسم» و«الصف».
      يُرسَل اسم الطالب وصفه عند الدخول، ومرة واحدة يوميًا عند فتح الموقع. اتركيه فارغًا لإيقاف السجل. */
-window.HARBOR_SETTINGS={loginForm:'https://docs.google.com/forms/d/e/1FAIpQLScx8Yn8aQfaXLnuDqTFqBJByGsA8GnE68v0N_IhFG2wzg9xQg/viewform?usp=pp_url&entry.388752984=الاسم&entry.2016340418=الصف&entry.1025957595=النجوم',honorCsv:'https://docs.google.com/spreadsheets/d/e/2PACX-1vSrzfXco1hXygwOD45FU3QZ_OpSr4UQdpwRymgSQGNq92dfPH_mV5V85IYe615MU--MbSZxCOXPNJvr/pub?gid=1948610366&single=true&output=csv',teacherHash:'75d2b9439f177d196cdebe91ad8322950d50fafd1166586845114cbca8608adb',resultsLinks:[{t:'نتائج اختبار الأسبوع الأول - الصف الثامن',url:''}]};
+window.HARBOR_SETTINGS={loginForm:'https://docs.google.com/forms/d/e/1FAIpQLScx8Yn8aQfaXLnuDqTFqBJByGsA8GnE68v0N_IhFG2wzg9xQg/viewform?usp=pp_url&entry.388752984=الاسم&entry.2016340418=الصف&entry.1025957595=النجوم',honorCsv:'https://docs.google.com/spreadsheets/d/e/2PACX-1vSrzfXco1hXygwOD45FU3QZ_OpSr4UQdpwRymgSQGNq92dfPH_mV5V85IYe615MU--MbSZxCOXPNJvr/pub?gid=1948610366&single=true&output=csv',teacherHash:'78544d0e5d260d14b9fbcef50d0c483eb408932f0a6ed2fbeb59be6a1e0e8435',resultsLinks:[{t:'نتائج اختبار الأسبوع الأول - الصف الثامن',url:''}]};
 </script>
 <script>
 /* ===== مرفأ السفينة: ألعاب الدروس =====
@@ -1653,7 +1653,7 @@ window.hHash=hHash;
 function hGradeHTML(g,teacher){
  const acts=(g.activities||[]).map(a=>{const u=hSafe(a.url);return`<div class="card hitem"><div class="ic"><svg aria-hidden="true"><use href="#${hIcon[a.type]||'i-flag'}"/></svg></div><div class="tx"><b>${hEsc(a.t)}</b><small>${hEsc(a.type||'نشاط')}</small></div>${u?`<a class="btn" ${hLink(u)}>افتح</a>`:'<span class="badge gold">قريبًا</span>'}</div>`}).join('')||'<div class="hempty">لا توجد أنشطة بعد، وستُضاف قريبًا.</div>';
  const tests=(g.tests||[]).map(t=>{const s=hStatus(t);return`<div class="card hitem"><div class="ic" style="background:var(--grad-gold);color:var(--deep-ocean)"><svg aria-hidden="true"><use href="#i-pencil"/></svg></div><div class="tx"><b>${hEsc(t.t)}</b><span class="badge ${s.cls}" style="margin-top:.3rem">${hEsc(s.txt)}</span></div>${s.k==='open'?`<a class="btn gold" ${hLink(s.u)}>ابدأ الاختبار</a>`:`<span class="btn dis" aria-disabled="true">${s.k==='wait'?'لم يفتح بعد':s.k==='done'?'أُغلق':'قريبًا'}</span>`}</div>`}).join('')||'<div class="hempty">لا توجد اختبارات بعد.</div>';
- return`<div class="hbar"><h2>${hEsc(g.name)}</h2>${teacher?(g.codeHash?'':'<span class="badge gold">رمز الصف غير معيّن</span>'):''}</div>
+ return`<div class="hbar"><h2>${hEsc(g.name)}</h2></div>
  <div class="hcols"><div class="hcol"><h3><svg width="26" height="26" aria-hidden="true"><use href="#i-star"/></svg> أنشطة التدريب</h3><div class="hlist">${acts}</div></div><div class="hcol"><h3><svg width="26" height="26" aria-hidden="true"><use href="#i-flag"/></svg> الاختبارات</h3><div class="hlist">${tests}</div></div></div>`}
 /* ===== مرفأ السفينة (الإصدار الجديد): بوابة بالاسم والصف، دروس الصف، اللعبة داخل الموقع، الشهادة ===== */
 const HG={g5:['#F43F7F','#BE185D','#FFE4EF'],g6:['#14B8A6','#0F766E','#DDF7F3'],g7:['#8B5CF6','#5B21B6','#EDE6FF'],g8:['#F59E0B','#B45309','#FFF1D6'],g9:['#3BA3FF','#0E5FA8','#E3F1FF']};
