@@ -490,6 +490,15 @@ body.on-home footer{display:none}
 .hs-say:empty{display:none}
 .hs-credit{position:absolute;z-index:5;left:50%;bottom:.6rem;transform:translateX(-50%);width:max-content;max-width:94%;text-align:center;text-wrap:balance;font-family:var(--font);font-weight:400;font-size:clamp(.95rem,1.8cqw,1.2rem);color:#fff;line-height:1.5;padding:.35em 1.1em;border-radius:999px;background:rgba(7,59,76,.62);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 14px rgba(7,40,55,.3)}
 @keyframes hsb{50%{transform:translateY(-1cqh)}}
+/* حركة هادئة: دخول ناعم + تمايل خفيف للفتاة (تُعطَّل مع تفضيل تقليل الحركة) */
+@keyframes hsin{from{opacity:0;transform:translateY(1.6cqh)}}
+@keyframes hsfi{from{opacity:0}}
+@keyframes hsg{0%,100%{transform:translateY(0) rotate(-.5deg)}50%{transform:translateY(-1cqh) rotate(.6deg)}}
+.hs-girl{animation:hsfi 1s .15s ease both,hsg 8s 1.2s ease-in-out infinite;transform-origin:50% 100%}
+.hs-title{animation:hsin .9s ease both}
+.hs-sayw{animation:hsfi .9s .7s ease both}
+.hs-st{animation:hsin .8s ease both}
+.hs-stops .hs-st:nth-child(1){animation-delay:.35s}.hs-stops .hs-st:nth-child(2){animation-delay:.5s}.hs-stops .hs-st:nth-child(3){animation-delay:.65s}.hs-stops .hs-st:nth-child(4){animation-delay:.8s}
 @media (orientation:portrait){
  .hs-title{inset-inline:7cqw;width:auto;top:6cqh;text-align:center}
  .hs-title h1{font-size:min(15cqw,9cqh)}
@@ -527,7 +536,7 @@ body.on-home footer{display:none}
 .hs-resume b{color:#F6C660;font-weight:700}.hs-resume svg{width:1em;height:1em;flex:none}
 .hs-resume[hidden]{display:none}
 .hs-resume:hover{background:rgba(7,59,76,.92)}
-@media (max-height:520px) and (orientation:landscape){.hs-stops{bottom:3.5rem}}
+@media (max-height:520px) and (orientation:landscape){.hs-stops{bottom:3.5rem}.hs-title{top:4cqh}.hs-title h1{white-space:nowrap;font-size:min(6.6cqw,14cqh)}.hs-title p{font-size:min(2.3cqw,5cqh);margin-top:.4cqh}.hs-cta{margin-top:1.6cqh;font-size:min(2.3cqw,5.2cqh)}}
 @media (orientation:portrait) and (max-width:600px){
  .hs-stops{inset-inline:2cqw;bottom:4.1rem;--is:min(15cqw,10cqh)}
  .hs-st{width:23cqw}
