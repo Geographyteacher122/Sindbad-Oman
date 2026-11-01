@@ -2410,9 +2410,11 @@ GRADS.forEach((c,i)=>NAMES[`url(#sg${i})`]='تدرج: '+GRAD_NAMES[i]);
 const hist=[];let cur='#2D5A27';
 const P=$('palette');P.innerHTML='';
 function sw(color,name,bg){const b=document.createElement('button');b.type='button';b.className='swatch';b.dataset.c=color;b.style.background=bg||color;b.title=name;b.setAttribute('aria-label',name);b.onclick=()=>pick(color,name);return b}
-const flat=document.createElement('div');flat.className='palette';P.appendChild(flat);
-PALLETTE.forEach(c=>flat.appendChild(sw(c,c)));
-GRADS.forEach((c,i)=>flat.appendChild(sw(`url(#sg${i})`,'تدرج: '+GRAD_NAMES[i],`linear-gradient(135deg,${c[0]},${c[1]})`)));
+const W=t=>String(t).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+const grp=(title,fill)=>{const h=document.createElement('div');h.className='pgt';h.textContent=title;P.appendChild(h);const f=document.createElement('div');f.className='palette';P.appendChild(f);fill(f)};
+grp('ألوان الخريطة',f=>PALLETTE.forEach(c=>f.appendChild(sw(c,c))));
+GROUPS.forEach(g=>grp(g[0],f=>g[1].forEach(c=>f.appendChild(sw(c[0],W(c[1]))))));
+grp('تدرجات',f=>GRADS.forEach((c,i)=>f.appendChild(sw(`url(#sg${i})`,'تدرج: '+GRAD_NAMES[i],`linear-gradient(135deg,${c[0]},${c[1]})`))));
 function setCurrent(c,name){cur=c;state.currentColor=c;const grad=/^url/.test(c);const idx=grad?+c.match(/sg(\d)/)[1]:0;$('curChip').style.background=grad?`linear-gradient(135deg,${GRADS[idx][0]},${GRADS[idx][1]})`:c;$('curName').textContent=name||NAMES[c.toUpperCase()]||'لون مخصص';$('curHex').textContent=grad?'تدرج':c.toUpperCase();if(!grad){$('customColor').value=c;$('hexIn').value=c.toUpperCase()}else $('hexIn').value='';P.querySelectorAll('.swatch').forEach(b=>b.classList.toggle('active',b.dataset.c.toUpperCase()===c.toUpperCase()))}
 function setBucket(on){state.bucket=on;['bucket','tbBucket'].forEach(id=>{const e=$(id);e.classList.toggle('on',on);e.classList.toggle('active',on);e.setAttribute('aria-pressed',on)});$('bucket').innerHTML=SIC('bucket')+(on?' إيقاف دلو التلوين':' تفعيل دلو التلوين');$('mapWrap').classList.toggle('coloring',on);$('status').textContent=on?'دلو التلوين مفعّل — اضغط على محافظة':'الخريطة جاهزة'}
 function pick(c,name){setCurrent(c,name);if(!state.bucket)setBucket(true)}
@@ -2613,6 +2615,68 @@ const POSES={"wave": "data:image/webp;base64,UklGRt48AABXRUJQVlA4WAoAAAAQAAAAuAA
  $('palette').addEventListener('click',()=>{if(matchMedia('(max-width:900px)').matches)setTimeout(()=>dr(false),180)});
  const blk=document.createElement('div');blk.className='mblock';blk.innerHTML='<div class="mtitle">العرض</div><div class="mrow"></div>';blk.querySelector('.mrow').append($('fit'),$('reset'));document.querySelector('#v-maps .mside h3').insertAdjacentElement('afterend',blk);
 })();
+
+/* ===== اكتشف عُمان: تعريف بالصفحة + شرح مصوّر قصير ===== */
+(function(){
+ const svg0=$('map'),labs=[...svg0.querySelectorAll('.label')].map(t=>t.textContent.trim());
+ const I2={play:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z" fill="currentColor"/></svg>',pause:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg>',next:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',prev:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'};
+ const SK='sindbad-maps-intro-v1',box=document.createElement('div');box.className='mtut';box.id='mtut';box.hidden=true;
+ box.innerHTML=`<div class="mtbox" role="dialog" aria-modal="true" aria-label="تعريف بصفحة اكتشف عُمان"><button class="mtx" aria-label="إغلاق">${SIC('close')}</button>
+ <div class="mtintro"><img class="mtg" src="${POSES.wave}" alt=""><h3>مرحبًا بك في «اكتشف عُمان»</h3><p>اضغط على أي محافظة لتتعرف على معلومات عنها ومحافظاتها المجاورة ومعالمها، واجمع ختمًا لكل محافظة في جواز المستكشف، ولوّن الخريطة كما تحب.</p><div class="mtbtns"><button class="mtgo">${I2.play} شاهد الشرح</button><button class="mtskip">ابدأ مباشرة</button></div></div>
+ <div class="mtplay" hidden><div class="mtstage"><div class="mtmap"></div><div class="mtmock"></div><div class="mtptr" aria-hidden="true">${SIC('hand')}</div></div><div class="mtcap"><b></b><span></span></div><div class="mtbar"><i></i></div><div class="mtctl"><button class="mtb mtprev" aria-label="السابق">${I2.prev}</button><button class="mtb mtpp" aria-label="إيقاف مؤقت">${I2.pause}</button><button class="mtb mtnext" aria-label="التالي">${I2.next}</button><span class="mtdots"></span></div></div></div>`;
+ document.body.appendChild(box);
+ const q=x=>box.querySelector(x),stage=q('.mtstage'),mapBox=q('.mtmap'),mock=q('.mtmock'),ptr=q('.mtptr');
+ const clone=()=>{const c=svg0.cloneNode(true);c.removeAttribute('id');c.setAttribute('viewBox','0 0 799 1058');c.removeAttribute('style');c.classList.add('mtsvg');c.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id'));c.querySelectorAll('text,.label,.wlabel,.lline,.wline,.lmcount,defs,rect').forEach(e=>e.remove());c.querySelectorAll('path').forEach(p=>{p.removeAttribute('style');p.removeAttribute('fill');p.setAttribute('class','gov')});const g=c.querySelector('g');if(g)g.removeAttribute('transform');return c};
+ const gi=n=>{const i=labs.findIndex(t=>t.includes(n));return i<0?0:i};
+ const NM=['مسقط','ظفار','الداخلية','شمال الباطنة'];
+ let cur=0,tms=[],playing=true,t0=0,DUR=6500;
+ const SC=[
+  {t:'اضغط على محافظة',d:'اضغط على أي محافظة لتظهر بطاقتها: معلومة عنها، ومحافظاتها المجاورة، ومعالمها.',
+   mock:()=>`<div class="mtcard" id="mc1"><b>محافظة ${NM[0]}</b><i></i><i></i><i class="s"></i><div class="mtchips"><u></u><u></u><u></u></div></div>`,
+   run:(P,T,pt,gv)=>{const g=gv[gi(NM[0])];pt(g,500);T(()=>{g.classList.add('hl');stage.querySelector('#mc1').classList.add('on');tap()},1400)}},
+  {t:'اجمع الأختام',d:'كل محافظة تكتشفها تمنحك ختمًا في «جواز المستكشف». اجمع الأختام الأحد عشر.',
+   mock:()=>`<div class="mtpass">${SIC('stamp')}<span>جواز المستكشف</span><b id="mcn">0/11</b></div><div class="mtst">${[0,1,2,3].map(i=>`<div class="mtsl" data-i="${i}"></div>`).join('')}</div>`,
+   run:(P,T,pt,gv)=>{[0,2,5,8].forEach((id,k)=>{T(()=>{const sl=stage.querySelector(`.mtsl[data-i="${k}"]`);sl.innerHTML=stamp(ALL[id],true);sl.classList.add('on');stage.querySelector('#mcn').textContent=(k+1)+'/11';gv[(id*3)%gv.length].classList.add('hl')},700+k*1300)})}},
+  {t:'لوّن الخريطة',d:'افتح الأدوات من أول زر في شريط الخريطة، فعّل الدلو، اختر لونًا ثم اضغط المحافظة.',
+   mock:()=>`<div class="mtpal"><div class="mtbk" id="mbk">${SIC('bucket')}</div><div class="mtsw">${['#E63946','#F4A261','#F9C80E','#26734D','#1499B8','#6A4C93'].map((c,i)=>`<span data-i="${i}" style="background:${c}"></span>`).join('')}</div></div>`,
+   run:(P,T,pt,gv)=>{const sw=i=>stage.querySelector(`.mtsw span[data-i="${i}"]`),bk=stage.querySelector('#mbk');pt(bk,300);T(()=>{bk.classList.add('on');tap()},1000);
+    [[4,'مسقط'],[1,'ظفار'],[3,'الداخلية']].forEach(([c,n],k)=>{const b=1500+k*1650;T(()=>pt(sw(c),0),b);T(()=>{sw(c).classList.add('on');tap()},b+650);T(()=>pt(gv[gi(n)],0),b+700);T(()=>{gv[gi(n)].style.fill=sw(c).style.background;tap()},b+1350)})}},
+  {t:'غيّر طريقة العرض',d:'من الشريط أسفل الخريطة: الجوار، ساحل وداخل، المسطحات، المعالم.',
+   mock:()=>`<div class="mtmodes">${[['near','الجوار'],['coast','ساحل وداخل'],['water','المسطحات'],['cam','المعالم']].map((m,i)=>`<span data-i="${i}">${SIC(m[0])}<em>${m[1]}</em></span>`).join('')}</div>`,
+   run:(P,T,pt,gv)=>{[0,1,2,3].forEach(k=>{const b=500+k*1400;T(()=>{stage.querySelectorAll('.mtmodes span').forEach((e,j)=>e.classList.toggle('on',j===k));pt(stage.querySelector(`.mtmodes span[data-i="${k}"]`),0);tap()},b)})}},
+  {t:'حرّك الخريطة وكبّرها',d:'اسحب الخريطة بإصبعك لتحريكها، وباعد بين إصبعين أو استخدم عجلة الماوس لتكبيرها. البوصلة تعيد العرض.',
+   mock:()=>`<div class="mtcomp"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="#F7F3E8" stroke="#D9A441" stroke-width="3"/><path d="M24 7l6 17H18z" fill="#c0392b"/><path d="M24 41l-6-17h12z" fill="#073B4C"/></svg><small>اضغط البوصلة لإعادة العرض</small></div>`,
+   run:(P,T,pt,gv)=>{const m=mapBox.firstChild;pt(m,0);T(()=>{m.style.transform='scale(1.7) translate(-6%,8%)'},700);T(()=>{m.style.transform='scale(1.7) translate(8%,-6%)'},2300);T(()=>{m.style.transform='scale(1)'; pt(stage.querySelector('.mtcomp'),0);tap()},3900)}}
+ ];
+ const dots=q('.mtdots');dots.innerHTML=SC.map((_,i)=>`<i data-i="${i}"></i>`).join('');
+ function tap(){ptr.classList.remove('tap');void ptr.offsetWidth;ptr.classList.add('tap')}
+ function clr(){tms.forEach(clearTimeout);tms=[]}
+ function T(f,ms){tms.push(setTimeout(f,ms))}
+ function pt(el,delay){const go=()=>{const a=stage.getBoundingClientRect(),b=el.getBoundingClientRect();ptr.style.left=(b.left-a.left+b.width/2-6)+'px';ptr.style.top=(b.top-a.top+b.height/2-4)+'px'};delay?T(go,delay):go()}
+ function scene(i){clr();cur=(i+SC.length)%SC.length;const S=SC[cur];mapBox.innerHTML='';const c=clone();mapBox.appendChild(c);mock.innerHTML=S.mock();ptr.style.left='88%';ptr.style.top='92%';
+  q('.mtcap b').textContent=S.t;q('.mtcap span').textContent=S.d;dots.querySelectorAll('i').forEach((e,k)=>e.classList.toggle('on',k===cur));
+  const bar=q('.mtbar i');bar.style.transition='none';bar.style.width='0';void bar.offsetWidth;
+  if(playing){bar.style.transition=`width ${DUR}ms linear`;bar.style.width='100%'}
+  const gv=[...c.querySelectorAll('path.gov')];requestAnimationFrame(()=>{S.run(null,T,pt,gv)});
+  if(playing)T(()=>{cur<SC.length-1?scene(cur+1):endShow()},DUR)}
+ function endShow(){clr();q('.mtcap b').textContent='جاهز للاستكشاف';q('.mtcap span').textContent='أغلق الشرح وابدأ باختيار محافظة. تجد زر «شرح الصفحة» دائمًا أعلى الخريطة.';q('.mtbar i').style.width='100%';const pp=q('.mtpp');pp.innerHTML=I2.play;pp.setAttribute('aria-label','إعادة العرض');playing=false;cur=SC.length}
+ const mark=()=>{try{localStorage.setItem(SK,'1')}catch(e){}};
+ function close(){clr();box.hidden=true;mark();document.removeEventListener('keydown',key)}
+ function key(e){if(e.key==='Escape')close()}
+ function open(auto){box.hidden=false;q('.mtintro').hidden=false;q('.mtplay').hidden=true;document.addEventListener('keydown',key);q('.mtgo').focus()}
+ function play(){q('.mtintro').hidden=true;q('.mtplay').hidden=false;playing=true;q('.mtpp').innerHTML=I2.pause;q('.mtpp').setAttribute('aria-label','إيقاف مؤقت');scene(0)}
+ q('.mtx').onclick=close;q('.mtskip').onclick=close;q('.mtgo').onclick=play;
+ q('.mtnext').onclick=()=>{playing=playing;scene(Math.min(cur+1,SC.length-1))};q('.mtprev').onclick=()=>scene(Math.max(cur-1,0));
+ q('.mtpp').onclick=()=>{if(cur>=SC.length){playing=true;q('.mtpp').innerHTML=I2.pause;scene(0);return}playing=!playing;q('.mtpp').innerHTML=playing?I2.pause:I2.play;q('.mtpp').setAttribute('aria-label',playing?'إيقاف مؤقت':'تشغيل');scene(cur)};
+ dots.onclick=e=>{const i=e.target.closest('i');if(i)scene(+i.dataset.i)};
+ box.addEventListener('click',e=>{if(e.target===box)close()});
+ window.mtScene=scene;
+ const hb=document.createElement('button');hb.className='mbtn mthelp';hb.type='button';hb.setAttribute('aria-label','شرح الصفحة');hb.innerHTML=I2.play+'<span> شرح الصفحة</span>';hb.onclick=()=>{open();};
+ document.querySelector('#v-maps .mtool').appendChild(hb);
+ let seen=false;try{seen=!!localStorage.getItem(SK)}catch(e){}
+ const vm=document.getElementById('v-maps'),chk=()=>{if(!seen&&vm.classList.contains('on')){seen=true;setTimeout(()=>open(true),700)}};
+ new MutationObserver(chk).observe(vm,{attributes:true,attributeFilter:['class']});chk();
+})();
 /* ---------- نصوص أوضح ---------- */
 const LS={mus:17,bur:15,sba:17,mct:17,nba:18,nsh:18,ssh:18,dha:20,dak:20,wus:23,dho:25};
 /* تسميات خارجية بخط إرشاد للمحافظات الصغيرة المتجاورة (مواضع في البحر، لا تغيير في الأشكال) */
@@ -2777,6 +2841,72 @@ body.on-maps #v-maps .mlayout.drawer .mdclose{inset-inline-start:auto;inset-inli
  body.on-maps #v-maps .minfo>p{font-size:.88rem;line-height:1.6}
  body.on-maps #v-maps .mxr{font-size:.88rem}
 }
+
+/* ===== اكتشف عُمان: حذف الشريط الزائد، البوصلة، شريط الأدوات، الألوان، الشرح ===== */
+body.on-maps #v-maps .mtool>.mpill:not(#count){display:none}
+body.on-maps #v-maps .compass{top:12px;right:12px;left:auto;bottom:auto;width:52px;height:52px}
+#v-maps .pgt{margin:.7rem 0 .35rem;font-weight:800;font-size:.95rem;color:var(--deep-ocean)}
+#v-maps .pgt:first-child{margin-top:0}
+.mthelp{display:inline-flex;align-items:center;gap:.3rem;margin-inline-start:auto}
+.mthelp .ico{width:1.1em;height:1.1em}
+@media (max-width:700px){
+ body.on-maps #v-maps .mtoolbar{flex-direction:row;flex-wrap:wrap;width:84px;gap:4px;padding:5px;justify-content:center}
+ body.on-maps #v-maps .tb{width:34px;height:34px}
+ body.on-maps #v-maps .mpop{inset-inline-end:96px;width:min(300px,calc(100% - 108px))}
+ body.on-maps #v-maps .compass{width:44px;height:44px}
+ .mthelp span{display:none}.mthelp{min-width:44px;padding:.3rem .6rem}
+}
+.mtut{position:fixed;inset:0;z-index:400;display:flex;align-items:center;justify-content:center;padding:14px;background:rgba(5,35,48,.6);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.mtut[hidden]{display:none}
+.mtbox{position:relative;width:min(640px,100%);max-height:94dvh;overflow:auto;border-radius:22px;background:#f7f3e8;border:3px solid #D9A441;box-shadow:0 24px 60px rgba(0,0,0,.45);padding:1.2rem 1.3rem 1.1rem}
+.mtx{position:absolute;inset-block-start:.6rem;inset-inline-start:.6rem;width:42px;height:42px;border:0;border-radius:50%;background:rgba(7,59,76,.1);color:#073B4C;cursor:pointer;display:grid;place-items:center;z-index:5}
+.mtx .ico{width:1.2em;height:1.2em}
+.mtintro{text-align:center;padding-top:.4rem}.mtintro[hidden],.mtplay[hidden]{display:none}
+.mtg{height:150px;width:auto;filter:drop-shadow(0 6px 8px rgba(7,59,76,.25))}
+.mtintro h3{font-size:1.5rem;color:#073B4C;margin:.3rem 0}
+.mtintro p{max-width:46ch;margin:.2rem auto 1rem;color:#2d4f5c;line-height:1.9}
+.mtbtns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.mtgo,.mtskip{min-height:48px;padding:.4rem 1.4rem;border-radius:99px;font:800 1rem var(--font);cursor:pointer;display:inline-flex;align-items:center;gap:.4rem}
+.mtgo{border:0;background:linear-gradient(135deg,#073B4C,#1499B8);color:#fff;box-shadow:0 4px 0 #04222c}
+.mtskip{border:2px solid #cfc3a2;background:#fff;color:#073B4C}
+.mtplay{padding-top:2.2rem}
+.mtstage{position:relative;display:grid;grid-template-columns:40% 60%;gap:.6rem;height:clamp(240px,44dvh,320px);padding:.6rem;border-radius:16px;overflow:hidden;background:linear-gradient(#d6ecf2,#bfe0ea);border:2px solid #fff;box-shadow:inset 0 0 0 1px rgba(7,59,76,.1)}
+.mtmap{display:grid;place-items:center;min-height:0}
+.mtsvg{height:100%;width:auto;max-width:100%;transition:transform 1.5s ease;transform-origin:50% 50%}
+.mtsvg path.gov{fill:#E5D5C7;stroke:#073B4C;stroke-width:1.4;transition:fill .5s}
+.mtsvg path.gov.hl{fill:#F6C660}
+.mtmock{display:flex;flex-direction:column;justify-content:center;gap:.6rem;min-width:0}
+.mtcard{background:#fff;border-radius:14px;padding:.7rem .8rem;box-shadow:0 8px 18px rgba(7,59,76,.22);opacity:.15;transform:translateY(10px);transition:all .5s}
+.mtcard.on{opacity:1;transform:none}
+.mtcard b{display:block;font-size:1.05rem;color:#073B4C;margin-bottom:.4rem}
+.mtcard i{display:block;height:8px;border-radius:6px;background:#dfe7ea;margin:.35rem 0;width:90%}.mtcard i.s{width:60%}
+.mtchips{display:flex;gap:.3rem;margin-top:.5rem}.mtchips u{display:block;height:22px;width:62px;border-radius:99px;border:1.5px solid #1499B8}
+.mtpass{display:inline-flex;align-self:flex-start;align-items:center;gap:.4rem;background:#fff7e0;border:2px solid #D9A441;border-radius:99px;padding:.3rem .9rem;font-weight:800;color:#073B4C}
+.mtpass b{background:#073B4C;color:#fff;border-radius:99px;padding:0 .6rem}.mtpass .ico{width:1.2em;height:1.2em}
+.mtst{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem}
+.mtsl{aspect-ratio:1;border:2px dashed #cdbf98;border-radius:12px;background:#fffaf0;display:grid;place-items:center;padding:3px}
+.mtsl svg{width:100%;height:100%}.mtsl.on{border-style:solid;animation:mtpop .6s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes mtpop{from{transform:scale(.3);opacity:0}}
+.mtpal{display:flex;align-items:center;gap:.6rem;background:#fff;border-radius:14px;padding:.6rem .7rem;box-shadow:0 8px 18px rgba(7,59,76,.2)}
+.mtbk{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:#fff;border:2px dashed #D9A441;color:#073B4C;flex:none}.mtbk.on{background:#073B4C;color:#fff;border-style:solid}.mtbk .ico{width:1.5em;height:1.5em}
+.mtsw{display:flex;gap:.3rem;flex-wrap:wrap}.mtsw span{width:28px;height:28px;border-radius:8px;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);transition:transform .3s}.mtsw span.on{transform:scale(1.25);outline:2px solid #073B4C}
+.mtmodes{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+.mtmodes span{display:flex;align-items:center;gap:.4rem;padding:.4rem .6rem;border-radius:99px;background:#fff;border:2px solid #d6dde0;color:#073B4C;font-weight:800;font-size:.85rem;transition:all .3s}
+.mtmodes span.on{background:#073B4C;color:#fff;border-color:#073B4C}.mtmodes .ico{width:1.2em;height:1.2em;flex:none}.mtmodes em{font-style:normal}
+.mtcomp{display:flex;flex-direction:column;align-items:center;gap:.4rem;color:#073B4C;font-weight:800;text-align:center}.mtcomp svg{width:64px;height:64px;filter:drop-shadow(0 4px 8px rgba(7,59,76,.35));animation:mtp 2s ease-in-out infinite}
+@keyframes mtp{50%{transform:rotate(18deg) scale(1.08)}}
+.mtptr{position:absolute;z-index:6;width:34px;height:34px;color:#073B4C;pointer-events:none;transition:left .9s ease,top .9s ease;filter:drop-shadow(0 3px 4px rgba(0,0,0,.4))}
+.mtptr svg{width:100%;height:100%;fill:#fff;stroke:#073B4C}.mtptr svg *{stroke:#073B4C}
+.mtptr::after{content:"";position:absolute;left:2px;top:-2px;width:18px;height:18px;border-radius:50%;border:3px solid #F6C660;opacity:0}
+.mtptr.tap::after{animation:mtr .55s ease-out}
+@keyframes mtr{from{transform:scale(.3);opacity:1}to{transform:scale(2.3);opacity:0}}
+.mtcap{margin-top:.7rem;text-align:center}.mtcap b{display:block;font-size:1.2rem;color:#073B4C}.mtcap span{display:block;color:#2d4f5c;line-height:1.8;font-size:.98rem;min-height:3.4em}
+.mtbar{height:6px;border-radius:9px;background:#e6dcc0;overflow:hidden;margin:.4rem 0}.mtbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#D9A441,#26734D)}
+.mtctl{display:flex;align-items:center;justify-content:center;gap:.6rem}
+.mtb{width:46px;height:46px;border:0;border-radius:50%;background:#073B4C;color:#fff;cursor:pointer;display:grid;place-items:center}.mtb .ico{width:1.3em;height:1.3em}
+.mtdots{display:flex;gap:.35rem;margin-inline-start:.4rem}.mtdots i{width:10px;height:10px;border-radius:50%;background:#cbd5d9;cursor:pointer}.mtdots i.on{background:#D9A441;transform:scale(1.25)}
+@media (prefers-reduced-motion:reduce){.mtptr{transition:none}.mtsvg{transition:none}.mtsl.on,.mtcomp svg{animation:none}}
+@media (max-width:520px){.mtstage{grid-template-columns:36% 64%;height:clamp(230px,40dvh,300px)}.mtg{height:110px}}
 </style>
 </body>
 </html>
