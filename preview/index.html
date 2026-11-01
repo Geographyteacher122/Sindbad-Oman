@@ -1709,7 +1709,7 @@ function hBoard(root,gid,teacher){const I=HIMG(),c=HG[gid]||HG.g9,D=hDone(),data
 
 function hSea(root,items,cur,gid,teacher,full,left){const sea=root.querySelector('#hsea');if(!sea)return;
  const pts=[...sea.querySelectorAll('.hpt')],pp=sea.querySelector('#hpp'),svg=sea.querySelector('.hpath'),ship=sea.querySelector('#hshipimg');
- let lastW=-1;const layout=()=>{if(!sea.isConnected)return;const W0=sea.parentElement.clientWidth;if(W0===lastW&&sea.style.height)return;lastW=W0;const W=sea.parentElement.clientWidth,N=pts.length,P=[],groups=[];let H;
+ let lastW=-1;const layout=()=>{if(!sea.isConnected)return;const W0=sea.clientWidth||sea.parentElement.clientWidth;if(W0===lastW&&sea.style.height)return;lastW=W0;const W=W0,N=pts.length,P=[],groups=[];let H;
   if(W<700){const rh=W<520?172:180;H=N*rh+96;pts.forEach((el,k)=>P.push([W*(k%2?.3:.7),96+k*rh+rh/2-26]));groups.push(P.map((_,i)=>i))}
   else{const res=W>=900?190:0,Wu=W-res,per=N<=8?N:Math.ceil(N/2),rows=Math.ceil(N/per),rh=262,amp=30,mx=84;H=rows*rh+84;
    pts.forEach((el,k)=>{const r=Math.floor(k/per),j=k%per,xi=r%2?j:per-1-j,x=mx+(per>1?xi/(per-1):.5)*(Wu-2*mx),y=84+r*rh+rh/2-30+(j%2?amp:-amp);P.push([x,y]);(groups[r]=groups[r]||[]).push(k)})}
@@ -1718,7 +1718,7 @@ function hSea(root,items,cur,gid,teacher,full,left){const sea=root.querySelector
   let d='M'+P[0][0]+' '+P[0][1];groups.forEach((g,gi)=>{if(gi){const pe=P[groups[gi-1][groups[gi-1].length-1]],ps=P[g[0]],dir=pe[0]<W/2?-1:1;d+=` C${pe[0]+dir*120} ${pe[1]+10} ${ps[0]+dir*120} ${ps[1]-10} ${ps[0]} ${ps[1]}`}d+=cr(g)});
   sea.style.height=H+'px';pp.setAttribute('d',d);const hs=sea.querySelector('#hps');if(hs)hs.setAttribute('d',d);svg.setAttribute('width',W);svg.setAttribute('height',H);
   const t=cur>=0?P[cur]:P[P.length-1],sw=ship.offsetWidth||110;ship.style.left=(t[0]-sw/2-(W<520?4:0))+'px';ship.style.top=Math.max(4,t[1]-sw*.77-40)+'px'};
- layout();requestAnimationFrame(layout);let lw=0;try{new ResizeObserver(()=>{const w=sea.parentElement.clientWidth;if(w!==lw){lw=w;layout()}}).observe(sea.parentElement)}catch(e){}if(document.fonts&&document.fonts.ready)document.fonts.ready.then(layout);
+ layout();requestAnimationFrame(layout);let lw=0;try{new ResizeObserver(()=>{const w=sea.clientWidth;if(w!==lw){lw=w;layout()}}).observe(sea.parentElement)}catch(e){}if(document.fonts&&document.fonts.ready)document.fonts.ready.then(layout);
  if(!window.__hseaR){window.__hseaR=1;}sea.__l=layout;
  sea.addEventListener('click',e=>{const b=e.target.closest('.hpt');if(!b)return;
   if(b.id==='hcertb'){if(+b.dataset.lock){hToast('أنهِ ألعاب دروسك كلها لتفتح شهادة الرحلة.');return}hCert(gid,teacher);return}
@@ -3097,6 +3097,13 @@ footer p{margin:0!important;font-size:clamp(.7rem,2.6vw,.9rem)!important;color:v
 .hsea .hcertn .hnode .hico svg{width:1.3rem!important;height:1.3rem!important}
 .hsea .hcertn .hnode .hico{position:absolute!important;left:50%;top:62%;transform:translate(-50%,-50%)!important}
 .mtgo{white-space:nowrap}.mtgo .ico{width:1.2em!important;height:1.2em!important;flex:none}
+
+.hsea{direction:ltr}.hsea .hpt,.hsea .hlb{direction:rtl}
+.hsea .hpath{left:0!important;right:auto!important;top:0!important;inset-inline:auto!important}
+.hvmock:has(.hvr2){place-items:start center;padding-top:.5rem}
+.hvr2 .hvmed{width:54px;height:54px}.hvr2 .hvl{top:calc(.6rem + 27px)}
+.hvpop{top:98px!important;padding:.45rem .6rem;gap:.3rem;inset-inline:22%}.hvpop u{font-size:.9rem;padding:.3rem}
+.hvstage{height:clamp(250px,46dvh,320px)!important}
 </style>
 </body>
 </html>
