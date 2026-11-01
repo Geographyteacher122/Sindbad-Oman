@@ -2683,7 +2683,7 @@ const LS={mus:17,bur:15,sba:17,mct:17,nba:18,nsh:18,ssh:18,dha:20,dak:20,wus:23,
 /* تسميات خارجية بخط إرشاد للمحافظات الصغيرة المتجاورة (مواضع في البحر، لا تغيير في الأشكال) */
 const OUT={mus:[528,64],nba:[612,228],sba:[648,268],mct:[744,300],ssh:[742,592]};
 const _av=applyView;applyView=function(){_av();const z=state.zoom;svgEl.querySelectorAll('.label').forEach((t,i)=>{t.style.fontSize=((LS[gid(i)]||13)/z)+'px';t.style.strokeWidth=(4/z)+'px'});svgEl.querySelectorAll('.wlabel').forEach(t=>{t.style.fontSize=(15/z)+'px';t.style.strokeWidth=(3/z)+'px'})};
-const intro=document.querySelector('#v-maps .wrap>p');if(intro)intro.textContent='اضغط على أي محافظة لتكتشف عاصمتها وجيرانها ومعالمها، واجمع ختمها في «جواز المستكشف». جرّب أوضاع العرض: الجوار، الساحل والداخل، المسطحات، المعالم.';
+const intro=document.querySelector('#v-maps .wrap>p');if(intro)intro.textContent='اضغط على أي محافظة لتكتشف عاصمتها وجيرانها ومعالمها، واجمع ختمها في «جواز المستكشف».';
 sync();legend();render();
 })();
 
