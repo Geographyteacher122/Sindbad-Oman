@@ -2444,7 +2444,8 @@ const LAYERS=[
  {id:'labels',name:'أسماء المحافظات',ok:true,on:()=>state.labels,set:v=>{state.labels=v;$('labels').checked=v;render()}},
  {id:'lm',name:'المعالم',ok:()=>LANDMARKS.length>0,on:()=>state.layers.lm,set:v=>{state.layers.lm=v;render()}},
  {id:'cities',name:'المدن',ok:false},{id:'water',name:'المسطحات المائية',ok:false},{id:'terrain',name:'التضاريس',ok:false}];
-function drawLayers(){const L=$('mlayers');L.innerHTML='<b>الطبقات</b>'+LAYERS.map(l=>{const ok=typeof l.ok==='function'?l.ok():l.ok;return`<label class="${ok?'':'off'}"><span>${l.name}${ok?'':'<small>لا توجد بيانات في المشروع</small>'}</span><input type="checkbox" data-l="${l.id}" ${ok?'':'disabled'} ${ok&&l.on()?'checked':''}></label>`}).join('')}
+function drawLayers(){const L=$('mlayers'),ok=l=>typeof l.ok==='function'?l.ok():l.ok,on=LAYERS.filter(ok),off=LAYERS.filter(l=>!ok(l)),ord=['gov','labels','smooth'];on.sort((x,y)=>{const i=ord.indexOf(x.id),j=ord.indexOf(y.id);return (i<0?9:i)-(j<0?9:j)});
+ L.innerHTML='<b>الطبقات</b>'+on.map(l=>`<label><span>${l.name}</span><input type="checkbox" data-l="${l.id}" ${l.on()?'checked':''}></label>`).join('')+(off.length?`<small class="lyoff">طبقات قادمة عند توفر بياناتها: ${off.map(l=>l.name).join('، ')}</small>`:'')}
 $('tbLayers').onclick=()=>{const s=$('mlayers').hidden;if(s)drawLayers();togglePanel($('mlayers'),$('tbLayers'),s)};
 $('mlayers').onchange=e=>{const l=LAYERS.find(x=>x.id===e.target.dataset.l);if(l)l.set(e.target.checked)};
 $('labels').addEventListener('change',()=>{if(!$('mlayers').hidden)drawLayers()});
@@ -3650,6 +3651,9 @@ footer p{margin:0!important;font-size:clamp(.7rem,2.6vw,.9rem)!important;color:v
  #pc.qwrap.hasc[data-g="sym"]{padding-bottom:1.1rem}
  #pc[data-g="sym"]>.mate.corner{bottom:auto;top:230px;inset-inline-end:calc(100% + 14px);height:190px}}
 @media(min-width:900px) and (max-width:1100px){#pc[data-g="sym"]>.mate.corner{display:none}}
+#v-maps .mlayers{max-height:calc(100% - 86px);overflow-y:auto;overscroll-behavior:contain}#v-maps .mlayers label{min-height:42px}#v-maps .mlayers .lyoff{display:block;padding:.35rem .5rem;font-size:.78rem;line-height:1.6;color:var(--muted,#54707b)}
+@media(max-height:700px){#v-maps .mlayers label{min-height:38px}}
+@media(min-width:900px){body.on-maps #v-maps .mlayers{width:min(440px,calc(100% - 24px));grid-template-columns:1fr 1fr}#v-maps .mlayers b,#v-maps .mlayers .lyoff{grid-column:1/-1}}
 </style>
 </body>
 </html>
