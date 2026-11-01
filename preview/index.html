@@ -1779,22 +1779,49 @@ function hCert(gid,teacher){const I=HIMG(),c=HG[gid]||HG.g9,p=hProg(gid),data=hL
  o.onclick=e=>{if(e.target===o)o.hidden=true};
  document.getElementById('hcprint').onclick=()=>{let pp=document.getElementById('ppPrint');if(!pp){pp=document.createElement('div');pp.id='ppPrint';document.body.appendChild(pp)}pp.innerHTML='<div class="hprintc">'+body+'</div>';setTimeout(()=>{try{window.print()}catch(e){}},200)}}
 
+/* إحصاءات المعلمة: تُقرأ من سجل الدخول المنشور (Google Sheets) */
+function trParse(t){const R=hbCsv(t),h=(R[0]||[]).map(x=>x.trim());const ti=h.findIndex(x=>/الطابع|timestamp/i.test(x)),ni=h.indexOf('الاسم'),gi=h.indexOf('الصف'),si=h.indexOf('النجوم');if(ni<0)return null;
+ const dig=v=>String(v||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+ const pd=v=>{const m=dig(v).match(/(\d{1,4})[\/\-.](\d{1,2})[\/\-.](\d{1,4})(?:\D+(\d{1,2}):(\d{2}))?/);if(!m)return null;let a=+m[1],b=+m[2],c=+m[3],Y,M,D;if(a>31){Y=a;M=b;D=c}else{Y=c;if(a>12){D=a;M=b}else{M=a;D=b}}if(Y<100)Y+=2000;return new Date(Y,M-1,D,+m[4]||0,+m[5]||0)};
+ const m={};let rows=0;R.slice(1).forEach(r=>{const nm=String(r[ni]||'').trim();if(!nm)return;rows++;const gr=gi>=0?String(r[gi]||'').trim():'',n=si>=0?(parseInt(dig(r[si]).replace(/[^\d]/g,''),10)||0):0,d=ti>=0?pd(r[ti]):null,k=nm+'|'+gr;const o=m[k]||(m[k]={nm,gr,n:0,last:null,v:0});o.v++;if(n>o.n)o.n=n;if(d&&(!o.last||d>o.last))o.last=d});
+ return{rows,list:Object.values(m)}}
+const trAgo=d=>{if(!d)return'غير معروف';const n=new Date(),a=new Date(n.getFullYear(),n.getMonth(),n.getDate()),b=new Date(d.getFullYear(),d.getMonth(),d.getDate()),k=Math.round((a-b)/864e5);return k<=0?'اليوم':k===1?'أمس':k===2?'قبل يومين':k<=10?'قبل '+k+' أيام':'قبل '+k+' يومًا'};
+function trStats(box,data){const L=data.list,n=L.length,now=new Date(),same=d=>d&&d.toDateString()===now.toDateString(),wk=d=>d&&(now-d)<=7*864e5;
+ const played=L.filter(o=>o.n>0).length,today=L.filter(o=>same(o.last)).length,week=L.filter(o=>wk(o.last)).length,stars=L.reduce((a,o)=>a+o.n,0);
+ const cls={};L.forEach(o=>{const c=o.gr||'بلا صف';(cls[c]=cls[c]||{n:0,p:0,s:0}).n++;if(o.n>0)cls[c].p++;cls[c].s+=o.n});
+ const names=Object.keys(cls).sort((a,b)=>a.localeCompare(b,'ar'));
+ const tile=(v,l,c)=>`<div class="tr-tl ${c||''}"><b>${v}</b><span>${l}</span></div>`;
+ box.innerHTML=`<div class="tr-tiles">${tile(n,'طالب سجّل دخوله')}${tile(today,'دخلوا اليوم','g')}${tile(week,'دخلوا هذا الأسبوع')}${tile(played,'لعبوا وجمعوا نجومًا','g')}${tile(n-played,'دخلوا ولم يلعبوا بعد',n-played?'w':'')}${tile(stars,'مجموع النجوم')}</div>
+ <div class="tr-cls">${names.map(c=>{const o=cls[c],pc=Math.round(o.p/o.n*100);return`<div class="tr-cr"><b>${hEsc(c)}</b><span class="tr-cb"><i style="width:${pc}%"></i></span><small>${o.p} من ${o.n} لعبوا · ${o.s} نجمة</small></div>`}).join('')}</div>
+ <div class="tr-flt"><label>الصف<select id="trfc" class="tr-in"><option value="">كل الصفوف</option>${names.map(c=>`<option>${hEsc(c)}</option>`).join('')}</select></label>
+ <div class="tr-seg" role="group" aria-label="الحالة"><button type="button" class="on" data-f="">الكل</button><button type="button" data-f="p">لعبوا</button><button type="button" data-f="n">لم يلعبوا</button></div></div>
+ <div class="tr-tw"><div id="trtb"></div></div><p class="tr-nt">الأرقام من سجل الدخول: يُسجَّل الطالب عند دخوله، ومرة يوميًا، وعند ازدياد نجومه. تظهر الأسماء كاملة هنا لك وحدك.</p>`;
+ let fc='',ff='';const draw=()=>{const R=L.filter(o=>(!fc||(o.gr||'بلا صف')===fc)&&(ff===''||(ff==='p'?o.n>0:o.n===0))).sort((a,b)=>(b.last||0)-(a.last||0));
+  document.getElementById('trtb').innerHTML=R.length?`<div class="tr-th"><span>الاسم</span><span>الصف</span><span>النجوم</span><span>آخر دخول</span><span>الحالة</span></div>`+R.map(o=>`<div class="tr-tr"><span class="tn">${hEsc(o.nm)}</span><span>${hEsc(o.gr||'-')}</span><span class="st"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.9 6.4.9-4.6 4.5 1.1 6.4L12 17.5l-5.7 3 1.1-6.4L2.8 9.6l6.4-.9z"/></svg>${o.n}</span><span>${trAgo(o.last)}</span><span><em class="${o.n>0?'p':'n'}">${o.n>0?'لعب':'لم يلعب بعد'}</em></span></div>`).join(''):'<div class="tr-empty">لا يوجد طلاب بهذا الاختيار.</div>'};
+ draw();document.getElementById('trfc').onchange=e=>{fc=e.target.value;draw()};
+ box.querySelectorAll('.tr-seg button').forEach(b=>b.onclick=()=>{ff=b.dataset.f;box.querySelectorAll('.tr-seg button').forEach(x=>x.classList.toggle('on',x===b));draw()})}
+function trLoad(){const box=document.getElementById('trst');if(!box)return;const u=String(hSet().honorCsv||'').trim();
+ if(!u){box.innerHTML='<div class="tr-empty">سجل الدخول غير مفعّل. أضف رابط الجدول في الإعدادات أعلى الملف.</div>';return}
+ box.innerHTML='<div class="tr-empty">جارٍ تحميل الإحصاءات…</div>';
+ fetch(u+'&_='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{const d=trParse(t);if(!d||!d.list.length){box.innerHTML='<div class="tr-empty">لا توجد تسجيلات بعد. ستظهر الإحصاءات عندما يدخل الطلاب إلى الموقع.</div>';return}trStats(box,d);const lu=document.getElementById('trup');if(lu)lu.textContent='آخر تحديث: '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}).catch(()=>{box.innerHTML='<div class="tr-empty">تعذّر تحميل الإحصاءات الآن. تأكد من الاتصال بالإنترنت ثم اضغط «تحديث».</div>'})}
 function teacherDraw(){const box=document.getElementById('tbox'),G=hCfg(),S=hSet(),I=window.SB_IMG||{};
  const key='<svg class="tr-key" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="28" r="18" class="o"/><circle cx="32" cy="25" r="5.5" class="i"/><path d="M32 29l-4 14h8z" class="i"/><circle cx="32" cy="28" r="12" fill="none" class="r"/></svg>';
- const head=`<div class="tr-head"><div><h2>ركن المعلمة</h2><p>غرفة القيادة: نتائج الطالبات والطلاب، ومعاينة الصفوف، وبصمة الرمز.</p></div><button type="button" class="tr-vid" id="trvid">${SIC('play')} الفيديو التوضيحي</button></div>`;
- const gen=`<section class="tr-pan tr-con"><div class="tr-ph"><span class="tr-pi"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><div><h3>إنشاء بصمة رمز</h3><p>اكتب رمزًا لصف (يفضّل 8 خانات فأكثر)، فتظهر بصمة تُلصق في الإعدادات أعلى الملف.</p></div></div>
+ const head=`<div class="tr-head"><div><h2>ركن المعلمة</h2><p>متابعة دخول الطلاب ونجومهم، ونتائج الاختبارات.</p></div><button type="button" class="tr-vid" id="trvid">${SIC('play')} الفيديو التوضيحي</button></div>`;
+ const gen=`<details class="tr-adv"><summary>إعدادات متقدمة: إنشاء بصمة رمز</summary><section class="tr-pan tr-con"><p class="tr-ap">لكل صف رمز سري. اكتب الرمز هنا (يفضّل 8 خانات فأكثر) فتظهر بصمة تُلصق في الإعدادات أعلى الملف، فلا يُكتب الرمز نفسه داخل الموقع.</p>
   <div class="tr-form"><label class="tr-f">لأي جهة؟<select id="tgid" class="tr-in">${G.map(g=>`<option value="${hEsc(g.id)}">${hEsc(g.name)}</option>`).join('')}<option value="teacher">المعلمة</option></select></label>
   <label class="tr-f">الرمز<input id="tgc" class="tr-in" autocomplete="off"></label>
   <button class="tr-go" id="tgb" type="button">إنشاء البصمة</button></div>
-  <div class="tr-tape"><p id="tgo" dir="ltr"></p><button type="button" class="tr-cp" id="tgcp" hidden>نسخ</button></div></section>`;
+  <div class="tr-tape"><p id="tgo" dir="ltr"></p><button type="button" class="tr-cp" id="tgcp" hidden>نسخ</button></div></section></details>`;
  let main;
  if(st.teacher){const L=(S.resultsLinks||[]).map(l=>{const u=hSafe(l.url);return`<div class="tr-row"><span class="tr-ri"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M8 11h8M8 15h8M8 8h4"/></svg></span><b>${hEsc(l.t)}</b>${u?`<a class="tr-open" ${hLink(u)}>افتح</a>`:'<span class="tr-no">لم يُضف الرابط</span>'}</div>`}).join('')||'<div class="tr-empty">لا توجد روابط نتائج. أضفها في الإعدادات أعلى الملف.</div>';
-  main=`<div class="tr-bar"><span class="tr-chip"><i></i>وضع المعلمة مفعّل</span><a class="tr-btn" href="#harbor">معاينة الصفوف</a><button class="tr-btn o" id="tout" type="button">خروج</button></div>
-  <section class="tr-pan"><div class="tr-ph"><span class="tr-pi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M8 11h8M8 15h8M8 8h4"/></svg></span><div><h3>نتائج الاختبارات</h3><p>روابط Google Forms لكل صف.</p></div></div><div class="tr-list">${L}</div></section>`}
- else main=`<section class="tr-pan tr-door">${I.write?`<img class="tr-girl" src="${I.write}" alt="">`:''}<div class="tr-dtx">${key}<h3>الغرفة مقفلة</h3><p>هذه الصفحة للمعلمة. تُحفظ نتائج اللعب داخل الموقع على جهاز كل طالب فقط، أما نتائج الاختبارات فتُراجع في Google Forms.</p><p>لفتح الغرفة، اضغط «دخول المعلمة» في صفحة مرفأ السفينة، ثم أدخل رمز المعلمة.</p><a class="tr-go" href="#harbor">اذهب إلى المرفأ</a></div></section>`;
+  main=`<div class="tr-bar"><span class="tr-chip"><i></i>وضع المعلمة مفعّل</span><a class="tr-btn" href="#harbor">معاينة الصفوف</a><button class="tr-btn o" id="trrf" type="button">تحديث الأرقام</button><span class="tr-up" id="trup"></span><button class="tr-btn o" id="tout" type="button" style="margin-inline-start:auto">خروج</button></div>
+  <section class="tr-pan tr-wide"><div class="tr-ph"><span class="tr-pi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><div><h3>متابعة الطلاب</h3><p>من دخل، ومن لعب، وكم نجمة جمع.</p></div></div><div id="trst"></div></section>
+  <section class="tr-pan tr-wide"><div class="tr-ph"><span class="tr-pi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M8 11h8M8 15h8M8 8h4"/></svg></span><div><h3>نتائج الاختبارات</h3><p>روابط Google Forms لكل اختبار.</p></div></div><div class="tr-list">${L}</div></section>`}
+ else main=`<section class="tr-pan tr-door tr-wide">${I.write?`<img class="tr-girl" src="${I.write}" alt="">`:''}<div class="tr-dtx">${key}<h3>الغرفة مقفلة</h3><p>هذه الصفحة للمعلمة، وفيها متابعة دخول الطلاب ونجومهم ونتائج الاختبارات.</p><p>لفتح الغرفة، اضغط «دخول المعلمة» في صفحة مرفأ السفينة، ثم أدخل رمز المعلمة.</p><a class="tr-go" href="#harbor">اذهب إلى المرفأ</a></div></section>`;
  box.innerHTML=`<div class="tr"><div class="tr-room">${head}<div class="tr-grid">${main}${gen}</div></div></div>`;
  document.getElementById('trvid').onclick=()=>window.mkVideo&&window.mkVideo('teacher');
  const out=document.getElementById('tout');if(out)out.onclick=()=>{st.teacher=false;save();teacherDraw()};
+ const rf=document.getElementById('trrf');if(rf)rf.onclick=trLoad;if(st.teacher)trLoad();
  const cp=document.getElementById('tgcp');
  document.getElementById('tgb').onclick=async()=>{const o=document.getElementById('tgo'),c=document.getElementById('tgc').value;cp.hidden=true;if(!c.trim()){o.textContent='اكتب رمزًا أولًا';return}
   try{o.textContent="codeHash:'"+await hHash(document.getElementById('tgid').value,c)+"'";cp.hidden=false}catch(e){o.textContent='يلزم فتح الموقع عبر https'}};
@@ -2783,16 +2810,19 @@ window.POSES=POSES;
    mock:()=>gvBook(0,{st:[3,2,0],bar:44,pin:2}),
    run:(S,T,pt,tap)=>{const p=S.querySelector('.gvpin[data-i="2"]'),r=S.querySelector('.gvrow[data-i="2"]');pt(p,200);T(()=>{p.querySelector('i').textContent='★';p.classList.add('done');r.classList.add('hl');r.querySelectorAll('s i').forEach((x,j)=>T(()=>x.classList.add('on'),j*350))},1000);T(()=>{S.querySelector('.gvbar i').style.width='78%';tap()},2200)}}
  ]};
- VIDS.teacher={title:'ركن المعلمة',pose:'map',intro:'ركن المعلمة غرفة قيادة خاصة. تدخل إليها برمز المعلمة من مرفأ السفينة، ثم تفتح روابط نتائج الاختبارات، وتنشئ بصمة الرمز لكل صف.',scenes:[
+ VIDS.teacher={title:'ركن المعلمة',pose:'map',intro:'ركن المعلمة غرفة قيادة خاصة بك. تدخل إليها برمز المعلمة، ثم تتابع من دخل إلى الموقع ومن لعب وكم نجمة جمع، وتفتح نتائج الاختبارات.',scenes:[
   {t:'ادخل برمز المعلمة',d:'في صفحة مرفأ السفينة اضغط «دخول المعلمة»، واكتب رمز المعلمة، ثم اضغط «دخول».',
    mock:()=>`<div class="hvt"><b>دخول المعلمة</b><div class="hvin"><span id="hvtx"></span><i class="hvcur"></i></div><div class="hvgo" id="hvgo">دخول</div></div>`,
    run:(S,T,pt,tap)=>{pt(S.querySelector('.hvin'),300);T(tap,900);'••••••••'.split('').forEach((_,k)=>T(()=>{S.querySelector('#hvtx').textContent='••••••••'.slice(0,k+1)},1200+k*160));T(()=>pt(S.querySelector('#hvgo'),0),2900);T(()=>{S.querySelector('#hvgo').classList.add('on');tap()},3700)}},
-  {t:'افتح نتائج الاختبارات',d:'بعد الدخول يظهر في الركن وضع المعلمة. اضغط «افتح» بجانب أي صف لتنتقل إلى نتائجه في Google Forms.',
-   mock:()=>`<div class="tvr">${['الصف الخامس','الصف السادس','الصف السابع'].map((n,i)=>`<div class="tvrow" data-i="${i}"><b>${n}</b><u>افتح</u></div>`).join('')}</div>`,
-   run:(S,T,pt,tap)=>{[0,1,2].forEach(i=>{const u=S.querySelector(`.tvrow[data-i="${i}"] u`);T(()=>pt(u,0),500+i*1700);T(()=>{tap();u.classList.add('on')},1200+i*1700)})}},
-  {t:'أنشئ بصمة الرمز',d:'اختر الجهة، واكتب رمزًا من 8 خانات فأكثر، ثم اضغط «إنشاء البصمة». انسخ النتيجة والصقها في الإعدادات.',
-   mock:()=>`<div class="tvpan"><span>لأي جهة؟</span><div class="tvin">الصف الثامن</div><span>الرمز</span><div class="tvin" id="tvc"></div><div class="tvbtn" id="tvb">إنشاء البصمة</div><div class="tvtape" id="tvt"></div></div>`,
-   run:(S,T,pt,tap)=>{pt(S.querySelector('#tvc'),200);T(tap,800);const w='Sindbad25';[...w].forEach((_,k)=>T(()=>{S.querySelector('#tvc').textContent=w.slice(0,k+1)},1000+k*150));T(()=>pt(S.querySelector('#tvb'),0),2700);T(()=>{S.querySelector('#tvb').classList.add('on');tap();S.querySelector('#tvt').textContent="codeHash:'a91f3c07b2…'"},3500)}}
+  {t:'اقرأ الإحصاءات',d:'تظهر في أعلى الغرفة أرقام الدخول: كم طالبًا سجّل، وكم دخل اليوم، وكم لعب، وكم لم يلعب بعد.',
+   mock:()=>`<div class="tvt">${[['24','سجّلوا دخولهم'],['6','دخلوا اليوم'],['19','لعبوا'],['5','لم يلعبوا بعد']].map((x,i)=>`<div class="tvtl" data-i="${i}"><b>0</b><span>${x[1]}</span></div>`).join('')}</div>`,
+   run:(S,T,pt,tap)=>{[24,6,19,5].forEach((v,i)=>{const e=S.querySelector(`.tvtl[data-i="${i}"]`);T(()=>{e.classList.add('on');pt(e,0);const b=e.querySelector('b');for(let k=1;k<=10;k++)T(()=>{b.textContent=Math.round(v*k/10)},k*60)},400+i*1300)})}},
+  {t:'تابع الطلاب',d:'اختر الصف، ثم اضغط «لم يلعبوا» لترى من دخل ولم يبدأ اللعب بعد.',
+   mock:()=>`<div class="tvpan"><div class="tvseg"><u class="on">الكل</u><u>لعبوا</u><u id="tvn">لم يلعبوا</u></div>${['سالم','مريم','خالد','آمنة'].map((n,i)=>`<div class="tvst ${i%2?'n':'p'}" data-p="${i%2?0:1}"><b>${n}</b><em>${i%2?'لم يلعب بعد':'لعب'}</em></div>`).join('')}</div>`,
+   run:(S,T,pt,tap)=>{pt(S.querySelector('#tvn'),400);T(()=>{tap();S.querySelectorAll('.tvseg u').forEach(u=>u.classList.toggle('on',u.id==='tvn'));S.querySelectorAll('.tvst[data-p="1"]').forEach(r=>r.style.display='none')},1400)}},
+  {t:'افتح نتائج الاختبارات',d:'اضغط «افتح» بجانب أي اختبار لتنتقل إلى نتائجه في Google Forms.',
+   mock:()=>`<div class="tvr">${['اختبار الأسبوع الأول','اختبار الأسبوع الثاني'].map((n,i)=>`<div class="tvrow" data-i="${i}"><b>${n}</b><u>افتح</u></div>`).join('')}</div>`,
+   run:(S,T,pt,tap)=>{[0,1].forEach(i=>{const u=S.querySelector(`.tvrow[data-i="${i}"] u`);T(()=>pt(u,0),500+i*1900);T(()=>{tap();u.classList.add('on')},1300+i*1900)})}}
  ]};
 const DUR=6500;
  window.mkVideo=function(key){
@@ -3466,6 +3496,44 @@ footer p{margin:0!important;font-size:clamp(.7rem,2.6vw,.9rem)!important;color:v
 .tvpan .tvin{background:#fbf3de;color:#3b2a14;border-radius:6px;padding:.3rem .5rem;min-height:1.5rem;display:flex;align-items:center}
 .tvpan .tvbtn{background:#d9a441;color:#4a2e0c;border-radius:6px;text-align:center;padding:.3rem;transition:transform .25s}.tvpan .tvbtn.on{transform:scale(.94)}
 .tvpan .tvtape{background:#0a1f28;border:1px dashed #5fa3b5;border-radius:6px;padding:.3rem .4rem;color:#8ff0b6;font-family:ui-monospace,monospace;min-height:1.6rem;direction:ltr;word-break:break-all}
+
+/* إحصاءات ركن المعلمة */
+.tr-grid{grid-template-columns:1fr}
+.tr-wide{grid-column:1/-1}
+.tr-up{color:#a9d3de;font-size:.85rem}
+.tr-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,44%),1fr));gap:.6rem;margin-bottom:.9rem}
+.tr-tl{background:rgba(255,255,255,.07);border:1.5px solid rgba(185,138,62,.6);border-radius:14px;padding:.6rem .8rem;display:flex;flex-direction:column;gap:.1rem}
+.tr-tl b{font-size:1.9rem;line-height:1.2;color:#ffe9b8;font-variant-numeric:tabular-nums}
+.tr-tl span{color:#cfe6ec;font-size:.88rem;font-weight:700}
+.tr-tl.g b{color:#8ff0b6}.tr-tl.w b{color:#ffb98a}
+.tr-cls{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.5rem .9rem;margin-bottom:.9rem}
+.tr-cr{display:grid;gap:.15rem}.tr-cr b{color:#ffe9b8}.tr-cr small{color:#a9d3de}
+.tr-cb{height:10px;border-radius:6px;background:rgba(255,255,255,.12);overflow:hidden;display:block}.tr-cb i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#d9a441,#5be08f)}
+.tr-flt{display:flex;flex-wrap:wrap;gap:.7rem;align-items:flex-end;margin-bottom:.6rem}
+.tr-flt label{display:grid;gap:.2rem;color:#d7ecf2;font-weight:800;font-size:.9rem;min-width:160px}
+.tr-seg{display:inline-flex;border:2px solid #b98a3e;border-radius:12px;overflow:hidden}
+.tr-seg button{font:inherit;font-weight:800;min-height:44px;padding:.3rem 1rem;border:0;background:none;color:#ffe9b8;cursor:pointer}
+.tr-seg button.on{background:#d9a441;color:#4a2e0c}
+.tr-tw{max-height:380px;overflow:auto;border-radius:12px;background:#fbf3de;color:#3b2a14}
+.tr-th,.tr-tr{display:grid;grid-template-columns:1.6fr 1.2fr .7fr 1fr 1fr;gap:.5rem;align-items:center;padding:.5rem .8rem}
+.tr-th{position:sticky;top:0;background:#e8d8ae;font-weight:900;font-size:.85rem;z-index:1}
+.tr-tr{border-top:1px solid #ead9ac}.tr-tr .tn{font-weight:800}
+.tr-tr .st{display:inline-flex;align-items:center;gap:.25rem;font-weight:800;font-variant-numeric:tabular-nums}.tr-tr .st svg{width:16px!important;height:16px!important;position:static!important;fill:#E0A526}
+.tr-tr em{font-style:normal;font-weight:800;font-size:.8rem;border-radius:999px;padding:.15rem .6rem;white-space:nowrap}.tr-tr em.p{background:#d6f1df;color:#1d6b43}.tr-tr em.n{background:#ffe3cf;color:#9a4a12}
+.tr-tw .tr-empty{background:none;color:#5a4527}
+.tr-nt{margin:.6rem 0 0;color:#a9d3de;font-size:.85rem;line-height:1.8}
+.tr-adv{grid-column:1/-1}.tr-adv summary{cursor:pointer;font-weight:800;color:#ffe9b8;min-height:44px;display:flex;align-items:center}
+.tr-ap{margin:0 0 .8rem;color:#d7ecf2;line-height:1.8}
+@media(max-width:640px){
+ .tr-th{display:none}
+ .tr-tr{grid-template-columns:1fr auto;grid-template-areas:"n s" "c a" "e e"}
+ .tr-tr span:nth-child(1){grid-area:n}.tr-tr span:nth-child(3){grid-area:s;justify-self:end}.tr-tr span:nth-child(2){grid-area:c;color:#7a6340;font-size:.88rem}.tr-tr span:nth-child(4){grid-area:a;justify-self:end;color:#7a6340;font-size:.88rem}.tr-tr span:nth-child(5){grid-area:e}
+ .tr-bar .tr-up{width:100%}.tr-tl b{font-size:1.5rem}.tr-tl{padding:.5rem .6rem}
+}
+.tvt{width:min(300px,92%);display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+.tvtl{background:#0b3a4d;border:1.5px solid #b98a3e;border-radius:10px;padding:.4rem .5rem;color:#cfe6ec;font-size:.62rem;font-weight:700;transition:transform .25s}.tvtl b{display:block;font-size:1.3rem;color:#ffe9b8}.tvtl.on{transform:scale(1.05)}
+.tvseg{display:flex;border:1.5px solid #b98a3e;border-radius:8px;overflow:hidden}.tvseg u{flex:1;text-decoration:none;text-align:center;padding:.25rem;color:#ffe9b8}.tvseg u.on{background:#d9a441;color:#4a2e0c}
+.tvst{display:flex;justify-content:space-between;background:#fbf3de;color:#3b2a14;border-radius:6px;padding:.25rem .5rem}.tvst em{font-style:normal;font-size:.58rem;border-radius:999px;padding:.05rem .45rem}.tvst.p em{background:#d6f1df;color:#1d6b43}.tvst.n em{background:#ffe3cf;color:#9a4a12}
 
 </style>
 </body>
