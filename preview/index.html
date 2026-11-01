@@ -1792,7 +1792,10 @@ function trStats(box,data){const L=data.list,n=L.length,now=new Date(),same=d=>d
  const names=Object.keys(cls).sort((a,b)=>a.localeCompare(b,'ar'));
  const tile=(v,l,c)=>`<div class="tr-tl ${c||''}"><b>${v}</b><span>${l}</span></div>`;
  box.innerHTML=`<div class="tr-tiles">${tile(n,'طالب سجّل دخوله')}${tile(today,'دخل اليوم','g')}${tile(week,'دخل هذا الأسبوع')}${tile(played,'لعب وجمع نجومًا','g')}${tile(n-played,'دخل ولم يلعب بعد',n-played?'w':'')}${tile(stars,'مجموع النجوم')}</div>
- <div class="tr-cls">${names.map(c=>{const o=cls[c],pc=Math.round(o.p/o.n*100);return`<div class="tr-cr"><b>${hEsc(c)}</b><span class="tr-cb"><i style="width:${pc}%"></i></span><small>${o.p} من ${o.n} لعب · ${o.s} نجمة</small></div>`}).join('')}</div>
+ <div class="tr-ch">${(()=>{const pc=n?played/n:0,C=2*Math.PI*40,dd=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'],day=[];for(let i=6;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);day.push({l:dd[d.getDay()],c:L.filter(o=>o.last&&o.last.toDateString()===d.toDateString()).length})}const mx=Math.max(1,...day.map(x=>x.c)),ms=Math.max(1,...names.map(c=>cls[c].s));
+ return`<div class="tr-cc"><h4>من لعب؟</h4><div class="tr-dn"><svg viewBox="0 0 100 100" role="img" aria-label="${played} من ${n} لعب"><circle cx="50" cy="50" r="40" class="bg"/><circle cx="50" cy="50" r="40" class="fg" stroke-dasharray="${(C*pc).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 50 50)"/><text x="50" y="55" text-anchor="middle">${Math.round(pc*100)}%</text></svg><ul><li><i class="a"></i>لعب <b>${played}</b></li><li><i class="b"></i>لم يلعب <b>${n-played}</b></li></ul></div></div>
+ <div class="tr-cc"><h4>الدخول خلال آخر 7 أيام</h4><div class="tr-col">${day.map(x=>`<div><b>${x.c}</b><span style="height:${Math.max(4,x.c/mx*100)}%"></span><small>${x.l}</small></div>`).join('')}</div></div>
+ <div class="tr-cc"><h4>النجوم في كل صف</h4><div class="tr-hb">${names.map(c=>{const o=cls[c];return`<div><div class="tr-hl"><b>${hEsc(c)}</b><em>${o.s} نجمة</em></div><span class="tr-ht"><i style="width:${Math.max(3,o.s/ms*100)}%"></i></span><small>${o.p} من ${o.n} لعب</small></div>`}).join('')}</div></div>`})()}</div>
  <div class="tr-flt"><label>الصف<select id="trfc" class="tr-in"><option value="">كل الصفوف</option>${names.map(c=>`<option>${hEsc(c)}</option>`).join('')}</select></label>
  <div class="tr-seg" role="group" aria-label="الحالة"><button type="button" class="on" data-f="">الكل</button><button type="button" data-f="p">لعب</button><button type="button" data-f="n">لم يلعب</button></div></div>
  <div class="tr-tw"><div id="trtb"></div></div><p class="tr-nt">الأرقام من سجل الدخول: يُسجَّل الطالب عند دخوله، ومرة يوميًا، وعند ازدياد نجومه. تظهر الأسماء كاملة هنا لك وحدك.</p>`;
@@ -3539,6 +3542,22 @@ footer p{margin:0!important;font-size:clamp(.7rem,2.6vw,.9rem)!important;color:v
 .tvst{display:flex;justify-content:space-between;background:#fbf3de;color:#3b2a14;border-radius:6px;padding:.25rem .5rem}.tvst em{font-style:normal;font-size:.58rem;border-radius:999px;padding:.05rem .45rem}.tvst.p em{background:#d6f1df;color:#1d6b43}.tvst.n em{background:#ffe3cf;color:#9a4a12}
 
 .tr-unl{display:flex;gap:.5rem;flex-wrap:wrap;margin:.4rem 0}.tr-unl .tr-in{flex:1 1 150px;min-width:0;text-align:center;letter-spacing:.2em}.tr-unl .tr-go{flex:0 0 auto}.tr-er{color:#ffb4a0;font-weight:700;min-height:1.2em;margin:0}
+.tr-ch{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.7rem;margin-bottom:.9rem}
+.tr-cc{background:rgba(255,255,255,.06);border:1px solid rgba(240,196,106,.28);border-radius:16px;padding:.8rem .9rem;min-width:0}
+.tr-cc h4{margin:0 0 .6rem;color:#ffe9b8;font-size:1rem}
+.tr-dn{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}.tr-dn svg{width:120px;height:120px;flex:none;position:static!important}
+.tr-dn circle{fill:none;stroke-width:14;position:static!important}.tr-dn .bg{stroke:rgba(255,255,255,.14)}.tr-dn .fg{stroke:#5fd68f;stroke-linecap:round}
+.tr-dn text{fill:#fff;font:800 20px Tajawal,sans-serif}
+.tr-dn ul{list-style:none;margin:0;padding:0;display:grid;gap:.4rem;color:#e9f3f6}.tr-dn li{display:flex;align-items:center;gap:.5rem}.tr-dn li b{margin-inline-start:auto;color:#ffe9b8;font-size:1.15rem}
+.tr-dn i{width:12px;height:12px;border-radius:50%;display:inline-block}.tr-dn i.a{background:#5fd68f}.tr-dn i.b{background:rgba(255,255,255,.3)}
+.tr-col{display:flex;gap:.35rem;align-items:flex-end;height:150px;direction:rtl}
+.tr-col>div{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:.2rem}
+.tr-col b{color:#ffe9b8;font-size:.85rem}.tr-col span{width:100%;max-width:34px;border-radius:7px 7px 2px 2px;background:linear-gradient(#f0c46a,#c98d2e);display:block}
+.tr-col small{color:#a9d3de;font-size:.68rem;white-space:nowrap}
+.tr-hb{display:grid;gap:.7rem}.tr-hl{display:flex;justify-content:space-between;color:#e9f3f6}.tr-hl b{color:#ffe9b8}.tr-hl em{font-style:normal;color:#ffe9b8}
+.tr-ht{display:block;height:14px;border-radius:9px;background:rgba(255,255,255,.14);overflow:hidden;margin:.25rem 0}.tr-ht i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,#f0c46a,#5fd68f)}
+.tr-hb small{color:#a9d3de}
+@media(max-width:520px){.tr-col small{font-size:.58rem}.tr-dn svg{width:100px;height:100px}}
 </style>
 </body>
 </html>
