@@ -997,7 +997,7 @@ window.HARBOR_CONFIG=[
    - resultsLinks: روابط نتائج Google Forms، وتظهر لك فقط بعد دخولك بوضع المعلمة.
    - loginForm: رابط «معاينة مملوءة مسبقًا» لنموذج سجل الدخول (سؤالان: الاسم، الصف) مكتوب فيه «الاسم» و«الصف».
      يُرسَل اسم الطالب وصفه عند الدخول، ومرة واحدة يوميًا عند فتح الموقع. اتركيه فارغًا لإيقاف السجل. */
-window.HARBOR_SETTINGS={loginForm:'https://docs.google.com/forms/d/e/1FAIpQLScx8Yn8aQfaXLnuDqTFqBJByGsA8GnE68v0N_IhFG2wzg9xQg/viewform?usp=pp_url&entry.388752984=الاسم&entry.2016340418=الصف&entry.1025957595=النجوم',honorCsv:'https://docs.google.com/spreadsheets/d/e/2PACX-1vSrzfXco1hXygwOD45FU3QZ_OpSr4UQdpwRymgSQGNq92dfPH_mV5V85IYe615MU--MbSZxCOXPNJvr/pub?gid=1948610366&single=true&output=csv',teacherHash:'75d2b9439f177d196cdebe91ad8322950d50fafd1166586845114cbca8608adb',resultsLinks:[{t:'نتائج اختبار الأسبوع الأول - الصف الثامن',url:''}]};
+window.HARBOR_SETTINGS={loginForm:'https://docs.google.com/forms/d/e/1FAIpQLScx8Yn8aQfaXLnuDqTFqBJByGsA8GnE68v0N_IhFG2wzg9xQg/viewform?usp=pp_url&entry.388752984=الاسم&entry.2016340418=الصف&entry.1025957595=النجوم',honorCsv:'https://docs.google.com/spreadsheets/d/e/2PACX-1vSrzfXco1hXygwOD45FU3QZ_OpSr4UQdpwRymgSQGNq92dfPH_mV5V85IYe615MU--MbSZxCOXPNJvr/pub?gid=1948610366&single=true&output=csv',teacherHash:'1e07a81bbbc2112f35a343cccce2ff3e12043800ade66c4f6cf55eeaf90306d6',resultsLinks:[{t:'نتائج اختبار الأسبوع الأول - الصف الثامن',url:''}]};
 </script>
 <script>
 /* ===== مرفأ السفينة: ألعاب الدروس =====
@@ -1791,10 +1791,10 @@ function trStats(box,data){const L=data.list,n=L.length,now=new Date(),same=d=>d
  const cls={};L.forEach(o=>{const c=o.gr||'بلا صف';(cls[c]=cls[c]||{n:0,p:0,s:0}).n++;if(o.n>0)cls[c].p++;cls[c].s+=o.n});
  const names=Object.keys(cls).sort((a,b)=>a.localeCompare(b,'ar'));
  const tile=(v,l,c)=>`<div class="tr-tl ${c||''}"><b>${v}</b><span>${l}</span></div>`;
- box.innerHTML=`<div class="tr-tiles">${tile(n,'طالب سجّل دخوله')}${tile(today,'دخلوا اليوم','g')}${tile(week,'دخلوا هذا الأسبوع')}${tile(played,'لعبوا وجمعوا نجومًا','g')}${tile(n-played,'دخلوا ولم يلعبوا بعد',n-played?'w':'')}${tile(stars,'مجموع النجوم')}</div>
- <div class="tr-cls">${names.map(c=>{const o=cls[c],pc=Math.round(o.p/o.n*100);return`<div class="tr-cr"><b>${hEsc(c)}</b><span class="tr-cb"><i style="width:${pc}%"></i></span><small>${o.p} من ${o.n} لعبوا · ${o.s} نجمة</small></div>`}).join('')}</div>
+ box.innerHTML=`<div class="tr-tiles">${tile(n,'طالب سجّل دخوله')}${tile(today,'دخل اليوم','g')}${tile(week,'دخل هذا الأسبوع')}${tile(played,'لعب وجمع نجومًا','g')}${tile(n-played,'دخل ولم يلعب بعد',n-played?'w':'')}${tile(stars,'مجموع النجوم')}</div>
+ <div class="tr-cls">${names.map(c=>{const o=cls[c],pc=Math.round(o.p/o.n*100);return`<div class="tr-cr"><b>${hEsc(c)}</b><span class="tr-cb"><i style="width:${pc}%"></i></span><small>${o.p} من ${o.n} لعب · ${o.s} نجمة</small></div>`}).join('')}</div>
  <div class="tr-flt"><label>الصف<select id="trfc" class="tr-in"><option value="">كل الصفوف</option>${names.map(c=>`<option>${hEsc(c)}</option>`).join('')}</select></label>
- <div class="tr-seg" role="group" aria-label="الحالة"><button type="button" class="on" data-f="">الكل</button><button type="button" data-f="p">لعبوا</button><button type="button" data-f="n">لم يلعبوا</button></div></div>
+ <div class="tr-seg" role="group" aria-label="الحالة"><button type="button" class="on" data-f="">الكل</button><button type="button" data-f="p">لعب</button><button type="button" data-f="n">لم يلعب</button></div></div>
  <div class="tr-tw"><div id="trtb"></div></div><p class="tr-nt">الأرقام من سجل الدخول: يُسجَّل الطالب عند دخوله، ومرة يوميًا، وعند ازدياد نجومه. تظهر الأسماء كاملة هنا لك وحدك.</p>`;
  let fc='',ff='';const draw=()=>{const R=L.filter(o=>(!fc||(o.gr||'بلا صف')===fc)&&(ff===''||(ff==='p'?o.n>0:o.n===0))).sort((a,b)=>(b.last||0)-(a.last||0));
   document.getElementById('trtb').innerHTML=R.length?`<div class="tr-th"><span>الاسم</span><span>الصف</span><span>النجوم</span><span>آخر دخول</span><span>الحالة</span></div>`+R.map(o=>`<div class="tr-tr"><span class="tn">${hEsc(o.nm)}</span><span>${hEsc(o.gr||'-')}</span><span class="st"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.9 6.4.9-4.6 4.5 1.1 6.4L12 17.5l-5.7 3 1.1-6.4L2.8 9.6l6.4-.9z"/></svg>${o.n}</span><span>${trAgo(o.last)}</span><span><em class="${o.n>0?'p':'n'}">${o.n>0?'لعب':'لم يلعب بعد'}</em></span></div>`).join(''):'<div class="tr-empty">لا يوجد طلاب بهذا الاختيار.</div>'};
@@ -1817,9 +1817,12 @@ function teacherDraw(){const box=document.getElementById('tbox'),G=hCfg(),S=hSet
   main=`<div class="tr-bar"><span class="tr-chip"><i></i>وضع المعلمة مفعّل</span><a class="tr-btn" href="#harbor">معاينة الصفوف</a><button class="tr-btn o" id="trrf" type="button">تحديث الأرقام</button><span class="tr-up" id="trup"></span><button class="tr-btn o" id="tout" type="button" style="margin-inline-start:auto">خروج</button></div>
   <section class="tr-pan tr-wide"><div class="tr-ph"><span class="tr-pi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><div><h3>متابعة الطلاب</h3><p>من دخل، ومن لعب، وكم نجمة جمع.</p></div></div><div id="trst"></div></section>
   <section class="tr-pan tr-wide"><div class="tr-ph"><span class="tr-pi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M8 11h8M8 15h8M8 8h4"/></svg></span><div><h3>نتائج الاختبارات</h3><p>روابط Google Forms لكل اختبار.</p></div></div><div class="tr-list">${L}</div></section>`}
- else main=`<section class="tr-pan tr-door tr-wide">${I.write?`<img class="tr-girl" src="${I.write}" alt="">`:''}<div class="tr-dtx">${key}<h3>الغرفة مقفلة</h3><p>هذه الصفحة للمعلمة، وفيها متابعة دخول الطلاب ونجومهم ونتائج الاختبارات.</p><p>لفتح الغرفة، اضغط «دخول المعلمة» في صفحة مرفأ السفينة، ثم أدخل رمز المعلمة.</p><a class="tr-go" href="#harbor">اذهب إلى المرفأ</a></div></section>`;
+ else main=`<section class="tr-pan tr-door tr-wide">${I.write?`<img class="tr-girl" src="${I.write}" alt="">`:''}<div class="tr-dtx">${key}<h3>الغرفة مقفلة</h3><p>هذه الصفحة للمعلمة، وفيها متابعة دخول الطلاب ونجومهم ونتائج الاختبارات.</p><p>اكتب رمز المعلمة لفتح الغرفة.</p><div class="tr-unl"><input id="tuc" class="tr-in" type="password" inputmode="numeric" autocomplete="off" placeholder="رمز المعلمة" aria-label="رمز المعلمة"><button class="tr-go" id="tub" type="button">فتح الغرفة</button></div><p class="tr-er" id="tue" role="alert"></p></div></section>`;
  box.innerHTML=`<div class="tr"><div class="tr-room">${head}<div class="tr-grid">${main}${gen}</div></div></div>`;
  document.getElementById('trvid').onclick=()=>window.mkVideo&&window.mkVideo('teacher');
+ const tub=document.getElementById('tub');if(tub){const tuc=document.getElementById('tuc'),tue=document.getElementById('tue');
+  const go=async()=>{tue.textContent='';try{const th=hSet().teacherHash;if(!th){tue.textContent='لم يُعيَّن رمز المعلمة بعد';return}if(await hHash('teacher',tuc.value)!==th){tue.textContent='الرمز غير صحيح';return}st.teacher=true;save();hud();teacherDraw()}catch(e){tue.textContent=e.message==='nosubtle'?'يلزم فتح الموقع عبر رابط https':'حدث خطأ، حاول مرة أخرى'}};
+  tub.onclick=go;tuc.onkeydown=e=>{if(e.key==='Enter')go()}}
  const out=document.getElementById('tout');if(out)out.onclick=()=>{st.teacher=false;save();teacherDraw()};
  const rf=document.getElementById('trrf');if(rf)rf.onclick=trLoad;if(st.teacher)trLoad();
  const cp=document.getElementById('tgcp');
@@ -2815,10 +2818,10 @@ window.POSES=POSES;
    mock:()=>`<div class="hvt"><b>دخول المعلمة</b><div class="hvin"><span id="hvtx"></span><i class="hvcur"></i></div><div class="hvgo" id="hvgo">دخول</div></div>`,
    run:(S,T,pt,tap)=>{pt(S.querySelector('.hvin'),300);T(tap,900);'••••••••'.split('').forEach((_,k)=>T(()=>{S.querySelector('#hvtx').textContent='••••••••'.slice(0,k+1)},1200+k*160));T(()=>pt(S.querySelector('#hvgo'),0),2900);T(()=>{S.querySelector('#hvgo').classList.add('on');tap()},3700)}},
   {t:'اقرأ الإحصاءات',d:'تظهر في أعلى الغرفة أرقام الدخول: كم طالبًا سجّل، وكم دخل اليوم، وكم لعب، وكم لم يلعب بعد.',
-   mock:()=>`<div class="tvt">${[['24','سجّلوا دخولهم'],['6','دخلوا اليوم'],['19','لعبوا'],['5','لم يلعبوا بعد']].map((x,i)=>`<div class="tvtl" data-i="${i}"><b>0</b><span>${x[1]}</span></div>`).join('')}</div>`,
+   mock:()=>`<div class="tvt">${[['24','سجّلوا دخولهم'],['6','دخل اليوم'],['19','لعب'],['5','لم يلعب بعد']].map((x,i)=>`<div class="tvtl" data-i="${i}"><b>0</b><span>${x[1]}</span></div>`).join('')}</div>`,
    run:(S,T,pt,tap)=>{[24,6,19,5].forEach((v,i)=>{const e=S.querySelector(`.tvtl[data-i="${i}"]`);T(()=>{e.classList.add('on');pt(e,0);const b=e.querySelector('b');for(let k=1;k<=10;k++)T(()=>{b.textContent=Math.round(v*k/10)},k*60)},400+i*1300)})}},
-  {t:'تابع الطلاب',d:'اختر الصف، ثم اضغط «لم يلعبوا» لترى من دخل ولم يبدأ اللعب بعد.',
-   mock:()=>`<div class="tvpan"><div class="tvseg"><u class="on">الكل</u><u>لعبوا</u><u id="tvn">لم يلعبوا</u></div>${['سالم','مريم','خالد','آمنة'].map((n,i)=>`<div class="tvst ${i%2?'n':'p'}" data-p="${i%2?0:1}"><b>${n}</b><em>${i%2?'لم يلعب بعد':'لعب'}</em></div>`).join('')}</div>`,
+  {t:'تابع الطلاب',d:'اختر الصف، ثم اضغط «لم يلعب» لترى من دخل ولم يبدأ اللعب بعد.',
+   mock:()=>`<div class="tvpan"><div class="tvseg"><u class="on">الكل</u><u>لعب</u><u id="tvn">لم يلعب</u></div>${['سالم','مريم','خالد','آمنة'].map((n,i)=>`<div class="tvst ${i%2?'n':'p'}" data-p="${i%2?0:1}"><b>${n}</b><em>${i%2?'لم يلعب بعد':'لعب'}</em></div>`).join('')}</div>`,
    run:(S,T,pt,tap)=>{pt(S.querySelector('#tvn'),400);T(()=>{tap();S.querySelectorAll('.tvseg u').forEach(u=>u.classList.toggle('on',u.id==='tvn'));S.querySelectorAll('.tvst[data-p="1"]').forEach(r=>r.style.display='none')},1400)}},
   {t:'افتح نتائج الاختبارات',d:'اضغط «افتح» بجانب أي اختبار لتنتقل إلى نتائجه في Google Forms.',
    mock:()=>`<div class="tvr">${['اختبار الأسبوع الأول','اختبار الأسبوع الثاني'].map((n,i)=>`<div class="tvrow" data-i="${i}"><b>${n}</b><u>افتح</u></div>`).join('')}</div>`,
@@ -3535,6 +3538,7 @@ footer p{margin:0!important;font-size:clamp(.7rem,2.6vw,.9rem)!important;color:v
 .tvseg{display:flex;border:1.5px solid #b98a3e;border-radius:8px;overflow:hidden}.tvseg u{flex:1;text-decoration:none;text-align:center;padding:.25rem;color:#ffe9b8}.tvseg u.on{background:#d9a441;color:#4a2e0c}
 .tvst{display:flex;justify-content:space-between;background:#fbf3de;color:#3b2a14;border-radius:6px;padding:.25rem .5rem}.tvst em{font-style:normal;font-size:.58rem;border-radius:999px;padding:.05rem .45rem}.tvst.p em{background:#d6f1df;color:#1d6b43}.tvst.n em{background:#ffe3cf;color:#9a4a12}
 
+.tr-unl{display:flex;gap:.5rem;flex-wrap:wrap;margin:.4rem 0}.tr-unl .tr-in{flex:1 1 150px;min-width:0;text-align:center;letter-spacing:.2em}.tr-unl .tr-go{flex:0 0 auto}.tr-er{color:#ffb4a0;font-weight:700;min-height:1.2em;margin:0}
 </style>
 </body>
 </html>
