@@ -1678,7 +1678,7 @@ function harborDraw(){const root=document.getElementById('hb2');if(!root)return;
   <label class="hfld" id="hcw" hidden>رمز المعلمة<input id="hc" autocomplete="off" inputmode="numeric"></label>
   <p id="herr" role="alert"></p>
   <button class="hgo" id="hgo">اصعد إلى السفينة</button>
-  <button type="button" class="hteach" id="hteach">دخول المعلمة</button><button type="button" class="hteach hvid" id="hvid0">${SIC('play')} فيديو توضيحي</button></div>
+  <button type="button" class="hteach" id="hteach">دخول المعلمة</button><button type="button" class="hteach hvid" id="hvid0">${SIC('play')} الفيديو التعريفي</button></div>
   ${I.wave?`<img class="hguide" src="${I.wave}" alt="المرشدة">`:''}</div>`;
  const $g=id=>document.getElementById(id);
  const sync=()=>{$g('hcw').hidden=!tmode;['hnw','hgl','hgs'].forEach(i=>$g(i).hidden=tmode);$g('hteach').textContent=tmode?'رجوع للطلبة':'دخول المعلمة';$g('hsub').textContent=tmode?'اكتب رمز المعلمة لمعاينة كل الصفوف.':'اكتب اسمك واختر صفك.'};
@@ -1696,9 +1696,9 @@ function hBoard(root,gid,teacher){const I=HIMG(),c=HG[gid]||HG.g9,D=hDone(),data
  let gi=0,cur=-1;const items=[];data.units.forEach(u=>u.lessons.forEach((l,li)=>{const none=!l.games.length,all=!none&&l.games.every(g=>D[hKey(g.repo)]);if(cur<0&&!none&&!all)cur=gi;items.push({u,l,none,all,first:li===0,i:gi});gi++}));
  const left=p.t-p.n,full=p.t>0&&left===0;
  root.innerHTML=`<div class="hhello">${I.hold?`<img src="${I.hold}" alt="">`:''}<div class="htx"><h2>${teacher?'وضع المعلمة':'مرحبًا '+hEsc(st.name||'')+'!'}</h2><p>${teacher?'معاينة دروس '+hEsc(hGName(gid)):'دروس '+hEsc(hGName(gid))+' وألعابها'}</p></div>
-  <div class="hhact">${teacher?'':`<span class="hchip">أنهيت ${p.n} من ${p.t}</span>`}<button class="hout" id="hout">${teacher?'خروج':'الرجوع للمرفأ'}</button><button class="hout hvid" type="button" id="hvid">${SIC('play')} فيديو توضيحي</button></div></div>
+  <div class="hhact">${teacher?'':`<span class="hchip">أنهيت ${p.n} من ${p.t}</span>`}<button class="hout" id="hout">${teacher?'خروج':'الرجوع للمرفأ'}</button><button class="hout hvid" type="button" id="hvid">${SIC('play')} الفيديو التعريفي</button></div></div>
   ${teacher?`<div class="htabs">${hCfg().map(x=>`<a class="htab${x.id===gid?' on':''}" href="#harbor-${hEsc(encodeURIComponent(x.id))}" style="--c:${(HG[x.id]||HG.g9)[0]}">${hEsc(x.name)}</a>`).join('')}</div>`:''}
-  ${items.length?`<div class="hsea" id="hsea"><svg class="hpath" aria-hidden="true"><path id="hpp" fill="none"/></svg>${items.map(x=>`<button type="button" class="hpt${x.all?' is-done':''}${x.i===cur?' is-cur':''}${x.none?' is-none':''}" data-i="${x.i}" aria-label="الدرس ${x.l.n!=null?x.l.n:x.i+1}: ${hEsc(x.l.t||'')}"><span class="hnode"><span class="hico">${hIc(x.l.ic)}</span>${x.all?`<i class="hbd">${HCHK}</i>`:x.i===cur?`<i class="hbd sh">${HSHIP}</i>`:''}</span><span class="hlb"><small>${x.first&&x.u.n!=null?'الوحدة '+x.u.n+' · ':''}الدرس ${x.l.n!=null?x.l.n:x.i+1}</small><b>${hEsc(x.l.t||'')}</b></span></button>`).join('')}<button type="button" class="hpt hcertn${full?' is-done':''}" id="hcertb" data-lock="${full||teacher?0:1}" aria-label="شهادة الرحلة"><span class="hnode"><span class="hico">${full||teacher?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H5a2 2 0 0 0 2 4M16 6h3a2 2 0 0 1-2 4M12 13v4M8.5 20h7M10 17h4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2" fill="currentColor"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>'}</span></span><span class="hlb"><small>${full?'أنهيت كل الألعاب':'بقي '+left+(left===1?' لعبة':left===2?' لعبتان':left<=10?' ألعاب':' لعبة')}</small><b>شهادة الرحلة</b></span></button><span class="hshipimg" id="hshipimg" aria-hidden="true"></span>${I.hold?`<img class="hsg" src="${I.hold}" alt="">`:''}</div>`:`<div class="hempty">${I.think?`<img src="${I.think}" alt="">`:''}<p>ألعاب هذا الصف تُضاف قريبًا.</p></div>`}</div>`;
+  ${items.length?`<div class="hsea" id="hsea"><svg class="hpath" aria-hidden="true"><path id="hpp" fill="none"/></svg>${items.map(x=>`<button type="button" class="hpt${x.all?' is-done':''}${x.i===cur?' is-cur':''}${x.none?' is-none':''}" data-i="${x.i}" aria-label="الدرس ${x.l.n!=null?x.l.n:x.i+1}: ${hEsc(x.l.t||'')}"><span class="hnode"><svg class="hwheel" viewBox="0 0 100 100" aria-hidden="true"><g class="hw-sp"><line x1="50" y1="50" x2="91.0" y2="50.0"/><circle cx="94.0" cy="50.0" r="4.6"/><line x1="50" y1="50" x2="79.0" y2="79.0"/><circle cx="81.1" cy="81.1" r="4.6"/><line x1="50" y1="50" x2="50.0" y2="91.0"/><circle cx="50.0" cy="94.0" r="4.6"/><line x1="50" y1="50" x2="21.0" y2="79.0"/><circle cx="18.9" cy="81.1" r="4.6"/><line x1="50" y1="50" x2="9.0" y2="50.0"/><circle cx="6.0" cy="50.0" r="4.6"/><line x1="50" y1="50" x2="21.0" y2="21.0"/><circle cx="18.9" cy="18.9" r="4.6"/><line x1="50" y1="50" x2="50.0" y2="9.0"/><circle cx="50.0" cy="6.0" r="4.6"/><line x1="50" y1="50" x2="79.0" y2="21.0"/><circle cx="81.1" cy="18.9" r="4.6"/></g><circle class="hw-ring" cx="50" cy="50" r="31"/><circle class="hw-in" cx="50" cy="50" r="25"/></svg><span class="hico">${hIc(x.l.ic)}</span>${x.all?`<i class="hbd">${HCHK}</i>`:x.i===cur?`<i class="hbd sh">${HSHIP}</i>`:''}</span><span class="hlb"><small>${x.first&&x.u.n!=null?'الوحدة '+x.u.n+' · ':''}الدرس ${x.l.n!=null?x.l.n:x.i+1}</small><b>${hEsc(x.l.t||'')}</b></span></button>`).join('')}<button type="button" class="hpt hcertn${full?' is-done':''}" id="hcertb" data-lock="${full||teacher?0:1}" aria-label="شهادة الرحلة"><span class="hnode"><svg class="hwheel hchest" viewBox="0 0 100 100" aria-hidden="true"><path class="hc-b" d="M16 46h68v32a6 6 0 0 1-6 6H22a6 6 0 0 1-6-6z"/><path class="hc-l" d="M16 46a34 24 0 0 1 68 0z"/><path class="hc-g" d="M16 46h68M30 24v60M70 24v60" fill="none"/><rect class="hc-k" x="43" y="42" width="14" height="16" rx="3"/><circle class="hc-h" cx="50" cy="50" r="2.4"/></svg><span class="hico">${full||teacher?'':'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2" fill="currentColor"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>'}</span></span><span class="hlb"><small>${full?'أنهيت كل الألعاب':'بقي '+left+(left===1?' لعبة':left===2?' لعبتان':left<=10?' ألعاب':' لعبة')}</small><b>شهادة الرحلة</b></span></button><span class="hshipimg" id="hshipimg" aria-hidden="true"></span>${I.hold?`<img class="hsg" src="${I.hold}" alt="">`:''}</div>`:`<div class="hempty">${I.think?`<img src="${I.think}" alt="">`:''}<p>ألعاب هذا الصف تُضاف قريبًا.</p></div>`}</div>`;
  hSea(root,items,cur,gid,teacher,full,left);
  document.getElementById('hvid').onclick=()=>window.mkVideo&&window.mkVideo('harbor');
  document.getElementById('hout').onclick=()=>{if(teacher){st.teacher=false}else{st.gid=''}save();hud();harborDraw()};
@@ -1709,15 +1709,17 @@ function hBoard(root,gid,teacher){const I=HIMG(),c=HG[gid]||HG.g9,D=hDone(),data
 
 function hSea(root,items,cur,gid,teacher,full,left){const sea=root.querySelector('#hsea');if(!sea)return;
  const pts=[...sea.querySelectorAll('.hpt')],pp=sea.querySelector('#hpp'),svg=sea.querySelector('.hpath'),ship=sea.querySelector('#hshipimg');
- const layout=()=>{if(!sea.isConnected)return;const W=sea.parentElement.clientWidth,N=pts.length,cols=W<520?2:W<900?3:5,rows=Math.ceil(N/cols),rowMin=W<520?182:132,fh=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--fh'))||30;
-  const top=sea.getBoundingClientRect().top+scrollY,fit=Math.max(innerHeight-(top-scrollY)-fh-14,360),H=Math.max(fit,rows*rowMin);sea.style.height=H+'px';
-  const res=W>=900?190:0,Wu=W-res,rh=H/rows,P=[];
-  pts.forEach((el,k)=>{const r=Math.floor(k/cols),j=k%cols,xi=r%2?j:cols-1-j,x=(xi+.5)/cols*Wu,y=(r+.5)*rh+(k%2?10:-10);P.push([x,y]);el.style.left=x+'px';el.style.top=y+'px'});
-  let d='M'+P[0][0]+' '+P[0][1];for(let k=0;k<P.length-1;k++){const p0=P[k-1]||P[k],p1=P[k],p2=P[k+1],p3=P[k+2]||p2;d+=` C${p1[0]+(p2[0]-p0[0])/6} ${p1[1]+(p2[1]-p0[1])/6} ${p2[0]-(p3[0]-p1[0])/6} ${p2[1]-(p3[1]-p1[1])/6} ${p2[0]} ${p2[1]}`}
-  pp.setAttribute('d',d);svg.setAttribute('width',W);svg.setAttribute('height',H);
-  const t=cur>=0?P[cur]:P[P.length-1];ship.style.left=(t[0]-(W<520?30:58))+'px';ship.style.top=Math.max(4,t[1]-(W<520?96:112))+'px'};
+ const layout=()=>{if(!sea.isConnected)return;const W=sea.parentElement.clientWidth,N=pts.length,P=[],groups=[];let H;
+  if(W<700){const rh=W<520?172:180;H=N*rh+96;pts.forEach((el,k)=>P.push([W*(k%2?.3:.7),96+k*rh+rh/2-26]));groups.push(P.map((_,i)=>i))}
+  else{const res=W>=900?190:0,Wu=W-res,per=N<=8?N:Math.ceil(N/2),rows=Math.ceil(N/per),rh=262,amp=30,mx=84;H=rows*rh+84;
+   pts.forEach((el,k)=>{const r=Math.floor(k/per),j=k%per,xi=r%2?j:per-1-j,x=mx+(per>1?xi/(per-1):.5)*(Wu-2*mx),y=84+r*rh+rh/2-30+(j%2?amp:-amp);P.push([x,y]);(groups[r]=groups[r]||[]).push(k)})}
+  pts.forEach((el,k)=>{el.style.left=P[k][0]+'px';el.style.top=P[k][1]+'px'});
+  const cr=idx=>{let d='';for(let k=0;k<idx.length-1;k++){const p0=P[idx[k-1]]||P[idx[k]],p1=P[idx[k]],p2=P[idx[k+1]],p3=P[idx[k+2]]||p2;d+=` C${p1[0]+(p2[0]-p0[0])/6} ${p1[1]+(p2[1]-p0[1])/6} ${p2[0]-(p3[0]-p1[0])/6} ${p2[1]-(p3[1]-p1[1])/6} ${p2[0]} ${p2[1]}`}return d};
+  let d='M'+P[0][0]+' '+P[0][1];groups.forEach((g,gi)=>{if(gi){const pe=P[groups[gi-1][groups[gi-1].length-1]],ps=P[g[0]],dir=pe[0]<W/2?-1:1;d+=` C${pe[0]+dir*120} ${pe[1]+10} ${ps[0]+dir*120} ${ps[1]-10} ${ps[0]} ${ps[1]}`}d+=cr(g)});
+  sea.style.height=H+'px';pp.setAttribute('d',d);svg.setAttribute('width',W);svg.setAttribute('height',H);
+  const t=cur>=0?P[cur]:P[P.length-1],sw=ship.offsetWidth||110;ship.style.left=(t[0]-sw/2-(W<520?4:0))+'px';ship.style.top=Math.max(4,t[1]-sw*.77-40)+'px'};
  layout();requestAnimationFrame(layout);let lw=0;try{new ResizeObserver(()=>{const w=sea.parentElement.clientWidth;if(w!==lw){lw=w;layout()}}).observe(sea.parentElement)}catch(e){}if(document.fonts&&document.fonts.ready)document.fonts.ready.then(layout);
- if(!window.__hseaR){window.__hseaR=1;addEventListener('resize',()=>{const e=document.getElementById('hsea');if(e&&e.__l)e.__l()})}sea.__l=layout;
+ if(!window.__hseaR){window.__hseaR=1;}sea.__l=layout;
  sea.addEventListener('click',e=>{const b=e.target.closest('.hpt');if(!b)return;
   if(b.id==='hcertb'){if(+b.dataset.lock){hToast('أنهِ ألعاب دروسك كلها لتفتح شهادة الرحلة.');return}hCert(gid,teacher);return}
   const it=items[+b.dataset.i];hLesson(it)})}
@@ -2641,7 +2643,7 @@ const POSES={"map": "data:image/webp;base64,UklGRrBCAABXRUJQVlA4WAoAAAAQAAAAJQEA
  const I2={play:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z" fill="currentColor"/></svg>',pause:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg>',next:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',prev:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'};
  const SK='sindbad-maps-intro-v1',box=document.createElement('div');box.className='mtut';box.id='mtut';box.hidden=true;
  box.innerHTML=`<div class="mtbox" role="dialog" aria-modal="true" aria-label="تعريف بصفحة اكتشف عُمان"><button class="mtx" aria-label="إغلاق">${SIC('close')}</button>
- <div class="mtintro"><img class="mtg" src="${POSES.map}" alt=""><h3>مرحبًا بك في «اكتشف عُمان»</h3><p>اضغط على أي محافظة لتتعرف على معلومات عنها ومحافظاتها المجاورة ومعالمها، واجمع ختمًا لكل محافظة في جواز المستكشف، ولوّن الخريطة كما يحلو لك.</p><div class="mtbtns"><button class="mtgo">${I2.play} فيديو توضيحي</button><button class="mtskip">ابدأ مباشرة</button></div></div>
+ <div class="mtintro"><img class="mtg" src="${POSES.map}" alt=""><h3>مرحبًا بك في «اكتشف عُمان»</h3><p>اضغط على أي محافظة لتتعرف على معلومات عنها ومحافظاتها المجاورة ومعالمها، واجمع ختمًا لكل محافظة في جواز المستكشف، ولوّن الخريطة كما يحلو لك.</p><div class="mtbtns"><button class="mtgo">${I2.play} شاهد الفيديو التعريفي</button><button class="mtskip">ابدأ مباشرة</button></div></div>
  <div class="mtplay" hidden><div class="mtstage"><div class="mtmap"></div><div class="mtmock"></div><div class="mtptr" aria-hidden="true">${SIC('hand')}</div></div><div class="mtcap"><b></b><span></span></div><div class="mtbar"><i></i></div><div class="mtctl"><button class="mtb mtprev" aria-label="السابق">${I2.prev}</button><button class="mtb mtpp" aria-label="إيقاف مؤقت">${I2.pause}</button><button class="mtb mtnext" aria-label="التالي">${I2.next}</button><span class="mtdots"></span></div></div></div>`;
  document.body.appendChild(box);
  const q=x=>box.querySelector(x),stage=q('.mtstage'),mapBox=q('.mtmap'),mock=q('.mtmock'),ptr=q('.mtptr');
@@ -2678,7 +2680,7 @@ const POSES={"map": "data:image/webp;base64,UklGRrBCAABXRUJQVlA4WAoAAAAQAAAAJQEA
   if(playing){bar.style.transition=`width ${DUR}ms linear`;bar.style.width='100%'}
   const gv=[...c.querySelectorAll('path.gov')];requestAnimationFrame(()=>{S.run(null,T,pt,gv)});
   if(playing)T(()=>{cur<SC.length-1?scene(cur+1):endShow()},DUR)}
- function endShow(){clr();q('.mtcap b').textContent='جاهز للاستكشاف';q('.mtcap span').textContent='أغلق الفيديو وابدأ باختيار محافظة. تجد زر «فيديو توضيحي» دائمًا أعلى الخريطة.';q('.mtbar i').style.width='100%';const pp=q('.mtpp');pp.innerHTML=I2.play;pp.setAttribute('aria-label','إعادة العرض');playing=false;cur=SC.length}
+ function endShow(){clr();q('.mtcap b').textContent='جاهز للاستكشاف';q('.mtcap span').textContent='أغلق الفيديو وابدأ باختيار محافظة. تجد زر «الفيديو التعريفي» دائمًا أعلى الخريطة.';q('.mtbar i').style.width='100%';const pp=q('.mtpp');pp.innerHTML=I2.play;pp.setAttribute('aria-label','إعادة العرض');playing=false;cur=SC.length}
  const mark=()=>{try{localStorage.setItem(SK,'1')}catch(e){}};
  function close(){clr();box.hidden=true;mark();document.removeEventListener('keydown',key)}
  function key(e){if(e.key==='Escape')close()}
@@ -2690,7 +2692,7 @@ const POSES={"map": "data:image/webp;base64,UklGRrBCAABXRUJQVlA4WAoAAAAQAAAAJQEA
  dots.onclick=e=>{const i=e.target.closest('i');if(i)scene(+i.dataset.i)};
  box.addEventListener('click',e=>{if(e.target===box)close()});
  window.mtScene=scene;
- const hb=document.createElement('button');hb.className='mbtn mthelp';hb.type='button';hb.setAttribute('aria-label','فيديو توضيحي');hb.innerHTML=I2.play+'<span> فيديو توضيحي</span>';hb.onclick=()=>{open();};
+ const hb=document.createElement('button');hb.className='mbtn mthelp';hb.type='button';hb.setAttribute('aria-label','الفيديو التعريفي');hb.innerHTML=I2.play+'<span> الفيديو التعريفي</span>';hb.onclick=()=>{open();};
  document.querySelector('#v-maps .mtool').appendChild(hb);
  let seen=false;try{seen=!!localStorage.getItem(SK)}catch(e){}
  const vm=document.getElementById('v-maps'),chk=()=>{if(!seen&&vm.classList.contains('on')){seen=true;setTimeout(()=>open(true),700)}};
@@ -2724,7 +2726,7 @@ const POSES={"map": "data:image/webp;base64,UklGRrBCAABXRUJQVlA4WAoAAAAQAAAAJQEA
   let box=document.getElementById('vtut');if(box)box.remove();
   box=document.createElement('div');box.className='mtut';box.id='vtut';
   box.innerHTML=`<div class="mtbox" role="dialog" aria-modal="true" aria-label="فيديو توضيحي"><button class="mtx" aria-label="إغلاق">${SIC('close')}</button>
-  <div class="mtintro"><img class="mtg" src="${POSES[cfg.pose]}" alt=""><h3>فيديو توضيحي: ${cfg.title}</h3><p>${cfg.intro}</p><div class="mtbtns"><button class="mtgo">${IP.play} شغّل الفيديو</button><button class="mtskip">إغلاق</button></div></div>
+  <div class="mtintro"><img class="mtg" src="${POSES[cfg.pose]}" alt=""><p>${cfg.intro}</p><div class="mtbtns"><button class="mtgo">${IP.play} شاهد الفيديو التعريفي</button><button class="mtskip">إغلاق</button></div></div>
   <div class="mtplay" hidden><div class="mtstage hvstage"><div class="hvmock"></div><div class="mtptr" aria-hidden="true">${SIC('hand')}</div></div><div class="mtcap"><b></b><span></span></div><div class="mtbar"><i></i></div><div class="mtctl"><button class="mtb mtprev" aria-label="السابق">${IP.pv}</button><button class="mtb mtpp" aria-label="إيقاف مؤقت">${IP.pause}</button><button class="mtb mtnext" aria-label="التالي">${IP.nx}</button><span class="mtdots"></span></div></div></div>`;
   document.body.appendChild(box);
   const q=x=>box.querySelector(x),stage=q('.mtstage'),mock=q('.hvmock'),ptr=q('.mtptr'),dots=q('.mtdots'),SC=cfg.scenes;
@@ -2738,7 +2740,7 @@ const POSES={"map": "data:image/webp;base64,UklGRrBCAABXRUJQVlA4WAoAAAAQAAAAJQEA
    const bar=q('.mtbar i');bar.style.transition='none';bar.style.width='0';void bar.offsetWidth;if(playing){bar.style.transition=`width ${DUR}ms linear`;bar.style.width='100%'}
    requestAnimationFrame(()=>S.run(mock,T,pt,tap));
    if(playing)T(()=>{cur<SC.length-1?scene(cur+1):end()},DUR)}
-  function end(){clr();playing=false;cur=SC.length;q('.mtcap b').textContent='انتهى الفيديو';q('.mtcap span').textContent='أغلق النافذة وابدأ رحلتك. تجد زر «فيديو توضيحي» دائمًا في أعلى الصفحة.';q('.mtbar i').style.width='100%';const pp=q('.mtpp');pp.innerHTML=IP.play;pp.setAttribute('aria-label','إعادة التشغيل')}
+  function end(){clr();playing=false;cur=SC.length;q('.mtcap b').textContent='انتهى الفيديو';q('.mtcap span').textContent='أغلق النافذة وابدأ رحلتك. تجد زر «الفيديو التعريفي» دائمًا في أعلى الصفحة.';q('.mtbar i').style.width='100%';const pp=q('.mtpp');pp.innerHTML=IP.play;pp.setAttribute('aria-label','إعادة التشغيل')}
   const close=()=>{clr();box.remove();document.removeEventListener('keydown',kd)},kd=e=>{if(e.key==='Escape')close()};
   document.addEventListener('keydown',kd);
   q('.mtx').onclick=close;q('.mtskip').onclick=close;box.addEventListener('click',e=>{if(e.target===box)close()});
@@ -3073,6 +3075,28 @@ footer p{margin:0!important;font-size:clamp(.7rem,2.6vw,.9rem)!important;color:v
 .hvm em{font-style:normal;background:#fff;border-radius:10px;padding:.1rem .5rem;box-shadow:0 2px 6px #0003}
 .hvpop{position:absolute;top:118px;inset-inline:18%;background:#fff;border-radius:14px;padding:.6rem;text-align:center;display:grid;gap:.4rem;box-shadow:0 10px 20px #0004;opacity:0;transform:translateY(8px);transition:all .35s;color:#073B4C;font-weight:800;z-index:3}
 .hvpop.on{opacity:1;transform:none}.hvpop u{text-decoration:none;background:linear-gradient(135deg,#073B4C,#1499B8);color:#fff;border-radius:10px;padding:.35rem}
+
+/* محطات: عجلة سفينة */
+.hsea .hpt{transform:translate(-50%,-48px)!important;width:min(168px,42vw)}
+.hsea .hpt .hnode{width:96px;height:96px;border:0!important;background:none!important;box-shadow:none!important;border-radius:0;--wr:#D9A441;--wf:#0b5568;filter:drop-shadow(0 6px 6px rgba(7,59,76,.38))}
+.hsea .hpt.is-done .hnode{--wr:#E6B94F;--wf:#1f7a4d}
+.hsea .hpt.is-cur .hnode{--wr:#F3C46A;--wf:#B8741E;animation:none!important;filter:drop-shadow(0 0 10px rgba(243,196,106,.85)) drop-shadow(0 6px 6px rgba(7,59,76,.38))}
+.hsea .hpt.is-none .hnode{--wr:#aab6bb;--wf:#7f8d93}
+.hwheel{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.hw-sp line{stroke:var(--wr);stroke-width:5;stroke-linecap:round}.hw-sp circle{fill:var(--wr)}
+.hw-ring{fill:none;stroke:var(--wr);stroke-width:7}.hw-in{fill:var(--wf);stroke:#fff;stroke-width:2}
+.hsea .hico{position:relative;color:#fff}.hsea .hico svg{width:1.9rem!important;height:1.9rem!important}
+.hsea .hbd{inset-inline-end:2px;bottom:4px}
+.hchest .hc-b{fill:#8a3b1e}.hchest .hc-l{fill:#b4552b}.hchest .hc-g{stroke:var(--wr);stroke-width:5}.hchest .hc-k{fill:var(--wr);stroke:#fff;stroke-width:2}.hchest .hc-h{fill:#5e1530}
+.hcertn .hnode{--wr:#D9A441}.hcertn:not(.is-done) .hnode{filter:grayscale(.55) drop-shadow(0 6px 6px rgba(7,59,76,.38))}
+.hcertn .hico{position:absolute;inset:auto;left:50%;top:60%;transform:translate(-50%,-50%);color:#fff}.hcertn .hico svg{width:1.3rem!important;height:1.3rem!important;filter:drop-shadow(0 1px 2px #0006)}
+
+.hsea .hpt .hnode .hwheel{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important}
+.hsea .hpt .hnode,.hsea .hpt.is-done .hnode,.hsea .hpt.is-cur .hnode,.hsea .hpt.is-none .hnode,.hsea .hcertn .hnode,.hsea .hcertn.is-done .hnode{background:none!important;box-shadow:none!important}
+.hsea .hpt .hnode .hico svg{position:static!important;width:1.9rem!important;height:1.9rem!important}
+.hsea .hcertn .hnode .hico svg{width:1.3rem!important;height:1.3rem!important}
+.hsea .hcertn .hnode .hico{position:absolute!important;left:50%;top:62%;transform:translate(-50%,-50%)!important}
+.mtgo{white-space:nowrap}.mtgo .ico{width:1.2em!important;height:1.2em!important;flex:none}
 </style>
 </body>
 </html>
