@@ -1582,22 +1582,35 @@ function hbRows(t){const R=hbCsv(t),h=R[0]||[],ni=h.findIndex(x=>x.trim()==='ا�
  R.slice(1).forEach(r=>{const nm=String(r[ni]||'').trim(),gr=gi>=0?String(r[gi]||'').trim():'',n=parseInt(String(r[si]||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^\d]/g,''),10);if(!nm||!(n>0))return;const k=nm+'|'+gr;if(!m[k]||n>m[k].n)m[k]={nm,gr,n,k}});
  return Object.values(m).sort((a,b)=>b.n-a.n||a.nm.localeCompare(b.nm,'ar'))}
 function honor(){
- const hc=$('#hc');if(!hc)return;const u=String(hSet().honorCsv||'').trim();
- hc.classList.remove('card');hc.className='hb';
- const star='<svg aria-hidden="true"><use href="#i-star"/></svg>';
+ const hc=$('#hc');if(!hc)return;const u=String(hSet().honorCsv||'').trim(),I=window.SB_IMG||{};
+ hc.className='hz';
  const fn=n=>String(n).split(/\s+/)[0];
- const head='<h2>لوحة الشرف</h2><p class="hb-sub">أعلى المبحرين جمعًا للنجوم في الموقع</p>';
- hc.innerHTML=head+'<p class="hb-sub">جارٍ تحميل الترتيب…</p>';
- if(!u){hc.innerHTML=head+'<p class="hb-note">اللوحة غير مفعّلة بعد.</p>';return}
+ const star='<svg class="hzs" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.9 6.4.9-4.6 4.5 1.1 6.4L12 17.5l-5.7 3 1.1-6.4L2.8 9.6l6.4-.9z"/></svg>';
+ const cup='<svg class="hzc" viewBox="0 0 64 64" aria-hidden="true"><path d="M18 8h28v14c0 9-6 15-14 15s-14-6-14-15z" class="a"/><path d="M18 12H8c0 9 4 14 11 15M46 12h10c0 9-4 14-11 15" class="b"/><path d="M32 37v9M22 56h20M25 46h14v10H25z" class="a"/><path d="M26 15v6c0 4 2 7 5 8" class="h"/></svg>';
+ const medal=r=>`<svg class="hzm" viewBox="0 0 64 80" aria-hidden="true"><path d="M18 2l10 24h8L46 2h-9L32 14 27 2z" class="rb${r}"/><circle cx="32" cy="50" r="24" class="md${r}"/><circle cx="32" cy="50" r="18" class="mi"/><text x="32" y="59" text-anchor="middle">${r}</text></svg>`;
+ const head=`<div class="hz-top">${I.trophy?`<img class="hz-girl" src="${I.trophy}" alt="">`:''}<div class="hz-tt"><h2>${cup}لوحة الشرف</h2><p>أعلى المبحرين جمعًا للنجوم في الموقع</p></div><button type="button" class="hz-vid" id="hzvid">${SIC('play')} الفيديو التوضيحي</button></div>`;
+ const wrap=b=>head+b;
+ const bind=()=>{const v=document.getElementById('hzvid');if(v)v.onclick=()=>window.mkVideo&&window.mkVideo('honor')};
+ hc.innerHTML=wrap('<p class="hz-nt">جارٍ تحميل الترتيب…</p>');bind();
+ if(!u){hc.innerHTML=wrap('<p class="hz-nt">اللوحة غير مفعّلة بعد.</p>');bind();return}
  const myG=(hCfg().find(x=>x.id===st.gid)||{}).name||'',myK=(st.name||'').trim()+'|'+myG;
  fetch(u+'&_='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
-  const L=hbRows(t),top=L.slice(0,10);
-  if(!top.length){hc.innerHTML=head+'<p class="hb-note">لا يوجد أحد في اللوحة بعد. اجمع النجوم من ألعاب سندباد لتكون أول الأسماء هنا.</p>';return}
-  const pod=[1,0,2].filter(i=>top[i]).map(i=>{const o=top[i];return `<div class="hb-p r${i+1}${o.k===myK?' me':''}"><div class="hb-rk">${i+1}</div><div class="hb-nm">${E(fn(o.nm))}</div><div class="hb-gr">${E(o.gr)}</div><div class="hb-sc">${star}${o.n}</div></div>`}).join('');
-  const rest=top.slice(3).map((o,j)=>`<div class="hb-li${o.k===myK?' me':''}"><div class="hb-rk">${j+4}</div><div class="hb-nm">${E(fn(o.nm))}<span class="hb-gr"> · ${E(o.gr)}</span></div><div class="hb-sc">${star}${o.n}</div></div>`).join('');
-  const mi=L.findIndex(o=>o.k===myK),me=st.name&&mi>=3&&mi>=10?`<p class="hb-me">ترتيبك الآن: ${mi+1} من ${L.length}</p>`:'';
-  hc.innerHTML=head+`<div class="hb-pod">${pod}</div>${rest}${me}<p class="hb-note">يظهر الاسم الأول والصف فقط. يتحدّث الترتيب خلال دقائق من تسجيل النجوم.</p>`;
- }).catch(()=>{hc.innerHTML=head+'<p class="hb-note">تعذّر تحميل الترتيب الآن. تأكد من اتصالك بالإنترنت ثم أعد فتح الصفحة.</p>'});
+  const ALL=hbRows(t);let fl='';
+  const grs=[...new Set(ALL.map(o=>o.gr).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ar'));
+  const draw=()=>{const L=fl?ALL.filter(o=>o.gr===fl):ALL,top=L.slice(0,10),mx=Math.max(1,...(top.map(o=>o.n)));
+   const chips=grs.length>1?`<div class="hz-ch" role="group" aria-label="الصف"><button type="button" data-g="" class="${fl?'':'on'}">كل الصفوف</button>${grs.map(g=>`<button type="button" data-g="${E(g)}" class="${fl===g?'on':''}">${E(g)}</button>`).join('')}</div>`:'';
+   let body;
+   if(!top.length)body='<p class="hz-nt">لا يوجد أحد في اللوحة بعد. اجمع النجوم من ألعاب سندباد لتكون أول الأسماء هنا.</p>';
+   else{
+    const pod=[1,0,2].filter(i=>top[i]).map(i=>{const o=top[i];return`<div class="hz-p r${i+1}${o.k===myK?' me':''}">${i===0?'<svg class="hz-cr" viewBox="0 0 48 30" aria-hidden="true"><path d="M4 26L2 8l12 9 10-14 10 14 12-9-2 18z"/></svg>':''}${medal(i+1)}<div class="hz-n">${E(fn(o.nm))}</div><div class="hz-g">${E(o.gr)}</div><div class="hz-sc">${star}${o.n}</div><div class="hz-bs"></div></div>`}).join('');
+    const rest=top.slice(3).map((o,j)=>`<div class="hz-li${o.k===myK?' me':''}"><span class="hz-rk">${j+4}</span><span class="hz-in"><b>${E(fn(o.nm))}</b><small>${E(o.gr)}</small><i class="hz-br"><u style="width:${Math.max(4,o.n/mx*100)}%"></u></i></span><span class="hz-sc">${star}${o.n}</span></div>`).join('');
+    const mi=L.findIndex(o=>o.k===myK);
+    const me=!st.name?'':mi>=10?`<div class="hz-me"><span>ترتيبك الآن</span><b>${mi+1}</b><small>من ${L.length}</small></div>`:mi<0?'<div class="hz-me o"><span>اجمع نجومًا من الألعاب ليظهر اسمك على اللوحة</span></div>':'';
+    body=`<div class="hz-pod">${pod}</div><div class="hz-ls">${rest}</div>${me}`}
+   hc.innerHTML=wrap(chips+body+'<p class="hz-nt">يظهر الاسم الأول والصف فقط. يتحدّث الترتيب خلال دقائق من تسجيل النجوم.</p>');bind();
+   hc.querySelectorAll('.hz-ch button').forEach(b=>b.onclick=()=>{fl=b.dataset.g;draw()})};
+  draw();
+ }).catch(()=>{hc.innerHTML=wrap('<p class="hz-nt">تعذّر تحميل الترتيب الآن. تأكد من اتصالك بالإنترنت ثم أعد فتح الصفحة.</p>');bind()});
 }
 /* ===== رموز اكتشف عُمان ===== */
 window.SIC=(()=>{const T={"play":"<path d=\"M8 5l11 7-11 7z\" fill=\"currentColor\"/>","check":"<path d=\"M5 12.5l4.5 4.5L19 7.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>","bucket": "<g transform=\"translate(1.5 2) scale(.9)\"><path fill=\"currentColor\" d=\"M16.56 8.94L7.62 0 6.21 1.41l2.38 2.38-5.15 5.15c-.59.59-.59 1.54 0 2.12l5.5 5.5c.29.29.68.44 1.06.44s.77-.15 1.06-.44l5.5-5.5c.59-.58.59-1.53 0-2.12zM5.21 10L10 5.21 14.79 10H5.21zM19 11.5s-2 2.17-2 3.5c0 1.1.9 2 2 2s2-.9 2-2c0-1.33-2-3.5-2-3.5z\"/><rect x=\"2\" y=\"19\" width=\"20\" height=\"3\" rx=\"1.5\" fill=\"#D9A441\"/></g>", "search": "<circle cx=\"11\" cy=\"11\" r=\"6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\"/><path d=\"M16 16l4.5 4.5\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\"/>", "hand": "<path d=\"M8 12V6.5a1.5 1.5 0 013 0V11m0-1V5.5a1.5 1.5 0 013 0V11m0-.5V7a1.5 1.5 0 013 0v6.5c0 4-2.5 6.5-6 6.5-3 0-4.5-2-6-5l-1.2-2.4a1.4 1.4 0 012.4-1.4L8 14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>", "layers": "<path d=\"M12 4l9 5-9 5-9-5z M3 14l9 5 9-5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linejoin=\"round\"/>", "pin": "<path d=\"M12 21s-6-5.5-6-10a6 6 0 0112 0c0 4.5-6 10-6 10z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><circle cx=\"12\" cy=\"11\" r=\"2.2\" fill=\"currentColor\"/>", "map": "<path d=\"M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z M9 4v14M15 6v14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linejoin=\"round\"/>", "near": "<circle cx=\"9\" cy=\"12\" r=\"5.2\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><circle cx=\"15\" cy=\"12\" r=\"5.2\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/>", "coast": "<path d=\"M3 15c3-3 4 3 7 0s4 3 7 0 3 0 4-1M3 9c3-3 4 3 7 0s4 3 7 0 3 0 4-1\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"/>", "drop": "<path d=\"M12 4c3 4 6 7 6 10.5a6 6 0 01-12 0C6 11 9 8 12 4z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/>", "cam": "<path d=\"M4 8h3l2-2.5h6L17 8h3v11H4z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linejoin=\"round\"/><circle cx=\"12\" cy=\"13.5\" r=\"3.2\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/>", "stamp": "<path d=\"M7 19h10M8 15h8l-1-4a3 3 0 10-6 0z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linejoin=\"round\"/>", "tools": "<path d=\"M4 7h10M18 7h2M4 17h2M10 17h10\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><circle cx=\"16\" cy=\"7\" r=\"2.2\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><circle cx=\"8\" cy=\"17\" r=\"2.2\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/>", "print": "<path d=\"M7 9V4h10v5M7 17H4v-7h16v7h-3M7 14h10v6H7z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linejoin=\"round\"/>", "link": "<path d=\"M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"/>", "undo": "<path d=\"M9 7L4 12l5 5M4 12h10a6 6 0 010 8\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>", "reset": "<path d=\"M20 12a8 8 0 11-2.4-5.7M20 4v5h-5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>", "fit": "<circle cx=\"12\" cy=\"12\" r=\"7\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><path d=\"M12 2v4M12 18v4M2 12h4M18 12h4\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"/>", "close": "<path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"/>", "dice": "<path d=\"M4 8h3l9 8h4M4 16h3l3-2.5M13 9.5L16 8h4M18 6l2 2-2 2M18 14l2 2-2 2\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>", "game": "<rect x=\"3\" y=\"7\" width=\"18\" height=\"11\" rx=\"4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><path d=\"M8 10v5M5.5 12.5h5\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"/><circle cx=\"15.5\" cy=\"11.5\" r=\"1.2\" fill=\"currentColor\"/><circle cx=\"18\" cy=\"14\" r=\"1.2\" fill=\"currentColor\"/>", "compass": "<circle cx=\"12\" cy=\"12\" r=\"9\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><path d=\"M15.5 8.5l-2 5-5 2 2-5z\" fill=\"currentColor\"/>", "medal": "<circle cx=\"12\" cy=\"14\" r=\"5.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><path d=\"M8.5 3l3.5 6 3.5-6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linejoin=\"round\"/>"};return n=>'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">'+T[n]+'</svg>'})();
@@ -2830,6 +2843,18 @@ window.POSES=POSES;
    mock:()=>`<div class="tvr">${['اختبار الأسبوع الأول','اختبار الأسبوع الثاني'].map((n,i)=>`<div class="tvrow" data-i="${i}"><b>${n}</b><u>افتح</u></div>`).join('')}</div>`,
    run:(S,T,pt,tap)=>{[0,1].forEach(i=>{const u=S.querySelector(`.tvrow[data-i="${i}"] u`);T(()=>pt(u,0),500+i*1900);T(()=>{tap();u.classList.add('on')},1300+i*1900)})}}
  ]};
+
+ VIDS.honor={title:'لوحة الشرف',pose:'cele',intro:'لوحة الشرف تعرض أعلى عشرة مبحرين جمعوا نجومًا في الموقع. العب الألعاب واجمع النجوم لتصعد المنصة.',scenes:[
+  {t:'اجمع النجوم',d:'كل لعبة تنهيها بنجاح تمنحك نجومًا تُسجَّل باسمك وصفك.',
+   mock:()=>`<div class="hzv"><div class="hzvc"><span>نجومي</span><b id="hzn">0</b></div></div>`,
+   run:(S,T,pt,tap)=>{const b=S.querySelector('#hzn');for(let k=1;k<=12;k++)T(()=>{b.textContent=k*4},400+k*160);T(()=>pt(b,0),500)}},
+  {t:'اصعد المنصة',d:'أصحاب أعلى ثلاث نتائج يقفون على المنصة بميداليات ذهبية وفضية وبرونزية.',
+   mock:()=>`<div class="hzv"><div class="hzvp"><div class="b">2</div><div class="a">1</div><div class="c">3</div></div></div>`,
+   run:(S,T,pt,tap)=>{const d=[...S.querySelectorAll('.hzvp div')];[2,1,0].forEach((i,k)=>T(()=>{d[i].classList.add('on')},500+k*700))}},
+  {t:'اعرف ترتيبك',d:'اختر صفك لترى ترتيب زملائك فيه، ويظهر ترتيبك إن لم تكن بين العشرة الأوائل.',
+   mock:()=>`<div class="hzv"><div class="hzvs"><u class="on">كل الصفوف</u><u id="hzg">الصف الخامس</u><u>الصف الثامن</u></div><div class="hzvp"><div class="b">2</div><div class="a">1</div><div class="c">3</div></div></div>`,
+   run:(S,T,pt,tap)=>{S.querySelectorAll('.hzvp div').forEach(x=>x.classList.add('on'));pt(S.querySelector('#hzg'),400);T(()=>{tap();S.querySelectorAll('.hzvs u').forEach(u=>u.classList.toggle('on',u.id==='hzg'))},1400)}}
+ ]};
 const DUR=6500;
  window.mkVideo=function(key){
   const cfg=VIDS[key];if(!cfg)return;
@@ -2871,6 +2896,10 @@ const DUR=6500;
  try{const k='sindbad-video-teacher-v1',vt=document.getElementById('v-teacher');let seen=false;try{seen=!!localStorage.getItem(k)}catch(e){}
   const chk=()=>{if(!seen&&vt.classList.contains('on')){seen=true;try{localStorage.setItem(k,'1')}catch(e){}}};
   new MutationObserver(chk).observe(vt,{attributes:true,attributeFilter:['class']});chk()}catch(e){}
+
+ try{const k='sindbad-video-honor-v1',vh=document.getElementById('v-honor');let seen=false;try{seen=!!localStorage.getItem(k)}catch(e){}
+  const chk=()=>{if(!seen&&vh.classList.contains('on')){seen=true;try{localStorage.setItem(k,'1')}catch(e){}setTimeout(()=>window.mkVideo('honor'),700)}};
+  new MutationObserver(chk).observe(vh,{attributes:true,attributeFilter:['class']});chk()}catch(e){}
 })();
 /* ---------- نصوص أوضح ---------- */
 const LS={mus:17,bur:15,sba:17,mct:17,nba:18,nsh:18,ssh:18,dha:20,dak:20,wus:23,dho:25};
@@ -3558,6 +3587,51 @@ footer p{margin:0!important;font-size:clamp(.7rem,2.6vw,.9rem)!important;color:v
 .tr-ht{display:block;height:14px;border-radius:9px;background:rgba(255,255,255,.14);overflow:hidden;margin:.25rem 0}.tr-ht i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,#f0c46a,#5fd68f)}
 .tr-hb small{color:#a9d3de}
 @media(max-width:520px){.tr-col small{font-size:.58rem}.tr-dn svg{width:100px;height:100px}}
+/* لوحة الشرف */
+.hz{max-width:860px;margin:0 auto;position:relative;color:#e9f3f6;border-radius:26px;padding:1.2rem 1.2rem 1rem;background:radial-gradient(120% 80% at 50% 0,#12627a 0,#0a3f54 55%,#072c3c);border:3px solid #d9a441;box-shadow:0 0 0 6px #0a3445,0 0 0 8px #b98a3e,0 18px 40px rgba(7,44,60,.35);overflow:hidden}
+.hz::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 12% 18%,rgba(255,233,184,.16) 0 2px,transparent 3px),radial-gradient(circle at 84% 12%,rgba(255,233,184,.14) 0 2px,transparent 3px),radial-gradient(circle at 70% 60%,rgba(255,233,184,.1) 0 2px,transparent 3px),radial-gradient(circle at 22% 70%,rgba(255,233,184,.1) 0 2px,transparent 3px);pointer-events:none}
+.hz>*{position:relative}
+.hz-top{display:flex;align-items:center;gap:.9rem;flex-wrap:wrap;margin-bottom:.8rem}
+.hz-girl{height:128px;width:auto;flex:none;filter:drop-shadow(0 6px 8px rgba(0,0,0,.3))}
+.hz-tt{flex:1 1 220px;min-width:0;text-align:start}
+.hz-tt h2{margin:0;display:flex;align-items:center;gap:.5rem;font-size:clamp(1.7rem,4.5vw,2.4rem);color:#ffe9b8;font-weight:800}
+.hz-tt p{margin:.2rem 0 0;color:#b7dbe5}
+.hz svg{position:static!important}
+.hz-c,.hzc{width:46px;height:46px;flex:none}.hzc .a{fill:#f0c46a;stroke:#b98a3e;stroke-width:2;stroke-linejoin:round}.hzc .b{fill:none;stroke:#f0c46a;stroke-width:3;stroke-linecap:round}.hzc .h{fill:none;stroke:#fff6d6;stroke-width:3;stroke-linecap:round;opacity:.8}
+.hz-vid{display:inline-flex;align-items:center;gap:.4rem;border:0;cursor:pointer;font:inherit;font-weight:800;font-size:.92rem;color:#4a2e0c;background:linear-gradient(#ffe9b8,#f0c46a);padding:.5rem 1rem;border-radius:999px;box-shadow:0 3px 0 #b98a3e}
+.hz-vid svg{width:16px;height:16px}
+.hz-ch{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center;margin:.2rem 0 .9rem}
+.hz-ch button{font:inherit;font-weight:700;font-size:.9rem;cursor:pointer;color:#e9f3f6;background:rgba(255,255,255,.08);border:1.5px solid rgba(240,196,106,.45);border-radius:999px;padding:.35rem .9rem}
+.hz-ch button.on{background:linear-gradient(#ffe9b8,#f0c46a);color:#4a2e0c;border-color:#f0c46a}
+.hz-pod{display:flex;align-items:flex-end;justify-content:center;gap:.7rem;margin:.6rem 0 1rem}
+.hz-p{flex:1;max-width:220px;min-width:0;text-align:center;position:relative;border-radius:16px 16px 0 0;padding:.6rem .4rem 0;color:#3b2a14;display:flex;flex-direction:column;align-items:center}
+.hz-p.r1{background:linear-gradient(#fff0bf,#f0c46a);min-height:250px}.hz-p.r2{background:linear-gradient(#f4f8fa,#bfd0d8);min-height:212px}.hz-p.r3{background:linear-gradient(#f7d3b0,#cf9460);min-height:184px}
+.hz-bs{margin-top:auto;height:10px;width:112%;border-radius:4px;background:rgba(0,0,0,.18)}
+.hz-cr{width:44px;height:28px;fill:#d9a441;stroke:#8a5a14;stroke-width:1.5;margin-bottom:-4px}
+.hzm{width:64px;height:80px;flex:none}.hzm text{font:800 24px Tajawal,sans-serif;fill:#3b2a14}
+.hzm .rb1{fill:#c0392b}.hzm .rb2{fill:#2f7ea8}.hzm .rb3{fill:#2e8b57}
+.hzm .md1{fill:#d9a441;stroke:#8a5a14;stroke-width:2.5}.hzm .md2{fill:#9fb0ba;stroke:#5b6b75;stroke-width:2.5}.hzm .md3{fill:#b87333;stroke:#6e3f17;stroke-width:2.5}.hzm .mi{fill:#fff6d6;opacity:.85}
+.hz-n{font-weight:800;font-size:1.2rem;line-height:1.3;max-width:100%;overflow-wrap:anywhere}.hz-g{font-size:.85rem;opacity:.8}
+.hz-sc{display:inline-flex;align-items:center;gap:.3rem;font-weight:800;font-size:1.15rem}.hz-p .hz-sc{margin-top:.35rem;background:rgba(255,255,255,.55);border-radius:999px;padding:.1rem .7rem}
+.hzs{width:18px;height:18px;fill:#d9a441;stroke:#8a5a14;stroke-width:1.2;flex:none}
+.hz-p.me,.hz-li.me{outline:3px solid #5fd6ee;outline-offset:2px}
+.hz-ls{display:grid;gap:.45rem}
+.hz-li{display:flex;align-items:center;gap:.8rem;padding:.5rem .8rem;border-radius:14px;background:#fbf3de;color:#3b2a14;border:1.5px solid #e6d3a3}
+.hz-rk{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#0a3f54;color:#ffe9b8;font-weight:800;flex:none;border:2px solid #d9a441}
+.hz-in{flex:1;min-width:0;display:grid;grid-template-columns:auto 1fr;gap:0 .5rem;align-items:center;text-align:start}
+.hz-in b{font-size:1.05rem}.hz-in small{opacity:.7}
+.hz-br{grid-column:1/-1;display:block;height:7px;border-radius:5px;background:#e9dcb8;overflow:hidden;margin-top:.25rem}.hz-br u{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#f0c46a,#5fd68f);text-decoration:none}
+.hz-me{margin-top:.8rem;display:flex;align-items:center;justify-content:center;gap:.6rem;flex-wrap:wrap;background:rgba(95,214,238,.14);border:1.5px dashed #5fd6ee;border-radius:14px;padding:.55rem;font-weight:700}
+.hz-me b{font-size:1.4rem;color:#ffe9b8}.hz-me.o{color:#b7dbe5}
+.hz-nt{margin:.9rem 0 0;text-align:center;color:#b7dbe5;font-size:.9rem;line-height:1.7}
+@media(max-width:600px){.hz{padding:.9rem .7rem .8rem;border-radius:20px}.hz-girl{height:92px}.hz-tt{flex-basis:150px}.hz-vid{width:100%;justify-content:center}.hz-pod{gap:.35rem}.hz-p{padding:.5rem .2rem 0}.hz-p.r1{min-height:230px}.hz-p.r2{min-height:196px}.hz-p.r3{min-height:170px}.hzm{width:52px;height:66px}.hz-n{font-size:1rem}.hz-cr{width:34px;height:22px}}
+/* فيديو لوحة الشرف */
+.hzv{width:min(300px,92%);display:grid;gap:.45rem;color:#ffe9b8;font-weight:800;font-size:.66rem}
+.hzvc{background:#0b3a4d;border:2px solid #b98a3e;border-radius:12px;padding:.6rem;text-align:center}.hzvc b{display:block;font-size:1.8rem}
+.hzvp{display:flex;align-items:flex-end;justify-content:center;gap:.35rem;height:120px}
+.hzvp div{flex:1;border-radius:8px 8px 0 0;display:grid;place-items:start center;padding-top:.3rem;color:#3b2a14;transform-origin:bottom;transform:scaleY(.05);transition:transform .6s}
+.hzvp div.on{transform:scaleY(1)}.hzvp .a{height:100%;background:#f0c46a}.hzvp .b{height:78%;background:#bfd0d8}.hzvp .c{height:62%;background:#cf9460}
+.hzvs{display:flex;gap:.3rem;justify-content:center}.hzvs u{text-decoration:none;background:#0b3a4d;border:1.5px solid #b98a3e;border-radius:999px;padding:.25rem .6rem;transition:.3s}.hzvs u.on{background:#f0c46a;color:#4a2e0c}
 </style>
 </body>
 </html>
