@@ -653,7 +653,7 @@ body.on-maps #v-maps .minfo{max-height:80%}
 .hhello .htx{flex:1;min-width:0}
 .hhello h2{margin:0;font-size:1.3rem;color:#fff}.hhello p{margin:0;font-weight:700;opacity:.93}
 .hhact{display:flex;align-items:center;gap:.5rem;margin-left:120px;flex-wrap:wrap;justify-content:flex-end}
-.hchip{padding:.25rem .8rem;border-radius:99px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);font-weight:800;font-size:.9rem}
+.hchip{padding:.25rem .8rem;border-radius:99px;background:rgba(7,80,110,.1);border:1px solid rgba(255,255,255,.4);font-weight:800;font-size:.9rem}
 .hout{min-height:40px;padding:.2rem .9rem;border-radius:12px;border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.14);color:#fff;font:800 .88rem Thmanyah Sans,Cairo,sans-serif;cursor:pointer}
 .htabs{display:flex;gap:.4rem;flex-wrap:wrap}
 .htab{padding:.3rem .9rem;border-radius:99px;background:#fff;border:2px solid var(--c);color:var(--deep-ocean);font-weight:800;text-decoration:none;font-size:.9rem}
@@ -874,7 +874,7 @@ html.hlock,html.hlock body{overflow:hidden}
 .k-sky .gdeco{background:radial-gradient(1.5px 1.5px at 20% 30%,#fff,transparent),radial-gradient(1.5px 1.5px at 45% 70%,#fff,transparent),radial-gradient(2px 2px at 70% 25%,#fff,transparent),radial-gradient(1.5px 1.5px at 88% 60%,#fff,transparent),radial-gradient(1.5px 1.5px at 60% 45%,#fff,transparent),radial-gradient(2px 2px at 33% 52%,#fff,transparent)}
 .gsub{background:none}
 .ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:.7rem}
-.gcard{position:relative;display:flex;align-items:center;gap:.8rem;text-align:start;padding:.8rem .9rem;border-radius:20px;border:2px solid transparent;background:#fff;box-shadow:0 8px 22px rgba(7,59,76,.09);cursor:pointer;font-family:Thmanyah Sans,Cairo,sans-serif;color:var(--deep-ocean);transition:transform .2s,box-shadow .2s,border-color .2s}
+.gcard{position:relative;display:flex;align-items:center;gap:.8rem;text-align:start;padding:.8rem .9rem;border-radius:20px;border:2px solid transparent;background:#fff;box-shadow:0 8px 22px rgba(20,130,165,.1);cursor:pointer;font-family:Thmanyah Sans,Cairo,sans-serif;color:var(--deep-ocean);transition:transform .2s,box-shadow .2s,border-color .2s}
 .gcard:hover{transform:translateY(-3px);border-color:var(--acc);box-shadow:0 14px 28px color-mix(in srgb,var(--acc) 22%,transparent)}
 .gcard:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 .gcard .gic{flex:0 0 62px;height:62px;border-radius:18px;display:grid;place-items:center;background:var(--accs);color:var(--acc2)}
@@ -1497,7 +1497,7 @@ function gStationView(root,i){const s=GST[i],I=window.SB_IMG||{},f=gInfo(i),t=ST
    <span class="gplay">${p?'العب مجددًا':'العب'}</span></button>`}).join('')}</div>`;
  root.querySelector('.gback').onclick=()=>{gStation=null;gamesDraw()};
  root.querySelectorAll('.gcard[data-id]').forEach(b=>b.onclick=()=>{location.hash='play-'+b.dataset.id})}
-function gWaves(){return'<svg class="w2" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 50 Q75 25 150 50 T300 50 T450 50 T600 50 T750 50 T900 50 T1050 50 T1200 50 V120 H0Z" fill="rgba(255,255,255,.2)"/></svg><svg class="w1" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 70 Q75 45 150 70 T300 70 T450 70 T600 70 T750 70 T900 70 T1050 70 T1200 70 V120 H0Z" fill="rgba(255,255,255,.32)"/></svg>'}
+function gWaves(){return'<svg class="w2" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 50 Q75 25 150 50 T300 50 T450 50 T600 50 T750 50 T900 50 T1050 50 T1200 50 V120 H0Z" fill="rgba(7,80,110,.1)"/></svg><svg class="w1" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 70 Q75 45 150 70 T300 70 T450 70 T600 70 T750 70 T900 70 T1050 70 T1200 70 V120 H0Z" fill="rgba(255,255,255,.32)"/></svg>'}
 function gToast(m){let t=document.getElementById('gtoast');if(!t){t=document.createElement('div');t.id='gtoast';t.setAttribute('role','status');document.body.appendChild(t)}t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2600)}
 function gChest(i){const s=GST[i],I=window.SB_IMG||{},o=document.createElement('div');o.id='gchest';o.style.cssText=`--c:${s.c};--c2:${s.c2}`;
  o.innerHTML=`<div class="gcbox" role="dialog" aria-label="صندوق الكنز">${I.trophy?`<img class="gcgirl" src="${I.trophy}" alt="">`:''}<div class="gchestart">${G_CHEST}</div><h3>أتممت قسم «${E(STG[i].t)}»</h3><p>حصلت على ختم القسم في جوازك${i<GST.length-1?`، ومحطتك التالية «${E(STG[i+1].t)}»`:''}.</p><span class="gstamp got big" style="--c:${s.c};--c2:${s.c2}">${gSvg(s.ic,'0 0 64 64')}</span><button type="button">أحسنت، تابع الرحلة</button></div>`;
@@ -3119,7 +3119,7 @@ footer p{margin:0!important;font-size:clamp(.7rem,2.6vw,.9rem)!important;color:v
 /* البنت في مكانها (يمين) + موج هادئ */
 .hsea .hsg{inset-inline-start:auto!important;left:auto!important;right:6px!important}
 .hsea::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
- background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 60' width='600' height='60'%3E%3Cpath d='M0 30.0 Q75.0 8.0 150.0 30.0 T300.0 30.0 T450.0 30.0 T600 30.0 V60 H0Z' fill='rgba%28255%2C255%2C255%2C.34%29'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 700 50' width='700' height='50'%3E%3Cpath d='M0 25.0 Q87.5 7.0 175.0 25.0 T350.0 25.0 T525.0 25.0 T700 25.0 V50 H0Z' fill='rgba%28255%2C255%2C255%2C.2%29'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 40' width='500' height='40'%3E%3Cpath d='M0 20.0 Q62.5 6.0 125.0 20.0 T250.0 20.0 T375.0 20.0 T500 20.0 V40 H0Z' fill='rgba%287%2C59%2C76%2C.09%29'/%3E%3C/svg%3E");
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 60' width='600' height='60'%3E%3Cpath d='M0 30.0 Q75.0 8.0 150.0 30.0 T300.0 30.0 T450.0 30.0 T600 30.0 V60 H0Z' fill='rgba%2820%2C130%2C165%2C.16%29'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 700 50' width='700' height='50'%3E%3Cpath d='M0 25.0 Q87.5 7.0 175.0 25.0 T350.0 25.0 T525.0 25.0 T700 25.0 V50 H0Z' fill='rgba%287%2C80%2C110%2C.1%29'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 40' width='500' height='40'%3E%3Cpath d='M0 20.0 Q62.5 6.0 125.0 20.0 T250.0 20.0 T375.0 20.0 T500 20.0 V40 H0Z' fill='rgba%2820%2C130%2C165%2C.1%29'/%3E%3C/svg%3E");
  background-repeat:repeat-x,repeat-x,repeat-x;background-size:600px 60px,700px 50px,500px 40px;
  background-position:0 100%,0 66%,0 34%;animation:hwave 26s linear infinite}
 @keyframes hwave{to{background-position:-600px 100%,700px 66%,-500px 34%}}
@@ -3133,6 +3133,7 @@ footer p{margin:0!important;font-size:clamp(.7rem,2.6vw,.9rem)!important;color:v
 @keyframes hsway{0%,100%{transform:translateY(0) rotate(0) scaleY(1)}50%{transform:translateY(-3px) rotate(.8deg) scaleY(1.012)}}
 @media (max-width:899px){.hsea .hshipimg{width:70px!important}}
 @media (prefers-reduced-motion:reduce){.hsea .hshipimg,.hsea .hsg{animation:none!important}.hsea .hshipimg{transform:scaleX(-1)}.hsea .hshipimg.sailing{transition:none}}
+.hpath path{stroke-width:8!important;opacity:1!important}
 </style>
 </body>
 </html>
