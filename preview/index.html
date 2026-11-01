@@ -2360,6 +2360,7 @@ function quizMCQ(id){const my=token,gm=GAMES.find(x=>x.id===id)||{};
 
 window.__app={get st(){return st},save,hud,confetti,win,grade(){try{const g=hCfg().find(x=>x.id===st.gid);return g?g.name:""}catch(e){return ""}}};
 setTimeout(hLogDaily,1500);
+try{if(location.hash&&!/\/preview\//.test(location.pathname))history.replaceState(null,'',location.pathname+location.search)}catch(e){}
 hud();route();frame();
 })();
 </script>
