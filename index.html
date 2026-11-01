@@ -1833,7 +1833,7 @@ function teacherDraw(){const box=document.getElementById('tbox'),G=hCfg(),S=hSet
   main=`<div class="tr-bar"><span class="tr-chip"><i></i>وضع المعلمة مفعّل</span><a class="tr-btn" href="#harbor">معاينة الصفوف</a><button class="tr-btn o" id="trrf" type="button">تحديث الأرقام</button><span class="tr-up" id="trup"></span><button class="tr-btn o" id="tout" type="button" style="margin-inline-start:auto">خروج</button></div>
   <section class="tr-pan tr-wide"><div class="tr-ph"><span class="tr-pi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><div><h3>متابعة الطلاب</h3><p>من دخل، ومن لعب، وكم نجمة جمع.</p></div></div><div id="trst"></div></section>
   <section class="tr-pan tr-wide"><div class="tr-ph"><span class="tr-pi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M8 11h8M8 15h8M8 8h4"/></svg></span><div><h3>نتائج الاختبارات</h3><p>روابط Google Forms لكل اختبار.</p></div></div><div class="tr-list">${L}</div></section>`}
- else main=`<section class="tr-pan tr-door tr-wide">${I.write?`<img class="tr-girl" src="${I.write}" alt="">`:''}<div class="tr-dtx">${key}<h3>الغرفة مقفلة</h3><p>هذه الصفحة للمعلمة، وفيها متابعة دخول الطلاب ونجومهم ونتائج الاختبارات.</p><p>اكتب رمز المعلمة لفتح الغرفة.</p><div class="tr-unl"><input id="tuc" class="tr-in" type="password" inputmode="numeric" autocomplete="off" placeholder="رمز المعلمة" aria-label="رمز المعلمة"><button class="tr-go" id="tub" type="button">فتح الغرفة</button></div><p class="tr-er" id="tue" role="alert"></p></div></section>`;
+ else main=`<section class="tr-pan tr-door tr-wide">${I.write?`<img class="tr-girl" src="${I.write}" alt="">`:''}<div class="tr-dtx">${key}<p>هذه الصفحة للمعلمة، وفيها متابعة دخول الطلاب ونجومهم.</p><p>اكتب رمز المعلمة لفتح الغرفة.</p><div class="tr-unl"><input id="tuc" class="tr-in" type="password" inputmode="numeric" autocomplete="off" placeholder="رمز المعلمة" aria-label="رمز المعلمة"><button class="tr-go" id="tub" type="button">فتح الغرفة</button></div><p class="tr-er" id="tue" role="alert"></p></div></section>`;
  box.innerHTML=`<div class="tr"><div class="tr-room">${head}<div class="tr-grid">${main}${gen}</div></div></div>`;
  
  const tub=document.getElementById('tub');if(tub){const tuc=document.getElementById('tuc'),tue=document.getElementById('tue');
@@ -2444,7 +2444,8 @@ const LAYERS=[
  {id:'labels',name:'أسماء المحافظات',ok:true,on:()=>state.labels,set:v=>{state.labels=v;$('labels').checked=v;render()}},
  {id:'lm',name:'المعالم',ok:()=>LANDMARKS.length>0,on:()=>state.layers.lm,set:v=>{state.layers.lm=v;render()}},
  {id:'cities',name:'المدن',ok:false},{id:'water',name:'المسطحات المائية',ok:false},{id:'terrain',name:'التضاريس',ok:false}];
-function drawLayers(){const L=$('mlayers');L.innerHTML='<b>الطبقات</b>'+LAYERS.map(l=>{const ok=typeof l.ok==='function'?l.ok():l.ok;return`<label class="${ok?'':'off'}"><span>${l.name}${ok?'':'<small>لا توجد بيانات في المشروع</small>'}</span><input type="checkbox" data-l="${l.id}" ${ok?'':'disabled'} ${ok&&l.on()?'checked':''}></label>`}).join('')}
+function drawLayers(){const L=$('mlayers'),ok=l=>typeof l.ok==='function'?l.ok():l.ok,on=LAYERS.filter(ok),off=LAYERS.filter(l=>!ok(l)),ord=['gov','labels','smooth'];on.sort((x,y)=>{const i=ord.indexOf(x.id),j=ord.indexOf(y.id);return (i<0?9:i)-(j<0?9:j)});
+ L.innerHTML='<b>الطبقات</b>'+on.map(l=>`<label><span>${l.name}</span><input type="checkbox" data-l="${l.id}" ${l.on()?'checked':''}></label>`).join('')+(off.length?`<small class="lyoff">طبقات قادمة عند توفر بياناتها: ${off.map(l=>l.name).join('، ')}</small>`:'')}
 $('tbLayers').onclick=()=>{const s=$('mlayers').hidden;if(s)drawLayers();togglePanel($('mlayers'),$('tbLayers'),s)};
 $('mlayers').onchange=e=>{const l=LAYERS.find(x=>x.id===e.target.dataset.l);if(l)l.set(e.target.checked)};
 $('labels').addEventListener('change',()=>{if(!$('mlayers').hidden)drawLayers()});
@@ -2910,7 +2911,9 @@ const DUR=6500;
 const LS={mus:17,bur:15,sba:17,mct:17,nba:18,nsh:18,ssh:18,dha:20,dak:20,wus:23,dho:25};
 /* تسميات خارجية بخط إرشاد للمحافظات الصغيرة المتجاورة (مواضع في البحر، لا تغيير في الأشكال) */
 const OUT={mus:[528,64],nba:[612,228],sba:[648,268],mct:[744,300],ssh:[742,592]};
-const _av=applyView;applyView=function(){_av();const z=state.zoom;svgEl.querySelectorAll('.label').forEach((t,i)=>{t.style.fontSize=((LS[gid(i)]||13)/z)+'px';t.style.strokeWidth=(4/z)+'px'});svgEl.querySelectorAll('.wlabel').forEach(t=>{t.style.fontSize=(15/z)+'px';t.style.strokeWidth=(3/z)+'px'})};
+const _av=applyView;applyView=function(){_av();const z=state.zoom,m0=svgEl.getScreenCTM(),k=(m0&&m0.a)||1;
+ const fs=(u,min)=>Math.min(34,Math.max(u*k*1.1,min)*z)/(k*z);
+ svgEl.querySelectorAll('.label').forEach((t,i)=>{t.style.fontSize=fs(LS[gid(i)]||13,7.5)+'px';t.style.strokeWidth=(3/z)+'px'});svgEl.querySelectorAll('.wlabel').forEach(t=>{t.style.fontSize=fs(15,8)+'px';t.style.strokeWidth=(3/z)+'px'})};
 const intro=document.querySelector('#v-maps .wrap>p');if(intro)intro.textContent='اضغط على أي محافظة لتكتشف عاصمتها وجيرانها ومعالمها، واجمع ختمها في «جواز المستكشف».';
 sync();legend();render();
 })();
@@ -3648,6 +3651,9 @@ footer p{margin:0!important;font-size:clamp(.7rem,2.6vw,.9rem)!important;color:v
  #pc.qwrap.hasc[data-g="sym"]{padding-bottom:1.1rem}
  #pc[data-g="sym"]>.mate.corner{bottom:auto;top:230px;inset-inline-end:calc(100% + 14px);height:190px}}
 @media(min-width:900px) and (max-width:1100px){#pc[data-g="sym"]>.mate.corner{display:none}}
+#v-maps .mlayers{max-height:calc(100% - 86px);overflow-y:auto;overscroll-behavior:contain}#v-maps .mlayers label{min-height:42px}#v-maps .mlayers .lyoff{display:block;padding:.35rem .5rem;font-size:.78rem;line-height:1.6;color:var(--muted,#54707b)}
+@media(max-height:700px){#v-maps .mlayers label{min-height:38px}}
+@media(min-width:900px){body.on-maps #v-maps .mlayers{width:min(440px,calc(100% - 24px));grid-template-columns:1fr 1fr}#v-maps .mlayers b,#v-maps .mlayers .lyoff{grid-column:1/-1}}
 </style>
 </body>
 </html>
