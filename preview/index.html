@@ -1717,7 +1717,13 @@ function hSea(root,items,cur,gid,teacher,full,left){const sea=root.querySelector
   const cr=idx=>{let d='';for(let k=0;k<idx.length-1;k++){const p0=P[idx[k-1]]||P[idx[k]],p1=P[idx[k]],p2=P[idx[k+1]],p3=P[idx[k+2]]||p2;d+=` C${p1[0]+(p2[0]-p0[0])/6} ${p1[1]+(p2[1]-p0[1])/6} ${p2[0]-(p3[0]-p1[0])/6} ${p2[1]-(p3[1]-p1[1])/6} ${p2[0]} ${p2[1]}`}return d};
   let d='M'+P[0][0]+' '+P[0][1];groups.forEach((g,gi)=>{if(gi){const pe=P[groups[gi-1][groups[gi-1].length-1]],ps=P[g[0]],dir=pe[0]<W/2?-1:1;d+=` C${pe[0]+dir*120} ${pe[1]+10} ${ps[0]+dir*120} ${ps[1]-10} ${ps[0]} ${ps[1]}`}d+=cr(g)});
   sea.style.height=H+'px';pp.setAttribute('d',d);const hs=sea.querySelector('#hps');if(hs)hs.setAttribute('d',d.replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g,(m,x,y)=>x+' '+(+y+4)));sea.classList.add('is-ready');svg.setAttribute('width',W);svg.setAttribute('height',H);
-  const t=cur>=0?P[cur]:P[P.length-1],sw=ship.offsetWidth||110;ship.style.left=(t[0]-sw/2-(W<520?4:0))+'px';ship.style.top=Math.max(4,t[1]-sw*.77-40)+'px'};
+  const sw=ship.offsetWidth||100,at=i=>{const t=P[Math.max(0,Math.min(i,P.length-1))];return [t[0]-sw/2-(W<520?4:0),Math.max(12,t[1]-sw*.77-34)]},ti=cur>=0?cur:P.length-1;
+  if(!sea.__sailed){sea.__sailed=1;let sv=-1;const k='sindbad-ship-'+gid;try{const v=localStorage.getItem(k);if(v!==null)sv=+v}catch(e){}
+   const to=at(ti);if(sv>=0&&sv!==ti&&!teacher){const fr=at(sv);ship.style.left=fr[0]+'px';ship.style.top=fr[1]+'px';ship.classList.remove('sailing');void ship.offsetWidth;
+    setTimeout(()=>{ship.classList.add('sailing');ship.style.left=to[0]+'px';ship.style.top=to[1]+'px';setTimeout(()=>ship.classList.remove('sailing'),2800)},900)}
+   else{ship.style.left=to[0]+'px';ship.style.top=to[1]+'px'}
+   if(!teacher){try{localStorage.setItem(k,String(ti))}catch(e){}}}
+  else if(!ship.classList.contains('sailing')){const to=at(ti);ship.style.left=to[0]+'px';ship.style.top=to[1]+'px'}};
  layout();requestAnimationFrame(layout);let lw=0;try{new ResizeObserver(()=>{const w=sea.clientWidth;if(w!==lw){lw=w;layout()}}).observe(sea.parentElement)}catch(e){}if(document.fonts&&document.fonts.ready)document.fonts.ready.then(layout);
  if(!window.__hseaR){window.__hseaR=1;}sea.__l=layout;
  sea.addEventListener('click',e=>{const b=e.target.closest('.hpt');if(!b)return;
@@ -3118,6 +3124,15 @@ footer p{margin:0!important;font-size:clamp(.7rem,2.6vw,.9rem)!important;color:v
  background-position:0 100%,0 66%,0 34%;animation:hwave 26s linear infinite}
 @keyframes hwave{to{background-position:-600px 100%,700px 66%,-500px 34%}}
 @media (prefers-reduced-motion:reduce){.hsea::before{animation:none}}
+
+/* السفينة والبنت: حركة خفيفة في مكانهما */
+.hsea .hshipimg{width:clamp(72px,8.6vw,100px)!important;animation:hbob2 5.5s ease-in-out infinite!important;transform-origin:50% 80%}
+.hsea .hshipimg.sailing{transition:left 2.4s ease-in-out,top 2.4s ease-in-out}
+@keyframes hbob2{0%,100%{transform:scaleX(-1) translateY(0) rotate(-1.6deg)}50%{transform:scaleX(-1) translateY(-5px) rotate(1.6deg)}}
+.hsea .hsg{transform-origin:50% 100%;animation:hsway 4.8s ease-in-out infinite}
+@keyframes hsway{0%,100%{transform:translateY(0) rotate(0) scaleY(1)}50%{transform:translateY(-3px) rotate(.8deg) scaleY(1.012)}}
+@media (max-width:899px){.hsea .hshipimg{width:70px!important}}
+@media (prefers-reduced-motion:reduce){.hsea .hshipimg,.hsea .hsg{animation:none!important}.hsea .hshipimg{transform:scaleX(-1)}.hsea .hshipimg.sailing{transition:none}}
 </style>
 </body>
 </html>
