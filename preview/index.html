@@ -536,6 +536,24 @@ body.on-home footer{display:none}
  .hs-sayw{bottom:calc(4.1rem + min(15cqw,10cqh) + 2.4rem);width:38cqw}
  .hs-resume{font-size:min(3.4cqw,2cqh)}
 }
+
+/* ===== لوحة الشرف ===== */
+.hb{max-width:760px;margin:0 auto;text-align:center}
+.hb h2{font-family:var(--font);font-weight:700;font-size:clamp(1.6rem,4vw,2.2rem);color:var(--deep-ocean,#073B4C);margin:.2rem 0}
+.hb-sub{color:#54707b;margin-bottom:1.1rem;line-height:1.7}
+.hb-pod{display:flex;align-items:flex-end;justify-content:center;gap:.7rem;margin:1rem 0 1.2rem}
+.hb-p{flex:1;max-width:210px;border-radius:18px 18px 8px 8px;padding:.8rem .5rem;color:#073B4C;box-shadow:0 6px 0 rgba(0,0,0,.12)}
+.hb-p.r1{background:linear-gradient(160deg,#f8d77c,#D9A441);min-height:170px}.hb-p.r2{background:linear-gradient(160deg,#eef2f4,#bcc8cf);min-height:140px}.hb-p.r3{background:linear-gradient(160deg,#f1c9a0,#c98b55);min-height:118px}
+.hb-rk{width:44px;height:44px;margin:0 auto .4rem;border-radius:50%;background:#fff;display:grid;place-items:center;font-weight:700;font-size:1.3rem;box-shadow:0 3px 8px rgba(0,0,0,.18)}
+.hb-nm{font-weight:700;font-size:1.15rem;line-height:1.4;word-break:break-word}.hb-gr{font-size:.9rem;opacity:.8}
+.hb-sc{display:inline-flex;align-items:center;gap:.3rem;margin-top:.35rem;font-weight:700;font-size:1.15rem}.hb-sc svg{width:1.1em;height:1.1em}
+.hb-li{display:flex;align-items:center;gap:.8rem;padding:.65rem .9rem;margin:.45rem 0;border-radius:14px;background:#fff;border:2px solid var(--glass-line,#d9e3e6);text-align:start}
+.hb-li.me,.hb-p.me{outline:3px solid #1499B8;outline-offset:2px}
+.hb-li .hb-rk{width:36px;height:36px;font-size:1.05rem;margin:0;background:#eaf3f5;box-shadow:none;flex:none}
+.hb-li .hb-nm{flex:1;font-size:1.05rem}.hb-li .hb-sc{margin:0}
+.hb-note{margin-top:1rem;font-size:.9rem;color:#54707b;line-height:1.7}
+.hb-me{margin-top:.8rem;font-weight:700;color:#073B4C}
+@media (max-width:520px){.hb-pod{gap:.4rem}.hb-p{padding:.6rem .3rem}.hb-nm{font-size:1rem}}
 </style>
 <style id="harbor2">
 /* ===== مرفأ السفينة (الإصدار الجديد) ===== */
@@ -924,7 +942,7 @@ window.HARBOR_CONFIG=[
    - resultsLinks: روابط نتائج Google Forms، وتظهر لك فقط بعد دخولك بوضع المعلمة.
    - loginForm: رابط «معاينة مملوءة مسبقًا» لنموذج سجل الدخول (سؤالان: الاسم، الصف) مكتوب فيه «الاسم» و«الصف».
      يُرسَل اسم الطالب وصفه عند الدخول، ومرة واحدة يوميًا عند فتح الموقع. اتركيه فارغًا لإيقاف السجل. */
-window.HARBOR_SETTINGS={loginForm:'https://docs.google.com/forms/d/e/1FAIpQLScx8Yn8aQfaXLnuDqTFqBJByGsA8GnE68v0N_IhFG2wzg9xQg/viewform?usp=pp_url&entry.388752984=الاسم&entry.2016340418=الصف',teacherHash:'75d2b9439f177d196cdebe91ad8322950d50fafd1166586845114cbca8608adb',resultsLinks:[{t:'نتائج اختبار الأسبوع الأول - الصف الثامن',url:''}]};
+window.HARBOR_SETTINGS={loginForm:'https://docs.google.com/forms/d/e/1FAIpQLScx8Yn8aQfaXLnuDqTFqBJByGsA8GnE68v0N_IhFG2wzg9xQg/viewform?usp=pp_url&entry.388752984=الاسم&entry.2016340418=الصف&entry.1025957595=النجوم',honorCsv:'https://docs.google.com/spreadsheets/d/e/2PACX-1vSrzfXco1hXygwOD45FU3QZ_OpSr4UQdpwRymgSQGNq92dfPH_mV5V85IYe615MU--MbSZxCOXPNJvr/pub?gid=1948610366&single=true&output=csv',teacherHash:'75d2b9439f177d196cdebe91ad8322950d50fafd1166586845114cbca8608adb',resultsLinks:[{t:'نتائج اختبار الأسبوع الأول - الصف الثامن',url:''}]};
 </script>
 <script>
 /* ===== مرفأ السفينة: ألعاب الدروس =====
@@ -1482,6 +1500,30 @@ function homeDraw(anim){
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{if(document.body.classList.contains('on-home'))homeDraw()});
 addEventListener('resize',()=>{if(document.body.classList.contains('on-home'))homeDraw()});
 addEventListener('orientationchange',()=>setTimeout(()=>{if(document.body.classList.contains('on-home'))homeDraw()},250));
+
+/* ===== لوحة الشرف: تقرأ ترتيب كل الطلاب من جدول Google المنشور ===== */
+function hbCsv(t){const R=[];let r=[],f='',q=false;for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++}else q=false}else f+=c}else if(c==='"')q=true;else if(c===','){r.push(f);f=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;r.push(f);f='';if(r.some(x=>x!==''))R.push(r);r=[]}else f+=c}r.push(f);if(r.some(x=>x!==''))R.push(r);return R}
+function hbRows(t){const R=hbCsv(t),h=R[0]||[],ni=h.findIndex(x=>x.trim()==='الاسم'),gi=h.findIndex(x=>x.trim()==='الصف'),si=h.findIndex(x=>x.trim()==='النجوم');if(ni<0||si<0)return[];const m={};
+ R.slice(1).forEach(r=>{const nm=String(r[ni]||'').trim(),gr=gi>=0?String(r[gi]||'').trim():'',n=parseInt(String(r[si]||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^\d]/g,''),10);if(!nm||!(n>0))return;const k=nm+'|'+gr;if(!m[k]||n>m[k].n)m[k]={nm,gr,n,k}});
+ return Object.values(m).sort((a,b)=>b.n-a.n||a.nm.localeCompare(b.nm,'ar'))}
+function honor(){
+ const hc=$('#hc');if(!hc)return;const u=String(hSet().honorCsv||'').trim();
+ hc.classList.remove('card');hc.className='hb';
+ const star='<svg aria-hidden="true"><use href="#i-star"/></svg>';
+ const fn=n=>String(n).split(/\s+/)[0];
+ const head='<h2>لوحة الشرف</h2><p class="hb-sub">أعلى المبحرين جمعًا للنجوم في الموقع</p>';
+ hc.innerHTML=head+'<p class="hb-sub">جارٍ تحميل الترتيب…</p>';
+ if(!u){hc.innerHTML=head+'<p class="hb-note">اللوحة غير مفعّلة بعد.</p>';return}
+ const myG=(hCfg().find(x=>x.id===st.gid)||{}).name||'',myK=(st.name||'').trim()+'|'+myG;
+ fetch(u+'&_='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
+  const L=hbRows(t),top=L.slice(0,10);
+  if(!top.length){hc.innerHTML=head+'<p class="hb-note">لا يوجد أحد في اللوحة بعد. اجمع النجوم من ألعاب سندباد لتكون أول الأسماء هنا.</p>';return}
+  const pod=[1,0,2].filter(i=>top[i]).map(i=>{const o=top[i];return `<div class="hb-p r${i+1}${o.k===myK?' me':''}"><div class="hb-rk">${i+1}</div><div class="hb-nm">${E(fn(o.nm))}</div><div class="hb-gr">${E(o.gr)}</div><div class="hb-sc">${star}${o.n}</div></div>`}).join('');
+  const rest=top.slice(3).map((o,j)=>`<div class="hb-li${o.k===myK?' me':''}"><div class="hb-rk">${j+4}</div><div class="hb-nm">${E(fn(o.nm))}<span class="hb-gr"> · ${E(o.gr)}</span></div><div class="hb-sc">${star}${o.n}</div></div>`).join('');
+  const mi=L.findIndex(o=>o.k===myK),me=st.name&&mi>=3&&mi>=10?`<p class="hb-me">ترتيبك الآن: ${mi+1} من ${L.length}</p>`:'';
+  hc.innerHTML=head+`<div class="hb-pod">${pod}</div>${rest}${me}<p class="hb-note">يظهر الاسم الأول والصف فقط. يتحدّث الترتيب خلال دقائق من تسجيل النجوم.</p>`;
+ }).catch(()=>{hc.innerHTML=head+'<p class="hb-note">تعذّر تحميل الترتيب الآن. تأكد من اتصالك بالإنترنت ثم أعد فتح الصفحة.</p>'});
+}
 /* الهيدر والقائمة */
 const burger=$('#burger'),nav=$('#nav');
 const setMenu=o=>{nav.classList.toggle('open',o);burger.setAttribute('aria-expanded',o)};
@@ -1500,7 +1542,7 @@ const win=()=>{beep(660);setTimeout(()=>beep(880),120)},lose=()=>beep(200,.25,'s
 function confetti(){if(reduce)return;for(let i=0;i<22;i++){const e=document.createElement('div');e.className='fx';e.textContent='★';e.style.left=Math.random()*100+'vw';e.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),2500)}}
 
 /* الاسم والنجوم */
-const hud=()=>{$('#who').textContent=st.name||'زائر';$('#pts').textContent=AR(stars())};
+const hud=()=>{$('#who').textContent=st.name||'زائر';$('#pts').textContent=AR(stars());hLogSoon()};
 const ask=()=>{$('#ni').value=st.name;$('#nmod').classList.add('open');$('#ni').focus()};
 $('#ns').onclick=()=>{const v=$('#ni').value.trim();if(!v){$('#ni').focus();return}st.name=v;save();hud();$('#nmod').classList.remove('open')};
 $('#ni').onkeydown=e=>{if(e.key==='Enter')$('#ns').click()};$('#chip').onclick=()=>{location.hash='harbor'};
@@ -1519,10 +1561,11 @@ function hStatus(t){const u=hSafe(t.url);if(!u)return{k:'soon',txt:'قريبًا
 const hSet=()=>window.HARBOR_SETTINGS||{};
 /* سجل الدخول: يرسل الاسم والصف إلى نموذج Google Forms الخاص بالمعلمة (بلا قاعدة بيانات في الموقع) */
 function hLog(){try{const u=String(hSet().loginForm||'').trim();if(!u||!st.name||st.teacher)return;const U=new URL(u),ent=[...U.searchParams.keys()].filter(k=>/^entry\.\d+$/.test(k));if(ent.length<2)return;
- let nk=ent[0],gk=ent[1];ent.forEach(k=>{const v=(U.searchParams.get(k)||'').trim();if(v==='الاسم')nk=k;if(v==='الصف')gk=k});
- const g=hCfg().find(x=>x.id===st.gid),b=new URLSearchParams();b.set(nk,st.name);b.set(gk,g?g.name:'');
+ let nk=ent[0],gk=ent[1];ent.forEach(k=>{const v=(U.searchParams.get(k)||'').trim();if(v==='الاسم')nk=k;if(v==='الصف')gk=k});let sk='';ent.forEach(k=>{if((U.searchParams.get(k)||'').trim()==='النجوم')sk=k});
+ const g=hCfg().find(x=>x.id===st.gid),b=new URLSearchParams();b.set(nk,st.name);b.set(gk,g?g.name:'');if(sk)b.set(sk,String(stars()));
  fetch(U.origin+U.pathname.replace(/\/viewform.*$/,'/formResponse'),{method:'POST',mode:'no-cors',body:b}).catch(()=>{});
- try{localStorage.setItem('sindbad-log-day',new Date().toDateString())}catch(e){}}catch(e){}}
+ try{localStorage.setItem('sindbad-log-day',new Date().toDateString());localStorage.setItem('sindbad-sent-stars',JSON.stringify({n:st.name,s:stars()}))}catch(e){}}catch(e){}}
+function hLogSoon(){clearTimeout(window.__hlt);window.__hlt=setTimeout(()=>{try{if(!st.name||st.teacher||!st.gid)return;let o={};try{o=JSON.parse(localStorage.getItem('sindbad-sent-stars')||'{}')}catch(e){}const last=o.n===st.name?(o.s||0):0;if(stars()>last)hLog()}catch(e){}},3500)}
 function hLogDaily(){try{if(st.gid&&localStorage.getItem('sindbad-log-day')!==new Date().toDateString())hLog()}catch(e){}}
 
 const hNorm=c=>String(c||'').trim().toLowerCase().replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));
