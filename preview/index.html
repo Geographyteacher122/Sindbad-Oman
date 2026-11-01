@@ -1716,7 +1716,7 @@ function hSea(root,items,cur,gid,teacher,full,left){const sea=root.querySelector
   pts.forEach((el,k)=>{el.style.left=P[k][0]+'px';el.style.top=P[k][1]+'px'});
   const cr=idx=>{let d='';for(let k=0;k<idx.length-1;k++){const p0=P[idx[k-1]]||P[idx[k]],p1=P[idx[k]],p2=P[idx[k+1]],p3=P[idx[k+2]]||p2;d+=` C${p1[0]+(p2[0]-p0[0])/6} ${p1[1]+(p2[1]-p0[1])/6} ${p2[0]-(p3[0]-p1[0])/6} ${p2[1]-(p3[1]-p1[1])/6} ${p2[0]} ${p2[1]}`}return d};
   let d='M'+P[0][0]+' '+P[0][1];groups.forEach((g,gi)=>{if(gi){const pe=P[groups[gi-1][groups[gi-1].length-1]],ps=P[g[0]],dir=pe[0]<W/2?-1:1;d+=` C${pe[0]+dir*120} ${pe[1]+10} ${ps[0]+dir*120} ${ps[1]-10} ${ps[0]} ${ps[1]}`}d+=cr(g)});
-  sea.style.height=H+'px';pp.setAttribute('d',d);const hs=sea.querySelector('#hps');if(hs)hs.setAttribute('d',d);svg.setAttribute('width',W);svg.setAttribute('height',H);
+  sea.style.height=H+'px';pp.setAttribute('d',d);const hs=sea.querySelector('#hps');if(hs)hs.setAttribute('d',d.replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g,(m,x,y)=>x+' '+(+y+4)));sea.classList.add('is-ready');svg.setAttribute('width',W);svg.setAttribute('height',H);
   const t=cur>=0?P[cur]:P[P.length-1],sw=ship.offsetWidth||110;ship.style.left=(t[0]-sw/2-(W<520?4:0))+'px';ship.style.top=Math.max(4,t[1]-sw*.77-40)+'px'};
  layout();requestAnimationFrame(layout);let lw=0;try{new ResizeObserver(()=>{const w=sea.clientWidth;if(w!==lw){lw=w;layout()}}).observe(sea.parentElement)}catch(e){}if(document.fonts&&document.fonts.ready)document.fonts.ready.then(layout);
  if(!window.__hseaR){window.__hseaR=1;}sea.__l=layout;
@@ -3104,6 +3104,11 @@ footer p{margin:0!important;font-size:clamp(.7rem,2.6vw,.9rem)!important;color:v
 .hvr2 .hvmed{width:54px;height:54px}.hvr2 .hvl{top:calc(.6rem + 27px)}
 .hvpop{top:98px!important;padding:.45rem .6rem;gap:.3rem;inset-inline:22%}.hvpop u{font-size:.9rem;padding:.3rem}
 .hvstage{height:clamp(250px,46dvh,320px)!important}
+
+.hpath path.hps{transform:none!important}
+.hsea .hpath,.hsea .hpath path{animation:none!important;transition:none!important}
+.hsea:not(.is-ready) .hpath,.hsea:not(.is-ready) .hpt,.hsea:not(.is-ready) .hshipimg{visibility:hidden}
+.hsea .hpath{will-change:auto;shape-rendering:geometricPrecision}
 </style>
 </body>
 </html>
