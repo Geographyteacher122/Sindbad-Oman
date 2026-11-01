@@ -192,6 +192,7 @@ section.sec{padding-block:4.5rem 1rem;position:relative}
 .type{display:grid;gap:.4rem;padding:1.5rem;border-radius:var(--r-lg);background:#fff;box-shadow:var(--sh-1)}
 footer{margin-top:5rem;padding:2.5rem 0 3rem;text-align:center;background:var(--grad-sea);color:var(--pearl);position:relative}
 footer p{color:var(--sand)}
+body:not(.on-home){min-height:100dvh;display:flex;flex-direction:column}body:not(.on-home)>main{flex:1 0 auto}body:not(.on-home)>footer{flex:none}
 footer svg{width:46px;margin:0 auto .6rem;animation:swing 8s ease-in-out infinite}
 @media (max-width:640px){
   .hero .wrap{padding-bottom:11rem}.journey .stop{font-size:.75rem}.stop .dot{width:36px;height:36px}.journey::before{top:26px}
