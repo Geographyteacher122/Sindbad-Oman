@@ -2411,10 +2411,11 @@ const hist=[];let cur='#2D5A27';
 const P=$('palette');P.innerHTML='';
 function sw(color,name,bg){const b=document.createElement('button');b.type='button';b.className='swatch';b.dataset.c=color;b.style.background=bg||color;b.title=name;b.setAttribute('aria-label',name);b.onclick=()=>pick(color,name);return b}
 const W=t=>String(t).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));
-const grp=(title,fill)=>{const h=document.createElement('div');h.className='pgt';h.textContent=title;P.appendChild(h);const f=document.createElement('div');f.className='palette';P.appendChild(f);fill(f)};
-grp('ألوان الخريطة',f=>PALLETTE.forEach(c=>f.appendChild(sw(c,c))));
-GROUPS.forEach(g=>grp(g[0],f=>g[1].forEach(c=>f.appendChild(sw(c[0],W(c[1]))))));
-grp('تدرجات',f=>GRADS.forEach((c,i)=>f.appendChild(sw(`url(#sg${i})`,'تدرج: '+GRAD_NAMES[i],`linear-gradient(135deg,${c[0]},${c[1]})`))));
+const seen=new Set(),flat=document.createElement('div');flat.className='palette';P.appendChild(flat);
+const add=(v,n,bg)=>{const key=String(v).toLowerCase();if(seen.has(key))return;seen.add(key);flat.appendChild(sw(v,n,bg))};
+PALLETTE.forEach(c=>add(c,c));
+GROUPS.forEach(g=>g[1].forEach(c=>add(c[0],W(c[1]))));
+GRADS.forEach((c,i)=>add(`url(#sg${i})`,'تدرج: '+GRAD_NAMES[i],`linear-gradient(135deg,${c[0]},${c[1]})`));
 function setCurrent(c,name){cur=c;state.currentColor=c;const grad=/^url/.test(c);const idx=grad?+c.match(/sg(\d)/)[1]:0;$('curChip').style.background=grad?`linear-gradient(135deg,${GRADS[idx][0]},${GRADS[idx][1]})`:c;$('curName').textContent=name||NAMES[c.toUpperCase()]||'لون مخصص';$('curHex').textContent=grad?'تدرج':c.toUpperCase();if(!grad){$('customColor').value=c;$('hexIn').value=c.toUpperCase()}else $('hexIn').value='';P.querySelectorAll('.swatch').forEach(b=>b.classList.toggle('active',b.dataset.c.toUpperCase()===c.toUpperCase()))}
 function setBucket(on){state.bucket=on;['bucket','tbBucket'].forEach(id=>{const e=$(id);e.classList.toggle('on',on);e.classList.toggle('active',on);e.setAttribute('aria-pressed',on)});$('bucket').innerHTML=SIC('bucket')+(on?' إيقاف دلو التلوين':' تفعيل دلو التلوين');$('mapWrap').classList.toggle('coloring',on);$('status').textContent=on?'دلو التلوين مفعّل — اضغط على محافظة':'الخريطة جاهزة'}
 function pick(c,name){setCurrent(c,name);if(!state.bucket)setBucket(true)}
@@ -2622,7 +2623,7 @@ const POSES={"wave": "data:image/webp;base64,UklGRt48AABXRUJQVlA4WAoAAAAQAAAAuAA
  const I2={play:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z" fill="currentColor"/></svg>',pause:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg>',next:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',prev:'<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'};
  const SK='sindbad-maps-intro-v1',box=document.createElement('div');box.className='mtut';box.id='mtut';box.hidden=true;
  box.innerHTML=`<div class="mtbox" role="dialog" aria-modal="true" aria-label="تعريف بصفحة اكتشف عُمان"><button class="mtx" aria-label="إغلاق">${SIC('close')}</button>
- <div class="mtintro"><img class="mtg" src="${POSES.wave}" alt=""><h3>مرحبًا بك في «اكتشف عُمان»</h3><p>اضغط على أي محافظة لتتعرف على معلومات عنها ومحافظاتها المجاورة ومعالمها، واجمع ختمًا لكل محافظة في جواز المستكشف، ولوّن الخريطة كما تحب.</p><div class="mtbtns"><button class="mtgo">${I2.play} شاهد الشرح</button><button class="mtskip">ابدأ مباشرة</button></div></div>
+ <div class="mtintro"><img class="mtg" src="${POSES.wave}" alt=""><h3>مرحبًا بك في «اكتشف عُمان»</h3><p>اضغط على أي محافظة لتتعرف على معلومات عنها ومحافظاتها المجاورة ومعالمها، واجمع ختمًا لكل محافظة في جواز المستكشف، ولوّن الخريطة كما يحلو لك.</p><div class="mtbtns"><button class="mtgo">${I2.play} شاهد الشرح</button><button class="mtskip">ابدأ مباشرة</button></div></div>
  <div class="mtplay" hidden><div class="mtstage"><div class="mtmap"></div><div class="mtmock"></div><div class="mtptr" aria-hidden="true">${SIC('hand')}</div></div><div class="mtcap"><b></b><span></span></div><div class="mtbar"><i></i></div><div class="mtctl"><button class="mtb mtprev" aria-label="السابق">${I2.prev}</button><button class="mtb mtpp" aria-label="إيقاف مؤقت">${I2.pause}</button><button class="mtb mtnext" aria-label="التالي">${I2.next}</button><span class="mtdots"></span></div></div></div>`;
  document.body.appendChild(box);
  const q=x=>box.querySelector(x),stage=q('.mtstage'),mapBox=q('.mtmap'),mock=q('.mtmock'),ptr=q('.mtptr');
@@ -2907,6 +2908,16 @@ body.on-maps #v-maps .compass{top:12px;right:12px;left:auto;bottom:auto;width:52
 .mtdots{display:flex;gap:.35rem;margin-inline-start:.4rem}.mtdots i{width:10px;height:10px;border-radius:50%;background:#cbd5d9;cursor:pointer}.mtdots i.on{background:#D9A441;transform:scale(1.25)}
 @media (prefers-reduced-motion:reduce){.mtptr{transition:none}.mtsvg{transition:none}.mtsl.on,.mtcomp svg{animation:none}}
 @media (max-width:520px){.mtstage{grid-template-columns:36% 64%;height:clamp(230px,40dvh,300px)}.mtg{height:110px}}
+
+/* ===== شريط الإعداد (الفوتر) يظهر في كل الصفحات ===== */
+:root{--fh:30px}
+body.on-home footer,body.on-maps footer{display:flex!important;position:fixed;inset-inline:0;bottom:0;height:var(--fh);margin:0;padding:0 .5rem;align-items:center;justify-content:center;z-index:60;background:var(--grad-sea);overflow:hidden}
+body.on-home footer svg,body.on-home footer b,body.on-maps footer svg,body.on-maps footer b,body.on-home footer p:first-of-type,body.on-maps footer p:first-of-type{display:none}
+body.on-home footer p,body.on-maps footer p{margin:0!important;font-size:clamp(.58rem,2.5vw,.8rem)!important;white-space:nowrap;line-height:1;color:var(--sand)}
+body.on-home .hs{height:calc(100dvh - var(--hh,76px) - var(--fh))}
+body.on-maps #v-maps .wrap.page{height:calc(100dvh - var(--hh,76px) - var(--fh))}
+@media (max-width:700px){:root{--fh:26px}}
+body.on-home .hs-credit{display:none!important}
 </style>
 </body>
 </html>
