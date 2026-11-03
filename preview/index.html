@@ -1528,7 +1528,7 @@ window.addEventListener('popstate',()=>{if(document.getElementById('v-games')?.c
 /* ===== المسار والصفحات ===== */
 const VIEWS=['home','maps','harbor','games','honor','teacher','play'];
 let hGrade=null;
-function show(v){clearInterval(tm);token++;document.body.classList.toggle('on-home',v==='home');document.body.classList.toggle('on-maps',v==='maps');if(v==='maps'){if(window.__mapsFresh)__mapsFresh();mapsHH();setTimeout(()=>{if(window.mgPose)mgPose('wave')},60)}noteVisit(v);$$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));
+function show(v){clearInterval(tm);token++;if(v==='harbor'){const pv=document.querySelector('.view.on');if(!pv||pv.id!=='v-harbor')window.__hGate=1}document.body.classList.toggle('on-home',v==='home');document.body.classList.toggle('on-maps',v==='maps');if(v==='maps'){if(window.__mapsFresh)__mapsFresh();mapsHH();setTimeout(()=>{if(window.mgPose)mgPose('wave')},60)}noteVisit(v);$$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));
  $$('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.r===(v==='play'?'games':v)));{const r=document.documentElement;r.style.scrollBehavior='auto';scrollTo(0,0);setTimeout(()=>r.style.scrollBehavior='',50)};
  if(v==='harbor')harborDraw();if(v==='teacher')teacherDraw();if(v==='honor')honor();if(v==='games'){gamesDraw()}if(v==='home')homeDraw(true)}
 const route=()=>{const r=location.hash.slice(1),m=r.match(/^harbor-(.+)$/);if(m){hGrade=decodeURIComponent(m[1]);show('harbor');return}const pm=r.match(/^play-(.+)$/);if(pm&&GAMES.some(x=>x.id===pm[1])){quiz(pm[1]);return}show(r==='journey'?'games':VIEWS.includes(r)&&r!=='play'?r:'home')};
@@ -1698,7 +1698,7 @@ function hToast(m){let t=document.getElementById('htoast');if(!t){t=document.cre
 function harborDraw(){const root=document.getElementById('hb2');if(!root)return;
  const I=HIMG(),G=hCfg();
  if(st.teacher){const gid=G.find(x=>x.id===hGrade)?hGrade:'g5';return hBoard(root,gid,true)}
- if(st.gid&&(st.name||'').trim()&&G.find(x=>x.id===st.gid))return hBoard(root,st.gid,false);
+ if(!window.__hGate&&st.gid&&(st.name||'').trim()&&G.find(x=>x.id===st.gid))return hBoard(root,st.gid,false);
  /* البوابة */
  root.removeAttribute('style');root.className='hb2 gate';let sel=G.find(x=>x.id===st.gid)?st.gid:null,tmode=false;
  root.innerHTML=`<div class="hsky"></div><div class="hpier"></div>${I.ship?`<img class="hship" src="${I.ship}" alt="">`:''}
@@ -1720,7 +1720,7 @@ function harborDraw(){const root=document.getElementById('hb2');if(!root)return;
  const go=async()=>{const err=$g('herr');err.textContent='';
   try{if(tmode){const th=hSet().teacherHash;if(!th){err.textContent='لم يُعيَّن رمز المعلمة بعد في الإعدادات';return}if(await hHash('teacher',$g('hc').value)!==th){err.textContent='الرمز غير صحيح';return}st.teacher=true;save();hud();harborDraw();return}
    const name=$g('hn').value.trim();if(!name){err.textContent='اكتب اسمك أولًا';$g('hn').focus();return}if(!sel){err.textContent='اختر صفك';return}
-   st.name=name;st.gid=sel;st.teacher=false;save();hud();hLog();harborDraw()}
+   st.name=name;st.gid=sel;st.teacher=false;window.__hGate=0;save();hud();hLog();harborDraw()}
   catch(e){err.textContent=e.message==='nosubtle'?'يلزم فتح الموقع عبر رابط https للتحقق من الرمز':'حدث خطأ، حاول مرة أخرى'}};
  $g('hgo').onclick=go;$g('hvid0').onclick=()=>window.mkVideo&&window.mkVideo('harbor');root.onkeydown=e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT')go()};sync()}
 
