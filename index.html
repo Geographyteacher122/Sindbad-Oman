@@ -1551,8 +1551,8 @@ function homeStops(){
   el.classList.toggle('done',!!V[x[0]]);el.classList.toggle('next',i===nx);
   let t,h;
   if((x[0]==='games'||x[0]==='honor')&&n>0){t=n+' ';h=n+' '+STAR}
-  else{t=V[x[0]]?'زرتها':(x[0]==='honor'?'اجمع النجوم':'لم تبدأ');h=t}
-  $('small',el).innerHTML=h;el.setAttribute('aria-label',x[1]+' — '+(n>0&&(x[0]==='games'||x[0]==='honor')?n+' نجمة':t))});
+  else{t=x[0]==='honor'?'اجمع النجوم':'';h=t}
+  $('small',el).innerHTML=h;el.setAttribute('aria-label',x[1]+' — '+(n>0&&(x[0]==='games'||x[0]==='honor')?n+' نجمة':(V[x[0]]?'تمت زيارتها':t)))});
  const r=$('#hsres'),L=d.last;
  if(L&&STS.some(x=>x[0]===L.k)){$('#hsresn').textContent=STS.find(x=>x[0]===L.k)[1];r.href=/^#[\w%-]{1,60}$/.test(L.h||'')?L.h:'#'+L.k;r.hidden=false}else r.hidden=true;
  return far}
@@ -2360,7 +2360,7 @@ function quizMCQ(id){const my=token,gm=GAMES.find(x=>x.id===id)||{};
 
 window.__app={get st(){return st},save,hud,confetti,win,grade(){try{const g=hCfg().find(x=>x.id===st.gid);return g?g.name:""}catch(e){return ""}}};
 setTimeout(hLogDaily,1500);
-try{if(location.hash&&!/\/preview\//.test(location.pathname))history.replaceState(null,'',location.pathname+location.search)}catch(e){}
+try{if(location.hash)history.replaceState(null,'',location.pathname+location.search)}catch(e){}
 hud();route();frame();
 })();
 </script>
