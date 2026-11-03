@@ -609,9 +609,8 @@ body.on-maps #v-maps .minfo{max-height:80%}
  #v-maps .mgirl{height:min(26%,170px)}#v-maps .mgbub{bottom:calc(min(26%,170px) + 10px);font-size:.75rem;max-width:150px}
 }
 @media (max-height:560px){body.on-maps #v-maps .wrap.page>p{display:none}}
-#v-maps .mtip{top:84px}
-#v-maps .mapWrap.infoopen .mtip,#v-maps .mapWrap.explore .mtip{display:none!important}
-@media (hover:none){#v-maps .mtip{display:none!important}}
+#v-maps .mtip{inset-inline-end:auto;inset-inline-start:84px;top:14px}
+@media (max-width:560px){#v-maps .mtip{inset-inline-start:14px;top:auto;bottom:14px;min-width:140px}}
 </style>
 <style id="harbor2">
 /* ===== مرفأ السفينة (الإصدار الجديد) ===== */
