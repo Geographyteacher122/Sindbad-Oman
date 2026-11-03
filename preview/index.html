@@ -1528,7 +1528,7 @@ window.addEventListener('popstate',()=>{if(document.getElementById('v-games')?.c
 /* ===== المسار والصفحات ===== */
 const VIEWS=['home','maps','harbor','games','honor','teacher','play'];
 let hGrade=null;
-function show(v){clearInterval(tm);token++;document.body.classList.toggle('on-home',v==='home');document.body.classList.toggle('on-maps',v==='maps');if(v==='maps'){mapsHH();setTimeout(()=>{if(window.mgPose)mgPose('wave')},60)}noteVisit(v);$$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));
+function show(v){clearInterval(tm);token++;document.body.classList.toggle('on-home',v==='home');document.body.classList.toggle('on-maps',v==='maps');if(v==='maps'){if(window.__mapsFresh)__mapsFresh();mapsHH();setTimeout(()=>{if(window.mgPose)mgPose('wave')},60)}noteVisit(v);$$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));
  $$('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.r===(v==='play'?'games':v)));{const r=document.documentElement;r.style.scrollBehavior='auto';scrollTo(0,0);setTimeout(()=>r.style.scrollBehavior='',50)};
  if(v==='harbor')harborDraw();if(v==='teacher')teacherDraw();if(v==='honor')honor();if(v==='games'){gamesDraw()}if(v==='home')homeDraw(true)}
 const route=()=>{const r=location.hash.slice(1),m=r.match(/^harbor-(.+)$/);if(m){hGrade=decodeURIComponent(m[1]);show('harbor');return}const pm=r.match(/^play-(.+)$/);if(pm&&GAMES.some(x=>x.id===pm[1])){quiz(pm[1]);return}show(r==='journey'?'games':VIEWS.includes(r)&&r!=='play'?r:'home')};
@@ -2541,10 +2541,11 @@ function pushHist(){hist.push(state.colors.slice());if(hist.length>50)hist.shift
 function undo(){if(!hist.length)return;state.colors=hist.pop();repaintAll();persist();$('undo').disabled=!hist.length;toast('تم التراجع')}
 $('undo').onclick=undo;
 addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&e.key.toLowerCase()==='z'&&document.getElementById('v-maps').classList.contains('active')&&!/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||'')){e.preventDefault();undo()}});
-$('resetSel').onclick=()=>{const t=[...state.selected].filter(i=>state.colors[i]);if(!t.length){toast('حدّدي محافظة ملوّنة أولًا');return}pushHist();t.forEach(i=>{state.colors[i]=null});repaintAll();persist();toast('تمت إعادة لون المحافظات المحددة')};
-$('reset').onclick=()=>{if(!state.colors.some(Boolean)){toast('لا توجد ألوان لمسحها');return}if(!confirm('هل تريدين مسح كل الألوان؟ يمكنك التراجع بزر «تراجع».'))return;pushHist();state.colors=Array(MAP_DATA.length).fill(null);repaintAll();persist();toast('تم مسح كل الألوان')};
+$('resetSel').onclick=()=>{const t=[...state.selected].filter(i=>state.colors[i]);if(!t.length){toast('حدّد محافظة ملوّنة أولًا');return}pushHist();t.forEach(i=>{state.colors[i]=null});repaintAll();persist();toast('تمت إعادة لون المحافظات المحددة')};
+$('reset').onclick=()=>{if(!state.colors.some(Boolean)){toast('لا توجد ألوان لمسحها');return}if(!confirm('هل تريد مسح كل الألوان؟ يمكنك التراجع بزر «تراجع».'))return;pushHist();state.colors=Array(MAP_DATA.length).fill(null);repaintAll();persist();toast('تم مسح كل الألوان')};
 clickGov=function(i){if(state.bucket){if(state.colors[i]!==cur){pushHist();state.colors[i]=cur;paint(i);persist();updateCount()}updateInfo(i);toast(`تم تلوين ${MAP_DATA[i].name}`)}else{if(state.selected.has(i))state.selected.delete(i);else state.selected=new Set([i]);updateInfo(i);render();updateCount();if(state.selected.has(i))flyToGov(i)}};
 restore();setCurrent(cur,'');updateCount();
+window.__mapsFresh=function(){try{state.colors=Array(MAP_DATA.length).fill(null);state.selected=new Set();hist.length=0;$('undo').disabled=true;persist();repaintAll();cancelAnim();state.zoom=1;state.panX=0;state.panY=0;applyView();const i=$('info');i.hidden=true;i.innerHTML='<h3>اختر محافظة</h3><p>اضغط على أي محافظة لاكتشاف اسمها ومعلومة عنها. فعّل دلو التلوين لتلوينها.</p>';render()}catch(e){}};
 })();
 render();
 
