@@ -2658,15 +2658,6 @@ function printPass(){const v=visited(),n=count(),nm=(A.st.name||'').trim(),gr=(A
 /* ---------- أزرار وأوضاع ---------- */
 const tool=document.querySelector('#v-maps .mtool');
 const pb=document.createElement('button');pb.className='passbtn';pb.id='passBtn';pb.innerHTML=SIC('stamp')+' جواز المستكشف <b id="passN"></b>';pb.onclick=openPass;tool.insertBefore(pb,tool.children[1]||null);
-/* ---------- قائمة المحافظات ومعالمها ---------- */
-const lov=document.createElement('div');lov.className='ppov';lov.hidden=true;lov.setAttribute('role','dialog');lov.setAttribute('aria-modal','true');lov.setAttribute('aria-label','المحافظات ومعالمها');document.body.appendChild(lov);
-const cnt=n=>n===0?'لا معالم مضافة بعد':n===1?'معلم واحد':n===2?'معلمان':n+' معالم';
-function drawList(){lov.innerHTML=`<div class="ppbook lbook"><div class="pphead"><button class="ppx" aria-label="إغلاق">${SIC('close')}</button><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#logo"/></svg><div><h3>المحافظات ومعالمها</h3><p>تصفّح معالم كل محافظة، واضغط على اسمها لعرضها على الخريطة.</p></div></div>
- <div class="llist">${ALL.map(id=>{const lm=lmOf(id);return`<section class="lg"><button class="lgh" data-id="${id}"><b>${esc(NAME(id))}</b><span>${cnt(lm.length)}</span></button>${lm.length?`<div class="lgb">${lm.map(l=>`<div class="lmi">${photo(l)?`<img src="${l.img}" alt="${esc(l.n)}" loading="lazy">`:''}<div><b>${esc(l.n)}</b>${l.w?`<small>${esc(l.w)}</small>`:''}${l.h?`<p>${esc(l.h)}</p>`:''}</div></div>`).join('')}</div>`:''}</section>`}).join('')}</div></div>`}
-const openList=()=>{drawList();lov.hidden=false;const x=lov.querySelector('.ppx');x&&x.focus()},closeList=()=>{lov.hidden=true;const b=$('listBtn');b&&b.focus()};
-lov.addEventListener('click',e=>{if(e.target===lov||e.target.closest('.ppx'))return closeList();const h=e.target.closest('.lgh');if(h){closeList();goTo(idx(h.dataset.id))}});
-addEventListener('keydown',e=>{if(e.key==='Escape'&&!lov.hidden)closeList()});
-const lb=document.createElement('button');lb.className='passbtn';lb.id='listBtn';lb.innerHTML=SIC('map')+' المحافظات ومعالمها';lb.onclick=openList;tool.insertBefore(lb,pb.nextSibling);
 const MODES=[['normal',SIC('map')+'<span>الخريطة</span>'],['near',SIC('near')+'<span>الجوار</span>'],['coast',SIC('coast')+'<span>ساحل وداخل</span>'],['water',SIC('drop')+'<span>المسطحات</span>'],['lm',SIC('cam')+'<span>المعالم</span>']];
 let mode='normal',focus=-1;
 const bar=document.createElement('div');bar.className='mmodes';bar.setAttribute('role','group');bar.setAttribute('aria-label','أوضاع عرض الخريطة');
@@ -2691,7 +2682,7 @@ function applyMode(){const g=svgEl.querySelector('g');if(!g)return;
  if(mode==='near'&&focus>=0){const f=gid(focus),nb=NB[f];MAP_DATA.forEach((_,i)=>{const id=gid(i);if(i===focus)paint(i,'#D9A441',1);else if(nb.includes(id))paint(i,'#8BCF9F',1);else paint(i,'#ECE5D3',.55)})}
  else if(mode==='coast'){MAP_DATA.forEach((_,i)=>paint(i,INLAND.has(gid(i))?'#E8D3A8':'#9FD3E0',1))}
  else if(mode==='water'){sea(g,'بحر عُمان',745,175);sea(g,'بحر العرب',650,905);sea(g,'مضيق هرمز',512,30,[470,38]);sea(g,'الخليج العربي',350,70,[430,68])}
- else if(mode==='lm'){LMS.length&&MAP_DATA.forEach((_,i)=>{const id=gid(i),n=lmOf(id).length;if(!n)return;const s=shapeOf(i),c=document.createElementNS(NS,'g');c.setAttribute('class','lmcount');c.setAttribute('transform',`translate(${s.ax} ${s.ay+20})`);c.innerHTML=`<g class="lmi"><circle r="14" fill="#D9A441" stroke="#fff" stroke-width="3"/><text>${AR2(n)}</text></g>`;c.addEventListener('click',ev=>{ev.stopPropagation();goTo(i);setTimeout(()=>{const t=$('info').querySelector('.mxl');t&&t.scrollIntoView({block:'nearest'})},650)});g.appendChild(c)})}
+ else if(mode==='lm'){LMS.length&&MAP_DATA.forEach((_,i)=>{const id=gid(i),n=lmOf(id).length;if(!n)return;const s=shapeOf(i),c=document.createElementNS(NS,'g');c.setAttribute('class','lmcount');c.setAttribute('transform',`translate(${s.ax} ${s.ay+20})`);c.innerHTML=`<g class="lmi"><circle r="14" fill="#D9A441" stroke="#fff" stroke-width="3"/><text>${AR2(n)}</text></g>`;c.addEventListener('click',ev=>{ev.stopPropagation();expanded=true;goTo(i);setTimeout(()=>{const t=$('info').querySelector('.mxl');t&&t.scrollIntoView({block:'nearest'})},650)});g.appendChild(c)})}
 
  if(state.labels)g.querySelectorAll('.label').forEach((t,i)=>{const id=gid(i),o=OUT[id];if(!o)return;const sp=shapeOf(i),l=document.createElementNS(NS,'line');l.setAttribute('class','lline');l.setAttribute('x1',sp.ax);l.setAttribute('y1',sp.ay);l.setAttribute('x2',o[0]);l.setAttribute('y2',o[1]);g.insertBefore(l,g.querySelector('.label'));t.setAttribute('x',o[0]);t.setAttribute('y',o[1])});
  applyView()}
@@ -2700,7 +2691,7 @@ const _fly=flyToGov;flyToGov=function(i){if(mode==='near'){const ids=[gid(i),...
 
 /* ---------- بطاقة المحافظة ---------- */
 const _ui=updateInfo;let expanded=false;
-updateInfo=function(i){_ui(i);if(state.bucket)return;focus=i;const id=gid(i),box=$('info'),fresh=visit(id);
+updateInfo=function(i){_ui(i);if(state.bucket)return;if(mode==='lm')expanded=true;focus=i;const id=gid(i),box=$('info'),fresh=visit(id);
  const nb=NB[id],lm=lmOf(id),sea=SEA[id],coastal=!INLAND.has(id);
  const badge=box.querySelector('.mbadge'),stats=box.querySelector('.mstats'),more=document.createElement('div');more.className='mxmore';more.hidden=!expanded;
  if(badge)more.appendChild(badge);if(stats)more.appendChild(stats);
@@ -3667,19 +3658,6 @@ footer p{margin:0!important;font-size:clamp(.7rem,2.6vw,.9rem)!important;color:v
 #v-maps .mlayers{max-height:calc(100% - 86px);overflow-y:auto;overscroll-behavior:contain}#v-maps .mlayers label{min-height:42px}#v-maps .mlayers .lyoff{display:block;padding:.35rem .5rem;font-size:.78rem;line-height:1.6;color:var(--muted,#54707b)}
 @media(max-height:700px){#v-maps .mlayers label{min-height:38px}}
 @media(min-width:900px){body.on-maps #v-maps .mlayers{width:min(440px,calc(100% - 24px));grid-template-columns:1fr 1fr}#v-maps .mlayers b,#v-maps .mlayers .lyoff{grid-column:1/-1}}
-#v-maps~.ppov .lbook,.lbook{width:min(720px,100%)}
-.lbook .llist{padding:.9rem 1rem 1.2rem;display:flex;flex-direction:column;gap:.6rem}
-.lbook .lg{background:#fffaf0;border:2px solid rgba(217,164,65,.45);border-radius:16px;overflow:hidden}
-.lbook .lgh{width:100%;min-height:52px;display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.5rem 1rem;border:0;background:transparent;font:800 1.05rem Thmanyah Sans,system-ui,sans-serif;color:#073B4C;cursor:pointer;text-align:start}
-.lbook .lgh span{font-weight:700;font-size:.86rem;color:#5c6b72;white-space:nowrap}
-.lbook .lgh:hover,.lbook .lgh:focus-visible{background:#f3e8c9}
-.lbook .lgb{display:grid;gap:.5rem;padding:.2rem 1rem .9rem}
-.lbook .lmi{display:flex;gap:.75rem;align-items:flex-start}
-.lbook .lmi img{flex:0 0 72px;width:72px;height:72px;object-fit:cover;border-radius:12px;border:2px solid #fff;box-shadow:0 2px 8px rgba(7,59,76,.25)}
-.lbook .lmi>div{min-width:0}
-.lbook .lmi b{display:block;color:#073B4C;font-size:.98rem}
-.lbook .lmi small{display:block;color:#8a6a1d;font-weight:700;font-size:.8rem}
-.lbook .lmi p{margin:.15rem 0 0;font-size:.88rem;line-height:1.6;color:#33454d}
 </style>
 </body>
 </html>
