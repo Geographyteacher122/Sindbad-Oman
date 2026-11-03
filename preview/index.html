@@ -1697,7 +1697,7 @@ function hToast(m){let t=document.getElementById('htoast');if(!t){t=document.cre
 
 function harborDraw(){const root=document.getElementById('hb2');if(!root)return;
  const I=HIMG(),G=hCfg();
- if(st.teacher){const gid=G.find(x=>x.id===hGrade)?hGrade:'g5';return hBoard(root,gid,true)}
+ if(st.teacher&&!window.__hGate){const gid=G.find(x=>x.id===hGrade)?hGrade:'g5';return hBoard(root,gid,true)}
  if(!window.__hGate&&st.gid&&(st.name||'').trim()&&G.find(x=>x.id===st.gid))return hBoard(root,st.gid,false);
  /* البوابة */
  root.removeAttribute('style');root.className='hb2 gate';let sel=G.find(x=>x.id===st.gid)?st.gid:null,tmode=false;
@@ -1718,7 +1718,7 @@ function harborDraw(){const root=document.getElementById('hb2');if(!root)return;
  $g('hgs').onclick=e=>{const b=e.target.closest('[data-g]');if(!b)return;sel=b.dataset.g;$g('hgs').querySelectorAll('.hflag').forEach(x=>x.classList.toggle('on',x===b));$g('herr').textContent=''};
  $g('hteach').onclick=()=>{tmode=!tmode;$g('herr').textContent='';sync()};
  const go=async()=>{const err=$g('herr');err.textContent='';
-  try{if(tmode){const th=hSet().teacherHash;if(!th){err.textContent='لم يُعيَّن رمز المعلمة بعد في الإعدادات';return}if(await hHash('teacher',$g('hc').value)!==th){err.textContent='الرمز غير صحيح';return}st.teacher=true;save();hud();harborDraw();return}
+  try{if(tmode){const th=hSet().teacherHash;if(!th){err.textContent='لم يُعيَّن رمز المعلمة بعد في الإعدادات';return}if(await hHash('teacher',$g('hc').value)!==th){err.textContent='الرمز غير صحيح';return}st.teacher=true;window.__hGate=0;save();hud();harborDraw();return}
    const name=$g('hn').value.trim();if(!name){err.textContent='اكتب اسمك أولًا';$g('hn').focus();return}if(!sel){err.textContent='اختر صفك';return}
    st.name=name;st.gid=sel;st.teacher=false;window.__hGate=0;save();hud();hLog();harborDraw()}
   catch(e){err.textContent=e.message==='nosubtle'?'يلزم فتح الموقع عبر رابط https للتحقق من الرمز':'حدث خطأ، حاول مرة أخرى'}};
